@@ -62,18 +62,7 @@ class Sidebar extends Component
                 ]
             ],
 
-            [
-                'title' => 'Pengaturan',
-                'items' => [
-                    [
-                        'name' => 'Profil',
-                        'icon' => 'user-circle',
-                        'activePattern' => 'profile',
-                        'route' => 'profile',
-                    ],
-                ]
-            ],
-
+           
             [
                 'title' => 'Pengaturan',
                 'items' => [
