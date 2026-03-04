@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Ecommerce\ProductController;
+use App\Http\Controllers\StatisticController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,11 +21,6 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
 
 Route::get('/profile', fn() => view('profile.index'))->name('profile');
 
-/*
-|--------------------------------------------------------------------------
-| BPS MANAGEMENT MODULES
-|--------------------------------------------------------------------------
-*/
 
 Route::prefix('super-admin')
     ->name('superadmin.')
@@ -35,13 +31,20 @@ Route::prefix('super-admin')
         Route::resource('admin-pelayanan', App\Http\Controllers\SuperAdmin\AdminPelayananController::class);
 });
 
-Route::prefix('statistik')->name('statistik.')->group(function () {
-    Route::get('/', fn() => view('statistik.index'))->name('index');
-});
+
 
 Route::prefix('pelayanan')->name('pelayanan.')->group(function () {
     Route::get('/', fn() => view('pelayanan.index'))->name('index');
 });
+
+Route::prefix('statistic')->name('statistic.')->group(function () {
+    Route::get('/', [StatisticController::class,'index'])->name('index');
+    Route::get('/create', [StatisticController::class,'create'])->name('create');
+    Route::post('/store', [StatisticController::class,'store'])->name('store');
+    Route::get('/preview/{id}', [StatisticController::class,'preview'])->name('preview');
+    Route::post('/publish/{id}', [StatisticController::class,'publish'])->name('publish');
+});
+
 
 // --- UI COMPONENTS ROUTES ---
 Route::prefix('pages/components')->name('components.')->group(function () {
@@ -88,14 +91,6 @@ Route::prefix('pages')->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('super-admin')
-    ->name('superadmin.')
-    ->group(function () {
-
-        Route::resource('admin-data-statistik', App\Http\Controllers\SuperAdmin\AdminDataStatistikController::class);
-
-        Route::resource('admin-pelayanan', App\Http\Controllers\SuperAdmin\AdminPelayananController::class);
-});
 
 
 Route::prefix('laravel')->name('laravel.')->group(function () {

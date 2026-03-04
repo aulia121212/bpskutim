@@ -50,8 +50,8 @@ class Sidebar extends Component
                      [
                         'name' => 'Data Statistik',
                         'icon' => 'chart-line',
-                        'activePattern' => 'statistik.*',
-                        'route' => 'statistik.index',
+                        'activePattern' => 'statistics.*',
+                        'route' => 'statistics.index',
                     ],
                     [
                         'name' => 'Pelayanan',
