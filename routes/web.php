@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Ecommerce\ProductController;
 use App\Http\Controllers\StatisticController;
+use App\Http\Controllers\StatisticTitleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,14 +38,29 @@ Route::prefix('pelayanan')->name('pelayanan.')->group(function () {
     Route::get('/', fn() => view('pelayanan.index'))->name('index');
 });
 
-Route::prefix('statistic')->name('statistic.')->group(function () {
+Route::prefix('statistics')->name('statistics.')->group(function () {
     Route::get('/', [StatisticController::class,'index'])->name('index');
     Route::get('/create', [StatisticController::class,'create'])->name('create');
     Route::post('/store', [StatisticController::class,'store'])->name('store');
     Route::get('/preview/{id}', [StatisticController::class,'preview'])->name('preview');
     Route::post('/publish/{id}', [StatisticController::class,'publish'])->name('publish');
-});
+    //Route::delete('/statistics/{id}', [StatisticController::class, 'destroy'])->name('statistics.destroy');
 
+Route::delete('/{id}', [StatisticController::class, 'destroy'])->name('destroy');
+
+
+Route::get('/grafik', [StatisticController::class,'grafik'])->name('grafik');
+    });
+
+Route::prefix('statistic-titles')->name('statistic-titles.')->group(function () {
+    Route::get('/',                              [StatisticTitleController::class, 'index'])->name('index');
+    Route::post('/',                             [StatisticTitleController::class, 'store'])->name('store');
+    Route::put('/{statisticTitle}',              [StatisticTitleController::class, 'update'])->name('update');
+    Route::delete('/{statisticTitle}',           [StatisticTitleController::class, 'destroy'])->name('destroy');
+
+    // API endpoint untuk fetch interpretasi via Alpine/JS
+    Route::get('/{statisticTitle}/interpretasi', [StatisticTitleController::class, 'getInterpretasi'])->name('interpretasi');
+});
 
 // --- UI COMPONENTS ROUTES ---
 Route::prefix('pages/components')->name('components.')->group(function () {

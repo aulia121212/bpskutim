@@ -14,11 +14,11 @@
             <li class="text-sm text-red-600">{{ $error }}</li>
         @endforeach
     </div>
-@endif
+    @endif
 
     <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6">
 
-        {{-- Row 1: Indikator + Judul Data --}}
+        {{-- Row 1: Indikator + Judul Data (dropdown dari master) --}}
         <div class="grid grid-cols-2 gap-6 mb-6">
             <div>
                 <label class="block text-sm font-semibold text-blue-500 mb-1">Indikator</label>
@@ -26,22 +26,59 @@
                     <select name="indikator_data"
                         class="w-full appearance-none border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="">Pilih Indikator</option>
-                        <option value="indikator_ekonomi">Indikator Ekonomi</option>
-                        <option value="indikator_ketenagakerjaan">Indikator Ketenagakerjaan</option>
-                        <option value="indikator_sosial">Indikator Sosial</option>
-                        <option value="indikator_pembangunan_manusia">Indikator Pembangunan Manusia</option>
+                        <option value="indikator_ekonomi" {{ old('indikator_data') === 'indikator_ekonomi' ? 'selected' : '' }}>Indikator Ekonomi</option>
+                        <option value="indikator_ketenagakerjaan" {{ old('indikator_data') === 'indikator_ketenagakerjaan' ? 'selected' : '' }}>Indikator Ketenagakerjaan</option>
+                        <option value="indikator_sosial" {{ old('indikator_data') === 'indikator_sosial' ? 'selected' : '' }}>Indikator Sosial</option>
+                        <option value="indikator_pembangunan_manusia" {{ old('indikator_data') === 'indikator_pembangunan_manusia' ? 'selected' : '' }}>Indikator Pembangunan Manusia</option>
                     </select>
                     <i class="ti ti-chevron-down absolute right-3 top-3 text-gray-400 pointer-events-none"></i>
                 </div>
                 @error('indikator_data')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
-            <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1">Judul Data</label>
-                <input type="text" name="judul_data" value="{{ old('judul_data') }}"
-                    placeholder="Judul Data"
-                    class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                @error('judul_data')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+            {{-- Judul Data — dropdown dari StatisticTitle --}}
+            <div x-data="judulPicker()" x-init="init()">
+                <div class="flex items-center justify-between mb-1">
+                    <label class="block text-sm font-semibold text-blue-500">Judul Data</label>
+                    <a href="{{ route('statistic-titles.index') }}" target="_blank"
+                        class="text-[10px] font-bold text-blue-400 hover:text-blue-600 transition flex items-center gap-1">
+                        <i class="ti ti-settings text-xs"></i> Kelola Judul
+                    </a>
+                </div>
+                <div class="relative">
+                    <select name="statistic_title_id" @change="fetchInterpretasi($event.target.value)"
+                        class="w-full appearance-none border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Pilih Judul Data</option>
+                        @foreach($statisticTitles as $title)
+                            <option value="{{ $title->id }}" {{ old('statistic_title_id') == $title->id ? 'selected' : '' }}>
+                                {{ $title->judul_data }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <i class="ti ti-chevron-down absolute right-3 top-3 text-gray-400 pointer-events-none"></i>
+                </div>
+                @error('statistic_title_id')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+
+                {{-- Preview Interpretasi (muncul otomatis saat judul dipilih) --}}
+                <div x-show="kecil || besar" x-cloak
+                    x-transition:enter="transition duration-200 ease-out"
+                    x-transition:enter-start="opacity-0 -translate-y-2"
+                    x-transition:enter-end="opacity-100 translate-y-0"
+                    class="mt-3 rounded-2xl border border-blue-100 dark:border-blue-900/40 bg-blue-50/50 dark:bg-blue-900/10 p-4 space-y-3">
+                    <p class="text-[10px] font-black uppercase tracking-widest text-blue-400">Preview Interpretasi</p>
+                    <div x-show="kecil">
+                        <p class="text-[10px] font-bold text-green-500 mb-1 flex items-center gap-1">
+                            <i class="ti ti-trending-down"></i> Lebih Kecil (Turun)
+                        </p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed" x-text="kecil"></p>
+                    </div>
+                    <div x-show="besar">
+                        <p class="text-[10px] font-bold text-red-400 mb-1 flex items-center gap-1">
+                            <i class="ti ti-trending-up"></i> Lebih Besar (Naik)
+                        </p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed" x-text="besar"></p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -95,26 +132,8 @@
             </div>
         </div>
 
-        {{-- Interpretasi Data --}}
-        <div class="mb-2">
-            <p class="text-center text-sm font-semibold text-blue-500 mb-4">Interpretasi Data</p>
-            <div class="grid grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-semibold text-blue-400 mb-1">Lebih Kecil</label>
-                    <textarea name="interpretasi_lebih_kecil" placeholder="Isi penjelasan"
-                        class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 h-28 resize-none"></textarea>
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-blue-400 mb-1">Lebih Besar</label>
-                    <textarea name="interpretasi_lebih_besar" placeholder="Isi Penjelasan"
-                        class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 h-28 resize-none"></textarea>
-                </div>
-            </div>
-            @error('interpretasi_data')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-        </div>
-
-        {{-- Value --}}
-        <div class="mt-6">
+        {{-- Nilai Data --}}
+        <div class="mt-2">
             <label class="block text-sm font-semibold text-blue-500 mb-2">Nilai Data</label>
             <div id="value-container" class="space-y-2">
                 <div class="flex gap-3">
@@ -140,4 +159,31 @@
     </div>
     </form>
 </div>
+
+<script>
+function judulPicker() {
+    return {
+        kecil: '',
+        besar: '',
+        init() {
+            // Restore preview jika ada old value (validation failed)
+            const oldId = '{{ old('statistic_title_id') }}';
+            if (oldId) this.fetchInterpretasi(oldId);
+        },
+        async fetchInterpretasi(id) {
+            this.kecil = '';
+            this.besar = '';
+            if (!id) return;
+            try {
+                const res  = await fetch(`/statistic-titles/${id}/interpretasi`);
+                const data = await res.json();
+                this.kecil = data.interpretasi_lebih_kecil || '';
+                this.besar = data.interpretasi_lebih_besar || '';
+            } catch (e) {
+                console.error('Gagal mengambil interpretasi:', e);
+            }
+        }
+    }
+}
+</script>
 @endsection
