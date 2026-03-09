@@ -1,0 +1,124 @@
+{{--
+    Partial ini dipakai di modal Tambah dan Edit.
+    x-data harus sudah ada di parent (componentForm atau titleRow).
+    $title = opsional, dipakai saat edit.
+--}}
+<div class="space-y-4">
+
+    {{-- Judul Data --}}
+    <div>
+        <label class="block text-xs font-semibold text-blue-500 mb-1">Judul Data <span class="text-red-400">*</span></label>
+        <input type="text" name="judul_data"
+            value="{{ old('judul_data', $title->judul_data ?? '') }}"
+            placeholder="Contoh: Struktur PDRB Menurut Lapangan Usaha (persen)"
+            class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        @error('judul_data')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+    </div>
+
+    {{-- Judul Kolom --}}
+    <div>
+        <label class="block text-xs font-semibold text-blue-500 mb-1">
+            Judul Kolom Kategori
+            <span class="font-normal text-gray-400 normal-case ml-1">(header kolom pertama tabel, misal: "Lapangan Usaha")</span>
+        </label>
+        <input type="text" name="judul_kolom"
+            value="{{ old('judul_kolom', $title->judul_kolom ?? '') }}"
+            placeholder="Lapangan Usaha"
+            class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+
+    {{-- =========================================================== --}}
+    {{-- KOMPONEN / KATEGORI                                         --}}
+    {{-- =========================================================== --}}
+    <div class="border-t border-gray-100 dark:border-gray-800 pt-4">
+        <div class="flex items-center justify-between mb-3">
+            <div>
+                <p class="text-xs font-semibold text-blue-500">Komponen / Kategori</p>
+                <p class="text-[10px] text-gray-400 mt-0.5">Akan otomatis muncul sebagai baris di form input data</p>
+            </div>
+            <div class="flex gap-2">
+                <button type="button" @click="addComponent(false)"
+                    class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 text-xs font-bold hover:bg-blue-100 transition">
+                    <i class="ti ti-plus text-xs"></i> Kategori
+                </button>
+                <button type="button" @click="addComponent(true)"
+                    class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 text-indigo-500 text-xs font-bold hover:bg-indigo-100 transition">
+                    <i class="ti ti-indent-increase text-xs"></i> Sub
+                </button>
+            </div>
+        </div>
+
+        {{-- List komponen --}}
+        <div class="space-y-1.5" x-show="components.length > 0">
+            <template x-for="(comp, i) in components" :key="i">
+                <div class="flex items-center gap-2 rounded-xl px-3 py-2"
+                    :class="comp.is_sub
+                        ? 'bg-indigo-50/60 dark:bg-indigo-900/10 border border-indigo-100 dark:border-indigo-800 pl-7'
+                        : 'bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700'">
+
+                    {{-- Indent marker sub --}}
+                    <span x-show="comp.is_sub" class="text-indigo-300 font-bold text-sm shrink-0">·</span>
+
+                    {{-- Input nama --}}
+                    <input type="text"
+                        :name="'components[' + i + '][nama]'"
+                        x-model="comp.nama"
+                        :placeholder="comp.is_sub ? 'Nama sub-kategori...' : 'Nama kategori...'"
+                        :class="comp.is_sub ? 'text-gray-500 italic text-xs' : 'text-gray-700 text-sm font-medium'"
+                        class="flex-1 bg-transparent focus:outline-none dark:text-gray-300 placeholder-gray-300">
+
+                    {{-- Hidden is_sub --}}
+                    <input type="hidden" :name="'components[' + i + '][is_sub]'" :value="comp.is_sub ? '1' : '0'">
+
+                    {{-- Toggle sub/utama --}}
+                    <button type="button" @click="comp.is_sub = !comp.is_sub"
+                        :title="comp.is_sub ? 'Jadikan kategori utama' : 'Jadikan sub-kategori'"
+                        :class="comp.is_sub ? 'text-indigo-400 hover:text-indigo-600' : 'text-gray-300 hover:text-indigo-400'"
+                        class="w-6 h-6 flex items-center justify-center rounded transition shrink-0">
+                        <i class="ti ti-indent-increase text-xs"></i>
+                    </button>
+
+                    {{-- Drag handle (visual only) --}}
+                    <span class="text-gray-300 cursor-grab shrink-0">
+                        <i class="ti ti-grip-vertical text-sm"></i>
+                    </span>
+
+                    {{-- Hapus --}}
+                    <button type="button" @click="removeComponent(i)"
+                        class="w-6 h-6 flex items-center justify-center rounded text-gray-300 hover:text-rose-500 transition shrink-0">
+                        <i class="ti ti-x text-xs"></i>
+                    </button>
+                </div>
+            </template>
+        </div>
+
+        {{-- Empty state --}}
+        <div x-show="components.length === 0"
+            class="border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl py-6 text-center">
+            <p class="text-xs text-gray-400">Belum ada komponen — klik <strong>+ Kategori</strong> untuk menambah</p>
+        </div>
+    </div>
+
+    {{-- =========================================================== --}}
+    {{-- INTERPRETASI                                                --}}
+    {{-- =========================================================== --}}
+    <div class="border-t border-gray-100 dark:border-gray-800 pt-4 grid grid-cols-2 gap-4">
+        <div>
+            <label class="block text-xs font-semibold text-green-500 mb-1">
+                <i class="ti ti-trending-down text-xs"></i> Interpretasi Lebih Kecil (Turun)
+            </label>
+            <textarea name="interpretasi_lebih_kecil" rows="3"
+                placeholder="Penjelasan jika data mengalami penurunan..."
+                class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none">{{ old('interpretasi_lebih_kecil', $title->interpretasi_lebih_kecil ?? '') }}</textarea>
+        </div>
+        <div>
+            <label class="block text-xs font-semibold text-red-400 mb-1">
+                <i class="ti ti-trending-up text-xs"></i> Interpretasi Lebih Besar (Naik)
+            </label>
+            <textarea name="interpretasi_lebih_besar" rows="3"
+                placeholder="Penjelasan jika data mengalami kenaikan..."
+                class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none">{{ old('interpretasi_lebih_besar', $title->interpretasi_lebih_besar ?? '') }}</textarea>
+        </div>
+    </div>
+
+</div>

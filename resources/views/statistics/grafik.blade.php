@@ -112,22 +112,24 @@
             <div class="mb-5">
                 <label class="block text-sm font-semibold text-blue-500 mb-2">Judul data</label>
                 <div class="relative">
-                    <select id="filter-judul"
-                        class="w-full appearance-none border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">Judul Data</option>
-                        @foreach($statistics as $stat)
-                            <option value="{{ $stat->id }}"
-                                data-judul="{{ $stat->judul_data }}"
-                                data-wilayah="{{ $stat->wilayah_data }}"
-                                data-years="{{ $stat->values->pluck('year')->toJson() }}"
-                                data-values="{{ $stat->values->sortBy('year')->pluck('value')->toJson() }}"
-                                data-updated="{{ $stat->updated_at->format('F Y') }}"
-                                data-interp-kecil="{{ addslashes($stat->interpretasi_lebih_kecil) }}"
-                                data-interp-besar="{{ addslashes($stat->interpretasi_lebih_besar) }}">
-                                {{ $stat->judul_data }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <select id="filter-judul" class="w-full appearance-none border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <option value="">Judul Data</option>
+    @foreach($statistics as $stat)
+        <option value="{{ $stat->id }}"
+            data-judul="{{ $stat->judul_data }}"
+            data-wilayah="{{ $stat->wilayah_data }}"
+            data-years="{{ $stat->values->pluck('year')->toJson() }}"
+            data-values="{{ $stat->values->sortBy('year')->pluck('value')->toJson() }}"
+            data-updated="{{ $stat->updated_at->format('F Y') }}"
+            data-interp-kecil="{{ addslashes($stat->interpretasi_lebih_kecil) }}"
+            data-interp-besar="{{ addslashes($stat->interpretasi_lebih_besar) }}"
+            {{-- ✅ TAMBAHKAN BARIS INI: --}}
+            data-components='{{ $stat->components->pluck('nama')->toJson() }}'
+        >
+            {{ $stat->judul_data }}
+        </option>
+    @endforeach
+</select>
                     <i class="ti ti-chevron-down absolute right-3 top-2.5 text-gray-400 pointer-events-none"></i>
                 </div>
             </div>
@@ -153,6 +155,13 @@
                 </div>
             </div>
 
+            <div class="mb-2">
+                <label class="block text-sm font-semibold text-blue-500 mb-2">Komponen/Kategori data</label>
+                <div id="filter-kategori" class="space-y-2">
+                    <p class="text-xs text-gray-400">Pilih judul data dulu</p>
+                </div>
+            </div> 
+            
         </div>
     </div>
 </div>
@@ -180,6 +189,7 @@ function switchTab(tab) {
 }
 
 // Judul filter change
+// Judul filter change
 document.getElementById('filter-judul').addEventListener('change', function () {
     const opt = this.options[this.selectedIndex];
     if (!opt.value) {
@@ -189,6 +199,7 @@ document.getElementById('filter-judul').addEventListener('change', function () {
 
     const years  = JSON.parse(opt.dataset.years);
     const values = JSON.parse(opt.dataset.values);
+    const components = JSON.parse(opt.dataset.components || '[]'); // ✅ Ambil data komponen
 
     currentData = {
         labels:      years,
@@ -200,7 +211,7 @@ document.getElementById('filter-judul').addEventListener('change', function () {
         interpBesar: opt.dataset.interpBesar,
     };
 
-    // Render tahun checkboxes
+    // ✅ Render tahun checkboxes
     const tahunDiv = document.getElementById('filter-tahun');
     tahunDiv.innerHTML = years.map(y => `
         <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
@@ -208,6 +219,24 @@ document.getElementById('filter-judul').addEventListener('change', function () {
             ${y}
         </label>
     `).join('');
+
+    // ✅ Render komponen checkboxes
+    const kategoriDiv = document.getElementById('filter-kategori');
+    if (components.length > 0) {
+        kategoriDiv.innerHTML = components.map(c => `
+            <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
+                <input type="checkbox" value="${c}" checked class="kategori-check rounded border-gray-300 text-blue-600">
+                ${c}
+            </label>
+        `).join('');
+        
+        // Tambahkan event listener untuk checkbox kategori
+        document.querySelectorAll('.kategori-check').forEach(cb => {
+            cb.addEventListener('change', applyFilters);
+        });
+    } else {
+        kategoriDiv.innerHTML = '<p class="text-xs text-gray-400">Tidak ada komponen</p>';
+    }
 
     document.querySelectorAll('.tahun-check').forEach(cb => {
         cb.addEventListener('change', applyFilters);

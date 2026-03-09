@@ -9,7 +9,7 @@ class Statistic extends Model
     protected $fillable = [
         'indikator_data',
         'judul_data',
-        //'interpretasi_data',
+        //'interpretasi_data', 
         'wilayah_data',
         'file_data',
         'interpretasi_lebih_kecil',  

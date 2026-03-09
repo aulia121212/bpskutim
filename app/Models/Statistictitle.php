@@ -8,12 +8,19 @@ class StatisticTitle extends Model
 {
     protected $fillable = [
         'judul_data',
+        'judul_kolom',
         'interpretasi_lebih_kecil',
         'interpretasi_lebih_besar',
     ];
 
-    public function statistics()
+    public function values()
+{
+    return $this->hasMany(StatisticValue::class); // Sesuaikan nama model nilai Anda
+}
+
+
+    public function components()
     {
-        return $this->hasMany(Statistic::class, 'statistic_title_id');
-    }
+        return $this->hasMany(StatisticTitleComponent::class)
+            ->orderBy('urutan');    }
 }

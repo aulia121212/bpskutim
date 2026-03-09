@@ -79,7 +79,7 @@
         {{-- ============================================================ --}}
         {{-- PREVIEW INTERPRETASI BERDASARKAN PERBANDINGAN DATA           --}}
         {{-- ============================================================ --}}
-        @php
+        <!-- @php
             $sortedValues = $values->sortBy('year')->values();
             $totalData    = $sortedValues->count();
             $tren         = null; // 'naik' | 'turun' | 'tetap'
@@ -193,7 +193,7 @@
                 </div>
             </div>
         </div>
-        @endif
+        @endif -->
         {{-- ============================================================ --}}
 
         {{-- Timestamps --}}
