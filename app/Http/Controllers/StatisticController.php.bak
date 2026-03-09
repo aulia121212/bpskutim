@@ -80,45 +80,20 @@ class StatisticController extends Controller
         return redirect()->route('statistics.preview', $statistic->id);
     }
 
-    // public function preview($id)
-    // {
-    //     $statistic = Statistic::with('values')->findOrFail($id);
-    //     $values    = $statistic->values->each(function ($val) {
-    //         if (is_null($val->y_label) && !is_null($val->year)) {
-    //             $val->y_label = (string) $val->year;
-    //         }
-    //     })->sortBy('x_label')->values();
-
-    //     $is2D           = $values->whereNotNull('y_label')->count() > 0;
-    //     $interpretation = $this->generateInterpretation($values, $is2D);
-
-    //     return view('statistics.preview', compact('statistic', 'values', 'interpretation', 'is2D'));
-    // }
-
     public function preview($id)
-{
-    $statistic = Statistic::with([
-        'values',
-        'title.components' // ambil kategori dari title
-    ])->findOrFail($id);
+    {
+        $statistic = Statistic::with('values')->findOrFail($id);
+        $values    = $statistic->values->each(function ($val) {
+            if (is_null($val->y_label) && !is_null($val->year)) {
+                $val->y_label = (string) $val->year;
+            }
+        })->sortBy('x_label')->values();
 
-    $values = $statistic->values->each(function ($val) {
-        if (is_null($val->y_label) && !is_null($val->year)) {
-            $val->y_label = (string) $val->year;
-        }
-    })->sortBy('x_label')->values();
+        $is2D           = $values->whereNotNull('y_label')->count() > 0;
+        $interpretation = $this->generateInterpretation($values, $is2D);
 
-    $is2D = $values->whereNotNull('y_label')->count() > 0;
-
-    $interpretation = $this->generateInterpretation($values, $is2D);
-
-    return view('statistics.preview', compact(
-        'statistic',
-        'values',
-        'interpretation',
-        'is2D'
-    ));
-}
+        return view('statistics.preview', compact('statistic', 'values', 'interpretation', 'is2D'));
+    }
 
     public function destroy($id)
     {
@@ -154,47 +129,43 @@ class StatisticController extends Controller
     }
 
     public function grafik()
-{
-    $titlesByJudul = StatisticTitle::with('components')
-        ->get()
-        ->keyBy('judul_data');
+    {
+        $titlesByJudul = StatisticTitle::with('components')
+            ->get()
+            ->keyBy('judul_data');
 
-    // Gabungkan semua statistic dengan judul+wilayah yang sama
-    $grouped = Statistic::with('values')
-        ->where('status', 'published')
-        ->get()
-        ->groupBy(fn($s) => $s->judul_data . '|||' . $s->wilayah_data);
+        $statistics = Statistic::with('values')
+            ->where('status', 'published')
+            ->get()
+            ->each(function ($stat) {
+                // Normalisasi: jika y_label null tapi year terisi, pakai year sebagai y_label
+                $stat->values->each(function ($val) {
+                    if (is_null($val->y_label) && !is_null($val->year)) {
+                        $val->y_label = (string) $val->year;
+                    }
+                });
+            })
+            ->each(function ($stat) use ($titlesByJudul) {
+                $title = $titlesByJudul->get($stat->judul_data);
 
-    $statistics = $grouped->map(function ($group) use ($titlesByJudul) {
-        $stat = $group->first();
+                $stat->setAttribute('judul_kolom', $title?->judul_kolom ?: 'Kategori');
+                $stat->setAttribute('components', $title?->components?->map(function ($comp) {
+                    return [
+                        'id'     => $comp->id,
+                        'nama'   => $comp->nama,
+                        'is_sub' => (bool) $comp->is_sub,
+                        'urutan' => $comp->urutan,
+                    ];
+                })->values() ?? collect());
 
-        // Gabungkan semua values dari semua stat dalam group
-        $allValues = $group->flatMap(fn($s) => $s->values)->map(function ($val) {
-            if (is_null($val->y_label) && !is_null($val->year)) {
-                $val->y_label = (string) $val->year;
-            }
-            return $val;
-        })->sortBy([
-            ['x_label', 'asc'],
-            ['y_label', 'asc'],
-        ])->values();
+                $stat->setRelation('values', $stat->values->sortBy([
+                    ['x_label', 'asc'],
+                    ['y_label', 'asc'],
+                ])->values());
+            });
 
-        $stat->setRelation('values', $allValues);
-
-        $title = $titlesByJudul->get($stat->judul_data);
-        $stat->setAttribute('judul_kolom', $title?->judul_kolom ?: 'Kategori');
-        $stat->setAttribute('components', $title?->components?->map(fn($c) => [
-            'id'     => $c->id,
-            'nama'   => $c->nama,
-            'is_sub' => (bool) $c->is_sub,
-            'urutan' => $c->urutan,
-        ])->values() ?? collect());
-
-        return $stat;
-    })->values();
-
-    return view('statistics.grafik', compact('statistics'));
-}
+        return view('statistics.grafik', compact('statistics'));
+    }
 
     public function publish($id)
     {

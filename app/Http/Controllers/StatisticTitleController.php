@@ -16,13 +16,11 @@ class StatisticTitleController extends Controller
 
 public function index()
 {
-    // ✅ Pastikan relasi 'components' dimuat dengan ->with()
-    // ✅ Ganti $titles menjadi $statistics agar sesuai dengan Blade
-    $statistics = StatisticTitle::with('components')
-        ->get(); // Gunakan ->get() agar semua data tersedia untuk filter client-side
+    $titles = StatisticTitle::with('components')
+        ->latest()
+        ->paginate(10);
 
-    // ✅ Pastikan nama view sesuai dengan file Blade Anda
-    return view('statistic-titles.index', compact('statistics'));
+    return view('statistic-titles.index', compact('titles'));
 }
 
     public function store(Request $request)

@@ -35,7 +35,7 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-50 dark:divide-gray-800">
-                @forelse ($titles as $title)
+           @forelse ($titles as $title)
                 <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition group"
                     x-data="titleRow({{ $title->components->toJson() }})">
                     <td class="px-6 py-4 text-gray-400">{{ $loop->iteration }}</td>

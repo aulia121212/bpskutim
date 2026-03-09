@@ -21,4 +21,10 @@ class Statistic extends Model
     {
         return $this->hasMany(StatisticValue::class);
     }
+
+    public function title()
+{
+    return $this->belongsTo(StatisticTitle::class, 'statistic_title_id');
+}
+
 }
