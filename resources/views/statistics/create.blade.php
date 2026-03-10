@@ -544,11 +544,9 @@ function judulPicker() {
 function submitStatisticForm() {
     const rows = [];
 
-    // Baca tiap baris dari DOM input yang di-render Alpine
     const categoryInputs = document.querySelectorAll('input[name^="grid"][name$="[category]"]');
 
     categoryInputs.forEach(catInput => {
-        // Ambil index baris: grid[0][category] → 0
         const match = catInput.name.match(/grid\[(\d+)\]/);
         if (!match) return;
         const ci = match[1];
@@ -556,22 +554,19 @@ function submitStatisticForm() {
         const rawName = catInput.value.trim();
         if (!rawName) return;
 
-        // Cek apakah sub-kategori (row punya class bg-indigo)
         const row    = catInput.closest('tr');
         const isSub  = row && row.classList.toString().includes('indigo');
         const xLabel = isSub ? '· ' + rawName : rawName;
 
         // Cari semua value input di baris yang sama: grid[ci][values][YEAR]
-        const valueInputs = document.querySelectorAll(`input[name^="grid[${ci}][values]"]`);
-        valueInputs.forEach(valInput => {
-            // Ambil tahun dari nama: grid[0][values][2024] → 2024
+        const valInputs = document.querySelectorAll(`input[name^="grid[${ci}][values]"]`);
+        valInputs.forEach(valInput => {
             const yearMatch = valInput.name.match(/\[values\]\[(\d+)\]/);
             if (!yearMatch) return;
             const year = yearMatch[1];
             const raw  = valInput.value.trim();
             if (!raw || raw === '-') return;
 
-            // Parse format Indonesia
             let s = raw;
             if (s.includes('.') && s.includes(',')) {
                 s = s.lastIndexOf(',') > s.lastIndexOf('.')
@@ -587,8 +582,12 @@ function submitStatisticForm() {
         });
     });
 
-    document.getElementById('grid_json_input').value = JSON.stringify(rows);
-    document.getElementById('statisticForm').submit();
+    //
+document.getElementById('grid_json_input').value = JSON.stringify(rows);
+//console.log('grid_json rows:', rows); // ← tambah ini
+//alert(JSON.stringify(rows));          // ← dan ini untuk lihat langsung
+document.getElementById('statisticForm').submit();    
 }
+
 </script>
 @endsection

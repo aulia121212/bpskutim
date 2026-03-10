@@ -61,30 +61,22 @@ class StatisticController extends Controller
         $rows = json_decode($gridJson, true);
         if (is_array($rows) && count($rows) > 0) {
             foreach ($rows as $row) {
-                $xLabel = trim($row['x_label'] ?? '');
-                $yLabel = isset($row['y_label']) && $row['y_label'] !== '' ? trim($row['y_label']) : null;
-                $value  = $row['value'] ?? null;
+    $xLabel = trim($row['x_label'] ?? '');
+    $yLabel = isset($row['y_label']) && $row['y_label'] !== '' 
+              ? trim($row['y_label']) 
+              : null;
+    $value  = $row['value'] ?? null;
 
-                if ($xLabel === '' || is_null($value)) continue;
+    if ($xLabel === '' || is_null($value)) continue;
 
-                // PERBAIKAN: Tentukan year dengan benar
-                $year = null;
-                if ($yLabel) {
-                    // Jika ada y_label, gunakan itu sebagai tahun
-                    $year = $yLabel;
-                } else {
-                    // Jika tidak ada y_label (data 1D), gunakan x_label sebagai tahun
-                    $year = $xLabel;
-                }
-
-                StatisticValue::create([
-                    'statistic_id' => $statistic->id,
-                    'year'         => $year,  // FIXED: year sekarang benar
-                    'x_label'      => $xLabel,
-                    'y_label'      => $yLabel,
-                    'value'        => is_numeric($value) ? $value : 0,
-                ]);
-            }
+    StatisticValue::create([
+    'statistic_id' => $statistic->id,
+    'year'         => null,      // ← tidak pakai kolom year lagi
+    'x_label'      => $xLabel,
+    'y_label'      => $yLabel,
+    'value'        => is_numeric($value) ? $value : 0,
+]);
+}
         }
     }
 
