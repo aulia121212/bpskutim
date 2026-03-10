@@ -7,58 +7,15 @@
     <div class="flex gap-6">
 
         {{-- Left: List Keterangan --}}
-        <div class="w-80 space-y-3">
+        <div class="w-80 flex-shrink-0">
             <h3 class="text-sm font-bold text-gray-700 mb-3">Keterangan</h3>
-
-            @forelse($jadwal ?? [] as $j)
-            <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 p-4 shadow-sm">
-                <div class="flex items-start justify-between">
-                    <div>
-                        <p class="text-sm font-semibold text-gray-800">{{ $j->keterangan }}</p>
-                        <p class="text-xs text-gray-400 mt-0.5">{{ $j->petugas ?? 'Semua Petugas' }}</p>
-                        <div class="flex items-center gap-1 mt-2 text-xs text-gray-500">
-                            <i class="ti ti-calendar text-blue-500"></i>
-                            {{ \Carbon\Carbon::parse($j->tanggal)->translatedFormat('l, j F Y') }}
-                        </div>
-                    </div>
-                    <span class="text-xs font-semibold px-2 py-0.5 rounded-full
-                        {{ $j->tipe === 'Libur Nasional' ? 'bg-red-100 text-red-600' :
-                           ($j->tipe === 'Cuti Bersama' ? 'bg-orange-100 text-orange-600' : 'bg-blue-100 text-blue-600') }}">
-                        {{ $j->tipe }}
-                    </span>
-                </div>
+            <div id="keterangan-list" class="space-y-3">
+                <p id="empty-keterangan" class="text-sm text-gray-400 text-center py-6">Belum ada jadwal tidak tersedia</p>
             </div>
-            @empty
-            {{-- Dummy data tampilan --}}
-            @foreach([
-                ['Tahun Baru 2026', 'Semua Petugas', 'Jumat, 1 Januari 2026', 'Cuti Bersama', 'orange'],
-                ['Cuti Pribadi', 'Nama Petugas', 'Selasa, 5 Januari 2026', 'Cuti Pribadi', 'blue'],
-                ['Cuti Pribadi', 'Nama Petugas', 'Rabu, 6 Januari 2026', 'Cuti Pribadi', 'blue'],
-                ['Cuti Pribadi', 'Nama Petugas', 'Kamis, 7 Januari 2026', 'Cuti Pribadi', 'blue'],
-                ['Isra Mikraj Nabi Muhammad SAW', 'Semua Petugas', 'Kamis, 28 Januari 2026', 'Libur Nasional', 'red'],
-            ] as $item)
-            <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 p-4 shadow-sm">
-                <div class="flex items-start justify-between gap-2">
-                    <div>
-                        <p class="text-sm font-semibold text-gray-800">{{ $item[0] }}</p>
-                        <p class="text-xs text-gray-400 mt-0.5">{{ $item[1] }}</p>
-                        <div class="flex items-center gap-1 mt-2 text-xs text-gray-500">
-                            <i class="ti ti-calendar text-blue-500"></i> {{ $item[2] }}
-                        </div>
-                    </div>
-                    <span class="shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full
-                        {{ $item[3] === 'Libur Nasional' ? 'bg-red-100 text-red-600' :
-                           ($item[3] === 'Cuti Bersama' ? 'bg-orange-100 text-orange-600' : 'bg-blue-100 text-blue-600') }}">
-                        {{ $item[3] }}
-                    </span>
-                </div>
-            </div>
-            @endforeach
-            @endforelse
         </div>
 
-        {{-- Right: Calendar --}}
-        <div class="flex-1 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6">
+        {{-- Right: Calendar + Form --}}
+        <div class="flex-1 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 relative">
 
             {{-- Calendar Header --}}
             <div class="flex items-center justify-between mb-6">
@@ -81,73 +38,172 @@
             {{-- Calendar Grid --}}
             <div id="calendar-grid" class="grid grid-cols-7 gap-1"></div>
 
+            {{-- Add Form Panel --}}
+            <div id="add-form" class="hidden absolute inset-4 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 shadow-xl p-6 overflow-y-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <input type="text" id="form-judul" placeholder="Tambah Judul Kegiatan"
+                        class="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mr-3">
+                    <button onclick="closeForm()" class="p-1.5 bg-blue-600 hover:bg-blue-700 rounded-lg text-white transition">
+                        <i class="ti ti-x text-base"></i>
+                    </button>
+                </div>
+
+                <div class="mb-5">
+                    <span class="text-sm font-semibold text-blue-500">Tanggal :</span>
+                    <span id="form-tanggal-label" class="text-sm font-semibold text-blue-600 ml-2"></span>
+                </div>
+
+                <div class="mb-5">
+                    <p class="text-sm font-semibold text-blue-500 mb-3">Alasan :</p>
+                    <div class="bg-gray-50 rounded-xl px-4 py-3 space-y-3">
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="radio" name="alasan" value="Cuti Pribadi" class="text-blue-600">
+                            <span class="text-sm text-gray-700">Cuti Pribadi</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="radio" name="alasan" value="Cuti Bersama" class="text-blue-600">
+                            <span class="text-sm text-gray-700">Cuti Bersama</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="radio" name="alasan" value="Libur Nasional" class="text-blue-600">
+                            <span class="text-sm text-gray-700">Libur Nasional</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <p class="text-sm font-semibold text-blue-500 mb-3">Nama Petugas :</p>
+                    <div class="bg-gray-50 rounded-xl px-4 py-3 space-y-3">
+                        @forelse($petugas ?? [] as $p)
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="radio" name="petugas" value="{{ $p->id }}" class="text-blue-600">
+                            <span class="text-sm text-gray-700">{{ $p->nama_lengkap }}</span>
+                        </label>
+                        @empty
+                        @foreach(['Yosi Ezra Afriani', 'Aulia Azizah Ramadhanti', 'Adha Karamina'] as $nama)
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="radio" name="petugas" value="{{ $nama }}" class="text-blue-600">
+                            <span class="text-sm text-gray-700">{{ $nama }}</span>
+                        </label>
+                        @endforeach
+                        @endforelse
+                    </div>
+                </div>
+
+                <div class="flex justify-end">
+                    <button onclick="saveJadwal()" class="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition">
+                        Simpan
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+<form id="jadwal-form" method="POST" action="{{ route('pelayanan.jadwal.store') }}" class="hidden">
+    @csrf
+    <input type="hidden" name="tanggal" id="input-tanggal">
+    <input type="hidden" name="judul" id="input-judul">
+    <input type="hidden" name="alasan" id="input-alasan">
+    <input type="hidden" name="petugas" id="input-petugas">
+</form>
+
 <script>
 const MONTHS = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const DAYS_ID = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
 let current = new Date();
-
-// Blocked dates (example - connect to backend)
-const blocked = {
-    '2026-01-01': { label: 'Cuti Bersama', color: 'orange' },
-    '2026-01-05': { label: 'Nama Petugas', color: 'blue' },
-    '2026-01-06': { label: 'Nama Petugas', color: 'blue' },
-    '2026-01-07': { label: 'Nama Petugas', color: 'blue' },
-    '2026-01-28': { label: 'Libur Nasional', color: 'red' },
-    '2026-01-29': { label: 'Libur Nasional', color: 'red' },
-};
+let selectedDate = null;
+let blockedMap = @json($jadwalMap ?? []);
 
 function pad(n) { return String(n).padStart(2, '0'); }
+function formatDateID(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    return `${DAYS_ID[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+}
 
 function renderCalendar() {
     const year = current.getFullYear();
     const month = current.getMonth();
     document.getElementById('calendar-title').textContent = MONTHS[month] + ' ' + year;
-
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const today = new Date();
-
     let html = '';
-
-    // Empty cells before first day
-    for (let i = 0; i < firstDay; i++) {
-        const prevDate = new Date(year, month, -firstDay + i + 1);
-        html += `<div class="h-16 rounded-lg p-1 text-center">
-            <span class="text-xs text-gray-300">${prevDate.getDate()}</span>
-        </div>`;
-    }
-
+    for (let i = 0; i < firstDay; i++) html += `<div class="h-16"></div>`;
     for (let d = 1; d <= daysInMonth; d++) {
         const key = `${year}-${pad(month+1)}-${pad(d)}`;
         const isToday = d === today.getDate() && month === today.getMonth() && year === today.getFullYear();
-        const blocked_entry = blocked[key];
-
-        html += `<div class="h-16 rounded-lg p-1 ${isToday ? 'bg-blue-50 border border-blue-200' : 'hover:bg-gray-50'} transition relative">
-            <span class="text-xs font-semibold ${isToday ? 'text-blue-600' : 'text-gray-600'} block text-center">${d}</span>
-            ${blocked_entry ? `
-            <div class="absolute bottom-1 left-1 right-1 text-[9px] font-semibold px-1 py-0.5 rounded text-center truncate
-                ${blocked_entry.color === 'red' ? 'bg-red-100 text-red-600' :
-                  blocked_entry.color === 'orange' ? 'bg-orange-100 text-orange-600' : 'bg-blue-100 text-blue-600'}">
-                ${blocked_entry.label}
-            </div>` : ''}
+        const isSelected = selectedDate === key;
+        const entry = blockedMap[key];
+        const colorMap = { 'Libur Nasional':'bg-red-100 text-red-600', 'Cuti Bersama':'bg-orange-100 text-orange-600', 'Cuti Pribadi':'bg-blue-100 text-blue-600' };
+        const badgeClass = entry ? (colorMap[entry.alasan] || 'bg-gray-100 text-gray-600') : '';
+        html += `<div onclick="selectDate('${key}')" class="h-16 rounded-lg p-1 cursor-pointer transition relative
+            ${isSelected ? 'bg-blue-600' : isToday ? 'bg-blue-50 border border-blue-200' : 'hover:bg-gray-50'}">
+            <span class="text-xs font-semibold block text-center ${isSelected ? 'text-white' : isToday ? 'text-blue-600' : 'text-gray-600'}">${d}</span>
+            ${entry ? `<div class="absolute bottom-1 left-0.5 right-0.5 text-[9px] font-semibold px-1 py-0.5 rounded text-center truncate ${badgeClass}">${entry.petugas ?? entry.alasan}</div>` : ''}
         </div>`;
     }
-
     document.getElementById('calendar-grid').innerHTML = html;
 }
 
-document.getElementById('prev-month').addEventListener('click', () => {
-    current.setMonth(current.getMonth() - 1);
+function selectDate(key) {
+    selectedDate = key;
     renderCalendar();
-});
-document.getElementById('next-month').addEventListener('click', () => {
-    current.setMonth(current.getMonth() + 1);
-    renderCalendar();
-});
+    document.getElementById('add-form').classList.remove('hidden');
+    document.getElementById('form-tanggal-label').textContent = formatDateID(key);
+    document.getElementById('form-judul').value = '';
+    document.querySelectorAll('input[name="alasan"]').forEach(r => r.checked = false);
+    document.querySelectorAll('input[name="petugas"]').forEach(r => r.checked = false);
+    const entry = blockedMap[key];
+    if (entry) {
+        document.getElementById('form-judul').value = entry.judul ?? '';
+        document.querySelectorAll('input[name="alasan"]').forEach(r => { if (r.value === entry.alasan) r.checked = true; });
+    }
+}
 
+function closeForm() {
+    document.getElementById('add-form').classList.add('hidden');
+    selectedDate = null;
+    renderCalendar();
+}
+
+function saveJadwal() {
+    const alasan = document.querySelector('input[name="alasan"]:checked')?.value;
+    if (!alasan) { alert('Pilih alasan terlebih dahulu'); return; }
+    document.getElementById('input-tanggal').value = selectedDate;
+    document.getElementById('input-judul').value   = document.getElementById('form-judul').value;
+    document.getElementById('input-alasan').value  = alasan;
+    document.getElementById('input-petugas').value = document.querySelector('input[name="petugas"]:checked')?.value ?? 'Semua Petugas';
+    document.getElementById('jadwal-form').submit();
+}
+
+function renderKeterangan() {
+    const list = document.getElementById('keterangan-list');
+    const empty = document.getElementById('empty-keterangan');
+    const entries = Object.entries(blockedMap).sort((a,b) => a[0].localeCompare(b[0]));
+    if (!entries.length) { empty.classList.remove('hidden'); return; }
+    empty.classList.add('hidden');
+    const colorMap = { 'Libur Nasional':['bg-red-100 text-red-600'], 'Cuti Bersama':['bg-orange-100 text-orange-600'], 'Cuti Pribadi':['bg-blue-100 text-blue-600'] };
+    list.innerHTML = entries.map(([date, entry]) => {
+        const cls = (colorMap[entry.alasan] ?? ['bg-gray-100 text-gray-600'])[0];
+        return `<div class="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
+            <div class="flex items-start justify-between gap-2">
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">${entry.judul || entry.alasan}</p>
+                    <p class="text-xs text-gray-400 mt-0.5">${entry.petugas ?? 'Semua Petugas'}</p>
+                    <div class="flex items-center gap-1 mt-2 text-xs text-gray-500">
+                        <i class="ti ti-calendar text-blue-500"></i> ${formatDateID(date)}
+                    </div>
+                </div>
+                <span class="shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full ${cls}">${entry.alasan}</span>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+document.getElementById('prev-month').addEventListener('click', () => { current.setMonth(current.getMonth()-1); renderCalendar(); });
+document.getElementById('next-month').addEventListener('click', () => { current.setMonth(current.getMonth()+1); renderCalendar(); });
 renderCalendar();
+renderKeterangan();
 </script>
 @endsection

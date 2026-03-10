@@ -38,12 +38,16 @@ Route::prefix('pelayanan')->name('pelayanan.')->group(function () {
     Route::get('/', fn() => view('pelayanan.index'))->name('index');
 
     // Petugas
-    Route::get('/petugas', [PelayananController::class, 'petugas'])->name('petugas.index');
-    Route::post('/petugas', [PelayananController::class, 'petugasStore'])->name('petugas.store');
-
+   Route::get('/petugas',         [PelayananController::class, 'petugas'])->name('petugas.index');
+Route::get('/petugas/create',  [PelayananController::class, 'petugasCreate'])->name('petugas.create');
+Route::post('/petugas',        [PelayananController::class, 'petugasStore'])->name('petugas.store');
+Route::delete('/petugas/{id}', [PelayananController::class, 'petugasDestroy'])->name('petugas.destroy');
+Route::get('/petugas/{id}',    [PelayananController::class, 'petugasShow'])->name('petugas.show');
+Route::get('/petugas/{id}/edit', [PelayananController::class, 'petugasEdit'])->name('petugas.edit');
     // Jadwal
     Route::get('/jadwal', [PelayananController::class, 'jadwal'])->name('jadwal.index');
-
+// web.php — tambah route store jadwal
+Route::post('/jadwal', [PelayananController::class, 'jadwalStore'])->name('jadwal.store');
     // Reservasi
     Route::get('/reservasi', [PelayananController::class, 'reservasi'])->name('reservasi.index');
 
