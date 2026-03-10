@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Ecommerce\ProductController;
 use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\StatisticTitleController;
-
+use App\Http\Controllers\PelayananController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -36,6 +36,23 @@ Route::prefix('super-admin')
 
 Route::prefix('pelayanan')->name('pelayanan.')->group(function () {
     Route::get('/', fn() => view('pelayanan.index'))->name('index');
+
+    // Petugas
+    Route::get('/petugas', [PelayananController::class, 'petugas'])->name('petugas.index');
+    Route::post('/petugas', [PelayananController::class, 'petugasStore'])->name('petugas.store');
+
+    // Jadwal
+    Route::get('/jadwal', [PelayananController::class, 'jadwal'])->name('jadwal.index');
+
+    // Reservasi
+    Route::get('/reservasi', [PelayananController::class, 'reservasi'])->name('reservasi.index');
+
+    // Pop Up
+    Route::get('/popup', [PelayananController::class, 'popup'])->name('popup.index');
+    Route::post('/popup', [PelayananController::class, 'popupStore'])->name('popup.store');
+
+    // User
+    Route::get('/user', [PelayananController::class, 'user'])->name('user.index');
 });
 
 Route::prefix('statistics')->name('statistics.')->group(function () {

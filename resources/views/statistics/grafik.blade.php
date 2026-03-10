@@ -108,12 +108,13 @@
                         <option value="">Pilih judul data...</option>
                         @foreach($statistics as $stat)
                             <option value="{{ $stat->id }}"
-                                data-judul="{{ $stat->judul_data }}"
-                                data-wilayah="{{ $stat->wilayah_data }}"
-                                data-updated="{{ $stat->updated_at->format('F Y') }}"
-                                data-interp-kecil="{{ addslashes($stat->interpretasi_lebih_kecil) }}"
-                                data-interp-besar="{{ addslashes($stat->interpretasi_lebih_besar) }}"
-                                data-values="{{ $stat->values->toJson() }}">
+    data-judul="{{ $stat->judul_data }}"
+    data-wilayah="{{ $stat->wilayah_data }}"
+    data-updated="{{ $stat->updated_at->format('F Y') }}"
+    data-interp-kecil="{{ addslashes($stat->interpretasi_lebih_kecil) }}"
+    data-interp-besar="{{ addslashes($stat->interpretasi_lebih_besar) }}"
+    data-values='@json($stat->values)'
+    data-components='@json($stat->components ?? [])'>
                                 {{ $stat->judul_data }}
                             </option>
                         @endforeach
@@ -196,17 +197,22 @@ document.getElementById('filter-judul').addEventListener('change', function () {
     // Parse semua nilai dari data-values
     // Format kemungkinan: [{x_label, y_label, year, value}, ...]
     allValues = JSON.parse(opt.dataset.values || '[]');
-
+const components = JSON.parse(opt.dataset.components || '[]');
     // Normalisasi: pastikan x_label dan y_label terisi
-    allValues = allValues.map(v => ({
-        ...v,
-        x_label: v.x_label || null,
-        y_label: v.y_label || (v.year ? String(v.year) : null),
-        year:    v.year    || null,
-    }));
-
+    allValues = allValues.map((v, i) => ({
+    ...v,
+    x_label: v.x_label || (components[i] ? components[i].nama : null),
+    y_label: v.y_label || (v.year ? String(v.year) : null),
+    year:    v.year    || null,
+}));
     // Ambil semua kategori unik dari x_label
-    const categories = [...new Set(allValues.map(v => v.x_label).filter(Boolean))];
+let categories = [];
+
+if (components.length) {
+    categories = components.map(c => c.nama);
+} else {
+    categories = [...new Set(allValues.map(v => v.x_label).filter(Boolean))];
+}
 
     const katDiv = document.getElementById('filter-kategori');
 
