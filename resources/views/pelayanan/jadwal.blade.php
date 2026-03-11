@@ -74,19 +74,14 @@
                 <div class="mb-6">
                     <p class="text-sm font-semibold text-blue-500 mb-3">Nama Petugas :</p>
                     <div class="bg-gray-50 rounded-xl px-4 py-3 space-y-3">
-                        @forelse($petugas ?? [] as $p)
-                        <label class="flex items-center gap-3 cursor-pointer">
-                            <input type="radio" name="petugas" value="{{ $p->id }}" class="text-blue-600">
-                            <span class="text-sm text-gray-700">{{ $p->nama_lengkap }}</span>
-                        </label>
-                        @empty
-                        @foreach(['Yosi Ezra Afriani', 'Aulia Azizah Ramadhanti', 'Adha Karamina'] as $nama)
-                        <label class="flex items-center gap-3 cursor-pointer">
-                            <input type="radio" name="petugas" value="{{ $nama }}" class="text-blue-600">
-                            <span class="text-sm text-gray-700">{{ $nama }}</span>
-                        </label>
-                        @endforeach
-                        @endforelse
+                        @forelse($petugas as $p)
+<label class="flex items-center gap-3 cursor-pointer">
+    <input type="radio" name="petugas" value="{{ $p->nama_lengkap }}" class="text-blue-600">
+    <span class="text-sm text-gray-700">{{ $p->nama_lengkap }}</span>
+</label>
+@empty
+<p class="text-xs text-gray-400">Belum ada petugas terdaftar</p>
+@endforelse
                     </div>
                 </div>
 

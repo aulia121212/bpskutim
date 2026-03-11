@@ -3,60 +3,110 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AdminDataStatistik;
 use Illuminate\Http\Request;
 
 class AdminDataStatistikController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
-{
-    $admins = \App\Models\AdminDataStatistik::latest()->get();
-    return view('superadmin.admin-data-statistik.index', compact('admins'));
-}
+    {
+        $admins = AdminDataStatistik::all();
+        return view('super-admin.admin-data-statistik.index', compact('admins'));
+    }
 
-public function create()
-{
-    return view('superadmin.admin-data-statistik.create');
-}
+    public function create()
+    {
+        return view('super-admin.admin-data-statistik.create');
+    }
 
-public function store(Request $request)
-{
-    $request->validate([
-        'nama_lengkap' => 'required',
-        'email' => 'required|email|unique:admin_data_statistiks',
-        'password' => 'required|min:6',
-    ]);
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama_lengkap' => 'required',
+            'email'        => 'required|email|unique:admin_data_statistiks,email',
+            'password'     => 'required|min:6',
+            'no_whatsapp'  => 'required',
+        ]);
 
-    \App\Models\AdminDataStatistik::create([
-        ...$request->except('password'),
-        'password' => bcrypt($request->password),
-    ]);
+        $foto = null;
+        if ($request->hasFile('foto')) {
+            $file     = $request->file('foto');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/admin'), $filename);
+            $foto = 'uploads/admin/' . $filename;
+        }
 
-    return redirect()->route('superadmin.admin-data-statistik.index')
-        ->with('success', 'Admin berhasil ditambahkan');
-}
+        AdminDataStatistik::create([
+            'nama_lengkap' => $request->nama_lengkap,
+            'email'        => $request->email,
+            'password'     => bcrypt($request->password),
+            'no_whatsapp'  => $request->no_whatsapp,
+            'asal_instansi'=> $request->asal_instansi,
+            'jabatan'      => $request->jabatan,
+            'tim'          => $request->tim,
+            'alamat'       => $request->alamat,
+            'foto'         => $foto,
+        ]);
 
-public function edit($id)
-{
-    $admin = \App\Models\AdminDataStatistik::findOrFail($id);
-    return view('superadmin.admin-data-statistik.edit', compact('admin'));
-}
+        return redirect()->route('superadmin.admin-data-statistik.index')
+            ->with('success', 'Admin berhasil ditambahkan.');
+    }
 
-public function update(Request $request, $id)
-{
-    $admin = \App\Models\AdminDataStatistik::findOrFail($id);
+    public function show($id)
+    {
+        $admin = AdminDataStatistik::findOrFail($id);
+        return view('super-admin.admin-data-statistik.show', compact('admin'));
+    }
 
-    $admin->update($request->except('password'));
+    public function edit($id)
+    {
+        $admin = AdminDataStatistik::findOrFail($id);
+        return view('super-admin.admin-data-statistik.edit', compact('admin'));
+    }
 
-    return redirect()->route('superadmin.admin-data-statistik.index');
-}
+    public function update(Request $request, $id)
+    {
+        $admin = AdminDataStatistik::findOrFail($id);
 
-public function destroy($id)
-{
-    \App\Models\AdminDataStatistik::destroy($id);
+        $request->validate([
+            'nama_lengkap' => 'required',
+            'email'        => 'required|email|unique:admin_data_statistiks,email,' . $id,
+            'no_whatsapp'  => 'required',
+        ]);
 
-    return back()->with('success', 'Data dihapus');
-}
+        $foto = $admin->foto;
+        if ($request->hasFile('foto')) {
+            $file     = $request->file('foto');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/admin'), $filename);
+            $foto = 'uploads/admin/' . $filename;
+        }
+
+        $data = [
+            'nama_lengkap'  => $request->nama_lengkap,
+            'email'         => $request->email,
+            'no_whatsapp'   => $request->no_whatsapp,
+            'asal_instansi' => $request->asal_instansi,
+            'jabatan'       => $request->jabatan,
+            'tim'           => $request->tim,
+            'alamat'        => $request->alamat,
+            'foto'          => $foto,
+        ];
+
+        if ($request->filled('password')) {
+            $data['password'] = bcrypt($request->password);
+        }
+
+        $admin->update($data);
+
+        return redirect()->route('superadmin.admin-data-statistik.index')
+            ->with('success', 'Admin berhasil diperbarui.');
+    }
+
+    public function destroy($id)
+    {
+        AdminDataStatistik::findOrFail($id)->delete();
+        return redirect()->route('superadmin.admin-data-statistik.index')
+            ->with('success', 'Admin berhasil dihapus.');
+    }
 }

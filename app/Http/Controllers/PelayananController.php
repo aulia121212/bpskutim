@@ -51,10 +51,9 @@ public function petugasDestroy($id) {
     // PelayananController.php
 public function jadwal()
 {
-    $petugas = \App\Models\Petugas::all(); // sesuaikan model
+    $petugas = \App\Models\Petugas::all();
     $jadwal  = \App\Models\JadwalTidakTersedia::all();
     
-    // Convert ke map { 'YYYY-MM-DD': { judul, alasan, petugas } }
     $jadwalMap = $jadwal->keyBy('tanggal')->map(fn($j) => [
         'judul'   => $j->judul,
         'alasan'  => $j->alasan,
@@ -83,14 +82,41 @@ public function jadwalStore(Request $request)
     }
 
     public function popup()
-    {
-        return view('pelayanan.popup');
+{
+    $popups = \App\Models\PopupOverlay::latest()->get();
+    return view('pelayanan.popup', compact('popups'));
+}
+
+public function popupStore(Request $request)
+{
+    $request->validate([
+        'foto'          => 'required|image|mimes:jpg,jpeg,png|max:2048',
+        'tanggal_mulai' => 'required|date',
+        'tanggal_akhir' => 'required|date|after_or_equal:tanggal_mulai',
+    ]);
+
+    $foto = null;
+    if ($request->hasFile('foto')) {
+        $file     = $request->file('foto');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('uploads/popup'), $filename);
+        $foto = 'uploads/popup/' . $filename;
     }
 
-    public function popupStore(Request $request)
-    {
-        // implementasi store popup
-    }
+    \App\Models\PopupOverlay::create([
+        'foto'          => $foto,
+        'tanggal_mulai' => $request->tanggal_mulai,
+        'tanggal_akhir' => $request->tanggal_akhir,
+    ]);
+
+    return redirect()->route('pelayanan.popup.index')->with('success', 'Pop up berhasil ditambahkan.');
+}
+
+public function popupDestroy($id)
+{
+    \App\Models\PopupOverlay::findOrFail($id)->delete();
+    return redirect()->route('pelayanan.popup.index')->with('success', 'Pop up berhasil dihapus.');
+}
 
     public function user()
     {

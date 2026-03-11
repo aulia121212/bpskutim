@@ -30,24 +30,23 @@ class Sidebar extends Component
                 'title' => 'Manajemen',
                 'items' => [
                     [
-    'name' => 'Kelola Admin',
-    'icon' => 'users',
-    'activePattern' => 'superadmin.*',
-    'children' => [
-        [
-            'name' => 'Admin Data Statistik',
-            'route' => 'superadmin.admin-data-statistik.index',
-            'activePattern' => 'superadmin.admin-data-statistik.*'
-        ],
-        [
-            'name' => 'Admin Pelayanan',
-            'route' => 'superadmin.admin-pelayanan.index',
-            'activePattern' => 'superadmin.admin-pelayanan.*'
-        ],
-    ]
-],
-
-                     [
+                        'name' => 'Kelola Admin',
+                        'icon' => 'users',
+                        'activePattern' => 'superadmin.*',
+                        'children' => [
+                            [
+                                'name' => 'Admin Data Statistik',
+                                'route' => 'superadmin.admin-data-statistik.index',
+                                'activePattern' => 'superadmin.admin-data-statistik.*'
+                            ],
+                            [
+                                'name' => 'Admin Pelayanan',
+                                'route' => 'superadmin.admin-pelayanan.index',
+                                'activePattern' => 'superadmin.admin-pelayanan.*'
+                            ],
+                        ]
+                    ],
+                    [
                         'name' => 'Data Statistik',
                         'icon' => 'chart-line',
                         'activePattern' => 'statistics.*',
@@ -59,10 +58,15 @@ class Sidebar extends Component
                         'activePattern' => 'pelayanan.*',
                         'route' => 'pelayanan.index',
                     ],
+                    [
+                        'name' => 'Publikasi',
+                        'icon' => 'book',
+                        'activePattern' => 'publikasi.*',
+                        'route' => 'publikasi.index',
+                    ],
                 ]
             ],
 
-           
             [
                 'title' => 'Pengaturan',
                 'items' => [

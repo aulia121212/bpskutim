@@ -3,60 +3,108 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AdminPelayanan;
 use Illuminate\Http\Request;
 
 class AdminPelayananController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
-{
-    $admins = \App\Models\AdminPelayanan::latest()->get();
-    return view('superadmin.admin-pelayanan.index', compact('admins'));
-}
+    {
+        $admins = AdminPelayanan::all();
+        return view('super-admin.admin-pelayanan.index', compact('admins'));
+    }
 
-public function create()
-{
-    return view('superadmin.admin-pelayanan.create');
-}
+    public function create()
+    {
+        return view('super-admin.admin-pelayanan.create');
+    }
 
-public function store(Request $request)
-{
-    $request->validate([
-        'nama_lengkap' => 'required',
-        'email' => 'required|email|unique:admin_pelayanans',
-        'password' => 'required|min:6',
-    ]);
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama_lengkap' => 'required',
+            'email'        => 'required|email|unique:admin_pelayanans,email',
+            'password'     => 'required|min:6',
+            'no_whatsapp'  => 'required',
+        ]);
 
-    \App\Models\AdminPelayanan::create([
-        ...$request->except('password'),
-        'password' => bcrypt($request->password),
-    ]);
+        $foto = null;
+        if ($request->hasFile('foto')) {
+            $file     = $request->file('foto');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/admin'), $filename);
+            $foto = 'uploads/admin/' . $filename;
+        }
 
-    return redirect()->route('superadmin.admin-pelayanan.index')
-        ->with('success', 'Admin berhasil ditambahkan');
-}
+        AdminPelayanan::create([
+            'nama_lengkap' => $request->nama_lengkap,
+            'email'        => $request->email,
+            'password'     => bcrypt($request->password),
+            'no_whatsapp'  => $request->no_whatsapp,
+            'jabatan'      => $request->jabatan,
+            'tim'          => $request->tim,
+            'alamat'       => $request->alamat,
+            'foto'         => $foto,
+        ]);
 
-public function edit($id)
-{
-    $admin = \App\Models\AdminPelayanan::findOrFail($id);
-    return view('superadmin.admin-pelayanan.edit', compact('admin'));
-}
+        return redirect()->route('superadmin.admin-pelayanan.index')
+            ->with('success', 'Admin berhasil ditambahkan.');
+    }
 
-public function update(Request $request, $id)
-{
-    $admin = \App\Models\AdminPelayanan::findOrFail($id);
+    public function show($id)
+    {
+        $admin = AdminPelayanan::findOrFail($id);
+        return view('super-admin.admin-pelayanan.show', compact('admin'));
+    }
 
-    $admin->update($request->except('password'));
+    public function edit($id)
+    {
+        $admin = AdminPelayanan::findOrFail($id);
+        return view('super-admin.admin-pelayanan.edit', compact('admin'));
+    }
 
-    return redirect()->route('superadmin.admin-pelayanan.index');
-}
+    public function update(Request $request, $id)
+    {
+        $admin = AdminPelayanan::findOrFail($id);
 
-public function destroy($id)
-{
-    \App\Models\AdminPelayanan::destroy($id);
+        $request->validate([
+            'nama_lengkap' => 'required',
+            'email'        => 'required|email|unique:admin_pelayanans,email,' . $id,
+            'no_whatsapp'  => 'required',
+        ]);
 
-    return back()->with('success', 'Data dihapus');
-}
+        $foto = $admin->foto;
+        if ($request->hasFile('foto')) {
+            $file     = $request->file('foto');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/admin'), $filename);
+            $foto = 'uploads/admin/' . $filename;
+        }
+
+        $data = [
+            'nama_lengkap' => $request->nama_lengkap,
+            'email'        => $request->email,
+            'no_whatsapp'  => $request->no_whatsapp,
+            'jabatan'      => $request->jabatan,
+            'tim'          => $request->tim,
+            'alamat'       => $request->alamat,
+            'foto'         => $foto,
+        ];
+
+        if ($request->filled('password')) {
+            $data['password'] = bcrypt($request->password);
+        }
+
+        $admin->update($data);
+
+        return redirect()->route('superadmin.admin-pelayanan.index')
+            ->with('success', 'Admin berhasil diperbarui.');
+    }
+
+    public function destroy($id)
+    {
+        AdminPelayanan::findOrFail($id)->delete();
+        return redirect()->route('superadmin.admin-pelayanan.index')
+            ->with('success', 'Admin berhasil dihapus.');
+    }
 }

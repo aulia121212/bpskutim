@@ -5,15 +5,31 @@ use App\Http\Controllers\Ecommerce\ProductController;
 use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\StatisticTitleController;
 use App\Http\Controllers\PelayananController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PublikasiController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
 */
+// web.php
 
-// --- DASHBOARD ROUTES ---
-Route::get('/', fn() => view('dashboard.index'))->name('dashboard.index');
+// Homepage untuk user (public)
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// Dashboard admin (pindah ke /dashboard)
+Route::get('/dashboard', fn() => view('dashboard.index'))->name('dashboard.index');
+
+// web.php
+Route::get('/data-statistik', [HomeController::class, 'dataStatistik'])->name('data-statistik');
+
+Route::prefix('dashboard')->name('dashboard.')->group(function () {
+    Route::get('/analytics', fn() => view('dashboard.analytics'))->name('analytics');
+    Route::get('/crm',       fn() => view('dashboard.crm'))->name('crm');
+    Route::get('/ecommerce', fn() => view('dashboard.ecommerce'))->name('ecommerce');
+});
 Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/analytics', fn() => view('dashboard.analytics'))->name('analytics');
     Route::get('/crm',       fn() => view('dashboard.crm'))->name('crm');
@@ -38,28 +54,27 @@ Route::prefix('pelayanan')->name('pelayanan.')->group(function () {
     Route::get('/', fn() => view('pelayanan.index'))->name('index');
 
     // Petugas
-   Route::get('/petugas',         [PelayananController::class, 'petugas'])->name('petugas.index');
-Route::get('/petugas/create',  [PelayananController::class, 'petugasCreate'])->name('petugas.create');
-Route::post('/petugas',        [PelayananController::class, 'petugasStore'])->name('petugas.store');
-Route::delete('/petugas/{id}', [PelayananController::class, 'petugasDestroy'])->name('petugas.destroy');
-Route::get('/petugas/{id}',    [PelayananController::class, 'petugasShow'])->name('petugas.show');
-Route::get('/petugas/{id}/edit', [PelayananController::class, 'petugasEdit'])->name('petugas.edit');
+    Route::get('/petugas',         [PelayananController::class, 'petugas'])->name('petugas.index');
+    Route::get('/petugas/create',  [PelayananController::class, 'petugasCreate'])->name('petugas.create');
+    Route::post('/petugas',        [PelayananController::class, 'petugasStore'])->name('petugas.store');
+    Route::delete('/petugas/{id}', [PelayananController::class, 'petugasDestroy'])->name('petugas.destroy');
+    Route::get('/petugas/{id}',    [PelayananController::class, 'petugasShow'])->name('petugas.show');
+    Route::get('/petugas/{id}/edit', [PelayananController::class, 'petugasEdit'])->name('petugas.edit');
     // Jadwal
     Route::get('/jadwal', [PelayananController::class, 'jadwal'])->name('jadwal.index');
-// web.php — tambah route store jadwal
-Route::post('/jadwal', [PelayananController::class, 'jadwalStore'])->name('jadwal.store');
+    Route::post('/jadwal', [PelayananController::class, 'jadwalStore'])->name('jadwal.store');
     // Reservasi
     Route::get('/reservasi', [PelayananController::class, 'reservasi'])->name('reservasi.index');
 
     // Pop Up
     Route::get('/popup', [PelayananController::class, 'popup'])->name('popup.index');
     Route::post('/popup', [PelayananController::class, 'popupStore'])->name('popup.store');
-
+    Route::delete('/popup/{id}', [PelayananController::class, 'popupDestroy'])->name('popup.destroy');
     // User
     Route::get('/user', [PelayananController::class, 'user'])->name('user.index');
 });
 
-Route::prefix('statistics')->name('statistics.')->group(function () {
+    Route::prefix('statistics')->name('statistics.')->group(function () {
     Route::get('/', [StatisticController::class,'index'])->name('index');
     Route::get('/create', [StatisticController::class,'create'])->name('create');
     Route::post('/store', [StatisticController::class,'store'])->name('store');
@@ -67,13 +82,13 @@ Route::prefix('statistics')->name('statistics.')->group(function () {
     Route::post('/publish/{id}', [StatisticController::class,'publish'])->name('publish');
     //Route::delete('/statistics/{id}', [StatisticController::class, 'destroy'])->name('statistics.destroy');
 
-Route::delete('/{id}', [StatisticController::class, 'destroy'])->name('destroy');
+    Route::delete('/{id}', [StatisticController::class, 'destroy'])->name('destroy');
 
 
-Route::get('/grafik', [StatisticController::class,'grafik'])->name('grafik');
+    Route::get('/grafik', [StatisticController::class,'grafik'])->name('grafik');
     });
 
-Route::prefix('statistic-titles')->name('statistic-titles.')->group(function () {
+    Route::prefix('statistic-titles')->name('statistic-titles.')->group(function () {
     Route::get('/',                              [StatisticTitleController::class, 'index'])->name('index');
     Route::post('/',                             [StatisticTitleController::class, 'store'])->name('store');
     Route::put('/{statisticTitle}',              [StatisticTitleController::class, 'update'])->name('update');
@@ -106,6 +121,8 @@ Route::prefix('pages/components')->name('components.')->group(function () {
         Route::get('/inputs',   fn() => view('pages.components.inputs'))->name('inputs'); // Dipindah ke grup form agar rapi
     });
 });
+
+Route::resource('publikasi', PublikasiController::class);
 
 // --- AUTHENTICATION PAGES ---
 Route::prefix('pages/auth')->name('auth.')->group(function () {
