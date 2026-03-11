@@ -406,7 +406,7 @@ function renderTable(labels, values, kategori) {
 // ── Render interpretasi ───────────────────────────────────────────────────
 function renderInterpretasi(labels, values) {
     const section = document.getElementById('interpretasi-section');
-    if (labels.length < 2) { section.classList.add('hidden'); return; }
+    if (!labels || labels.length < 2) { section.classList.add('hidden'); return; }
 
     const nilaiAwal  = values[0];
     const nilaiAkhir = values[values.length - 1];
@@ -415,39 +415,173 @@ function renderInterpretasi(labels, values) {
     const selisih    = nilaiAkhir - nilaiAwal;
     const tren       = selisih > 0 ? 'naik' : selisih < 0 ? 'turun' : 'tetap';
 
+    const cfg = {
+        naik:  { color: 'red',   icon: 'ti-trending-up',   label: 'Naik',  sign: '+', teks: currentData.interpBesar || 'Data mengalami kenaikan.' },
+        turun: { color: 'green', icon: 'ti-trending-down',  label: 'Turun', sign: '',  teks: currentData.interpKecil || 'Data mengalami penurunan.' },
+        tetap: { color: 'gray',  icon: 'ti-minus',          label: 'Tetap', sign: '',  teks: 'Data tidak berubah secara signifikan.' },
+    }[tren];
+
+    // Ringkasan keseluruhan
     document.getElementById('tren-tahun-awal').textContent  = 'Tahun ' + tahunAwal;
     document.getElementById('tren-nilai-awal').textContent  = nilaiAwal.toFixed(2);
     document.getElementById('tren-tahun-akhir').textContent = 'Tahun ' + tahunAkhir;
     document.getElementById('tren-nilai-akhir').textContent = nilaiAkhir.toFixed(2);
-
-    const cfg = {
-        naik:  { bg: 'red',   icon: 'ti-trending-up',   label: 'Naik',  sign: '+', teks: currentData.interpBesar || 'Data mengalami kenaikan.' },
-        turun: { bg: 'green', icon: 'ti-trending-down',  label: 'Turun', sign: '-', teks: currentData.interpKecil || 'Data mengalami penurunan.' },
-        tetap: { bg: 'gray',  icon: 'ti-minus',          label: 'Tetap', sign: '',  teks: 'Data tidak berubah antara ' + tahunAwal + ' dan ' + tahunAkhir + '.' },
-    }[tren];
-
     document.getElementById('tren-card').className =
-        `flex items-center justify-between gap-4 p-5 rounded-2xl border mb-4 bg-${cfg.bg}-50 dark:bg-${cfg.bg}-900/20 border-${cfg.bg}-100 dark:border-${cfg.bg}-800`;
-    document.getElementById('interpretasi-card').className =
-        `rounded-2xl border p-5 border-${cfg.bg}-100 dark:border-${cfg.bg}-800 bg-${cfg.bg}-50/50 dark:bg-${cfg.bg}-900/10`;
-    document.getElementById('tren-icon').className =
-        `text-3xl ti ${cfg.icon} text-${cfg.bg}-500`;
-    document.getElementById('tren-label').className  = `text-xs font-bold uppercase tracking-widest text-${cfg.bg}-500`;
-    document.getElementById('tren-label').textContent = cfg.label;
-    document.getElementById('tren-selisih').className  = `text-xs font-semibold text-${cfg.bg}-400`;
+        `flex items-center justify-between gap-4 p-5 rounded-2xl border mb-4 bg-${cfg.color}-50 dark:bg-${cfg.color}-900/20 border-${cfg.color}-100 dark:border-${cfg.color}-800`;
+    document.getElementById('tren-icon').className      = `text-3xl ti ${cfg.icon} text-${cfg.color}-500`;
+    document.getElementById('tren-label').className     = `text-xs font-bold uppercase tracking-widest text-${cfg.color}-500`;
+    document.getElementById('tren-label').textContent   = cfg.label;
+    document.getElementById('tren-selisih').className   = `text-xs font-semibold text-${cfg.color}-400`;
     document.getElementById('tren-selisih').textContent = cfg.sign + Math.abs(selisih).toFixed(2);
+
+    document.getElementById('interpretasi-card').className =
+        `rounded-2xl border p-5 border-${cfg.color}-100 dark:border-${cfg.color}-800 bg-${cfg.color}-50/50 dark:bg-${cfg.color}-900/10`;
     document.getElementById('interpretasi-icon-wrap').className =
-        `mt-0.5 shrink-0 w-8 h-8 rounded-xl flex items-center justify-center bg-${cfg.bg}-100 dark:bg-${cfg.bg}-900/30`;
-    document.getElementById('interpretasi-icon').className = `ti ${cfg.icon} text-${cfg.bg}-500 text-lg`;
-    document.getElementById('interpretasi-label').className  = `text-xs font-bold uppercase tracking-widest mb-2 text-${cfg.bg}-500`;
-    document.getElementById('interpretasi-label').textContent = 'Interpretasi — Data ' + cfg.label;
+        `mt-0.5 shrink-0 w-8 h-8 rounded-xl flex items-center justify-center bg-${cfg.color}-100 dark:bg-${cfg.color}-900/30`;
+    document.getElementById('interpretasi-icon').className    = `ti ${cfg.icon} text-${cfg.color}-500 text-lg`;
+    document.getElementById('interpretasi-label').className   = `text-xs font-bold uppercase tracking-widest mb-2 text-${cfg.color}-500`;
+    document.getElementById('interpretasi-label').textContent = `Interpretasi Keseluruhan ${tahunAwal}–${tahunAkhir}`;
     document.getElementById('interpretasi-teks').textContent  = cfg.teks;
 
+    // Per pasangan tahun
+    let pairsDiv = document.getElementById('interpretasi-pairs');
+    if (!pairsDiv) {
+        pairsDiv = document.createElement('div');
+        pairsDiv.id = 'interpretasi-pairs';
+        pairsDiv.className = 'space-y-3 mt-4';
+        document.getElementById('interpretasi-section').appendChild(pairsDiv);
+    }
+
+    let html = `
+        <div class="flex items-center gap-2 mb-1">
+            <div class="flex-1 h-px bg-gray-100"></div>
+            <span class="text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Perubahan Per Periode</span>
+            <div class="flex-1 h-px bg-gray-100"></div>
+        </div>`;
+
+    // Pasangan berurutan — pass labels & values agar generateInterpretasiTeks bisa akses total periode
+    for (let i = 0; i < labels.length - 1; i++) {
+        html += buildPairCard(labels[i], labels[i+1], values[i], values[i+1], false, labels, values);
+    }
+
+    if (labels.length > 2) {
+        html += `
+            <div class="flex items-center gap-2 mt-4 mb-1">
+                <div class="flex-1 h-px bg-gray-100"></div>
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Perubahan Total</span>
+                <div class="flex-1 h-px bg-gray-100"></div>
+            </div>`;
+        html += buildPairCard(tahunAwal, tahunAkhir, nilaiAwal, nilaiAkhir, true, labels, values);
+    }
+
+    pairsDiv.innerHTML = html;
     section.classList.remove('hidden');
+}
+
+// ── Auto-generate teks interpretasi ──────────────────────────────────────
+function generateInterpretasiTeks(tA, tB, vA, vB, selisih, pct, tren, isTotal, allLabels) {
+    const judulData = currentData.judul   || 'data';
+    const wilayah   = currentData.wilayah || 'wilayah ini';
+    const absSelisih = Math.abs(selisih).toFixed(2);
+    const absPct     = Math.abs(parseFloat(pct)).toFixed(1);
+    const mag        = Math.abs(parseFloat(pct));
+    const skala      = mag < 2 ? 'kecil' : mag < 5 ? 'sedang' : 'besar';
+
+    if (tren === 'tetap') {
+        return `Nilai ${judulData} di ${wilayah} tidak mengalami perubahan antara tahun ${tA} dan ${tB}, ` +
+               `tetap berada di angka ${vA.toFixed(2)}.`;
+    }
+
+    const arah     = tren === 'naik' ? 'meningkat'   : 'menurun';
+    const arahkata = tren === 'naik' ? 'Peningkatan' : 'Penurunan';
+    const teksAdmin = tren === 'naik'
+        ? (currentData.interpBesar || '')
+        : (currentData.interpKecil || '');
+
+    // Kalimat 1: fakta perubahan
+    let teks = `Pada periode ${tA}–${tB}, nilai ${judulData} di ${wilayah} ${arah} sebesar ${absSelisih} (${absPct}%), ` +
+               `dari ${vA.toFixed(2)} menjadi ${vB.toFixed(2)}. `;
+
+    // Kalimat 2: konteks magnitude
+    if (skala === 'kecil') {
+        teks += `Perubahan ini tergolong kecil dan kondisi relatif stabil. `;
+    } else if (skala === 'sedang') {
+        teks += `${arahkata} ini cukup signifikan dan perlu mendapat perhatian. `;
+    } else {
+        teks += `${arahkata} yang cukup besar ini memerlukan perhatian khusus dari pemangku kebijakan. `;
+    }
+
+    // Kalimat 3: teks dari admin jika ada
+    if (teksAdmin) {
+        teks += teksAdmin + ' ';
+    }
+
+    // Kalimat tambahan untuk kartu total
+    if (isTotal && allLabels && allLabels.length > 2) {
+        teks += `Secara keseluruhan selama ${allLabels.length} periode pengamatan (${tA}–${tB}), ` +
+                `tren menunjukkan ${arah === 'meningkat' ? 'kenaikan' : 'penurunan'} kumulatif.`;
+    }
+
+    return teks;
+}
+
+// ── Build kartu satu pasangan tahun ──────────────────────────────────────
+function buildPairCard(tA, tB, vA, vB, isTotal, allLabels, allValues) {
+    const selisih = vB - vA;
+    const pct     = vA !== 0 ? ((selisih / Math.abs(vA)) * 100).toFixed(1) : '0.0';
+    const tren    = selisih > 0 ? 'naik' : selisih < 0 ? 'turun' : 'tetap';
+
+    const cfg = {
+        naik:  { color: 'red',   icon: 'ti-trending-up',   label: 'Naik',  sign: '+' },
+        turun: { color: 'green', icon: 'ti-trending-down',  label: 'Turun', sign: ''  },
+        tetap: { color: 'gray',  icon: 'ti-minus',          label: 'Tetap', sign: ''  },
+    }[tren];
+
+    const selisihStr   = cfg.sign + selisih.toFixed(2);
+    const pctFormatted = (parseFloat(pct) > 0 ? '+' : '') + pct + '%';
+    const borderCls    = isTotal
+        ? `border-2 border-${cfg.color}-300 dark:border-${cfg.color}-700`
+        : `border border-${cfg.color}-100 dark:border-${cfg.color}-800`;
+
+    const teksInterp = generateInterpretasiTeks(tA, tB, vA, vB, selisih, pct, tren, isTotal, allLabels);
+
+    return `
+        <div class="rounded-2xl p-4 bg-${cfg.color}-50/60 dark:bg-${cfg.color}-900/10 ${borderCls}">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-bold uppercase tracking-widest text-${cfg.color}-500">
+                    ${isTotal ? '⭐ ' : ''}${tA} → ${tB}
+                </span>
+                <span class="inline-flex items-center gap-1 text-xs font-bold text-${cfg.color}-500 bg-${cfg.color}-100 dark:bg-${cfg.color}-900/30 px-2 py-0.5 rounded-lg">
+                    <i class="ti ${cfg.icon}"></i> ${cfg.label}
+                </span>
+            </div>
+            <div class="flex items-center justify-between mb-4">
+                <div class="text-center">
+                    <p class="text-xs text-gray-400 mb-0.5">Tahun ${tA}</p>
+                    <p class="text-xl font-black text-gray-800 dark:text-white">${vA.toFixed(2)}</p>
+                </div>
+                <div class="flex flex-col items-center gap-0.5 px-4">
+                    <i class="ti ${cfg.icon} text-2xl text-${cfg.color}-400"></i>
+                    <span class="text-sm font-bold text-${cfg.color}-500">${selisihStr}</span>
+                    <span class="text-xs text-${cfg.color}-400">${pctFormatted}</span>
+                </div>
+                <div class="text-center">
+                    <p class="text-xs text-gray-400 mb-0.5">Tahun ${tB}</p>
+                    <p class="text-xl font-black text-gray-800 dark:text-white">${vB.toFixed(2)}</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-2.5 bg-white/70 dark:bg-gray-900/40 rounded-xl p-3 border border-${cfg.color}-100/60">
+                <div class="shrink-0 w-6 h-6 rounded-lg bg-${cfg.color}-100 dark:bg-${cfg.color}-900/30 flex items-center justify-center mt-0.5">
+                    <i class="ti ti-info-circle text-${cfg.color}-500 text-xs"></i>
+                </div>
+                <p class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">${teksInterp}</p>
+            </div>
+        </div>`;
 }
 
 function escH(str) {
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+
 </script>
 @endsection
