@@ -11,6 +11,7 @@ class StatisticTitle extends Model
         'judul_kolom',
         'interpretasi_lebih_kecil',
         'interpretasi_lebih_besar',
+        'interpretasi_tetap',
     ];
 
     public function values()

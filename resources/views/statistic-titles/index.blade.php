@@ -166,7 +166,9 @@ function componentForm(existing = []) {
         editOpen: false,
         components: existing.length > 0 ? existing : [],
         addComponent(isSub = false) {
-            this.components.push({ nama: '', is_sub: isSub });
+            this.components.push({ nama: '', is_sub: isSub, showInterp: false,           // toggle expand
+        interpretasi_lebih_kecil: '',
+        interpretasi_lebih_besar: '', });
         },
         removeComponent(i) {
             this.components.splice(i, 1);

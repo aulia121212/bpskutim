@@ -11,6 +11,9 @@ class StatisticTitleComponent extends Model
         'nama',
         'is_sub',
         'urutan',
+        'interpretasi_lebih_kecil',  
+        'interpretasi_lebih_besar', 
+        'interpretasi_tetap', 
     ];
 
     protected $casts = [
