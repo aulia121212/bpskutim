@@ -50,6 +50,8 @@ class StatisticController extends Controller
     'file_data'                => $filePath,
     'interpretasi_lebih_kecil' => $title->interpretasi_lebih_kecil,
     'interpretasi_lebih_besar' => $title->interpretasi_lebih_besar,
+    'interpretasi_tetap' => $title->interpretasi_tetap,
+
     'status'                   => 'draft',
 ]);
     // ── Simpan nilai dari grid_json ──────────────────────────────────────
@@ -251,6 +253,13 @@ $stat->setAttribute(
 
         return $stat;
     })->values();
+
+    $statistics = Statistic::with([
+        'values',
+        'statisticTitle.components'
+    ])
+    ->where('status', 'published')
+    ->get();
 
     return view('statistics.grafik', compact('statistics'));
 }

@@ -30,7 +30,7 @@
             <div>
                 <label class="block text-sm font-semibold text-blue-500 mb-1">Tahun Data</label>
                 <div class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 bg-gray-50">
-                    {{ $values->pluck('year')->implode(', ') ?: '-' }}
+                   {{ $values->pluck('y_label')->filter()->unique()->sort()->implode(', ') ?: '-' }}
                 </div>
             </div>
             <div>
@@ -59,23 +59,34 @@
 
         {{-- Interpretasi Data --}}
         <div class="mb-6">
-            <p class="text-center text-sm font-semibold text-blue-500 mb-4">Interpretasi Data</p>
-            <div class="grid grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-semibold text-blue-400 mb-1">Lebih Kecil</label>
-                    <div class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 bg-gray-50 min-h-[7rem]">
-                        {{ $statistic->interpretasi_lebih_kecil }}
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-blue-400 mb-1">Lebih Besar</label>
-                    <div class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 bg-gray-50 min-h-[7rem]">
-                        {{ $statistic->interpretasi_lebih_besar }}
-                    </div>
-                </div>
+    <p class="text-center text-sm font-semibold text-blue-500 mb-4">Interpretasi Data</p>
+    <div class="grid grid-cols-3 gap-6">
+        <div>
+            <label class="block text-sm font-semibold text-green-500 mb-1">
+                <i class="ti ti-trending-down text-xs"></i> Lebih Kecil (Turun)
+            </label>
+            <div class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 bg-gray-50 min-h-[7rem]">
+                {{ $statistic->interpretasi_lebih_kecil ?: '-' }}
             </div>
         </div>
-
+        <div>
+            <label class="block text-sm font-semibold text-red-400 mb-1">
+                <i class="ti ti-trending-up text-xs"></i> Lebih Besar (Naik)
+            </label>
+            <div class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 bg-gray-50 min-h-[7rem]">
+                {{ $statistic->interpretasi_lebih_besar ?: '-' }}
+            </div>
+        </div>
+        <div>
+            <label class="block text-sm font-semibold text-gray-500 mb-1">
+                <i class="ti ti-minus text-xs"></i> Tetap
+            </label>
+            <div class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 bg-gray-50 min-h-[7rem]">
+                {{ $statistic->interpretasi_tetap ?? '-' }}
+            </div>
+        </div>
+    </div>
+</div>
         {{-- ============================================================ --}}
         {{-- PREVIEW INTERPRETASI BERDASARKAN PERBANDINGAN DATA           --}}
         {{-- ============================================================ --}}

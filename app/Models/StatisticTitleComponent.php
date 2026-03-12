@@ -9,6 +9,7 @@ class StatisticTitleComponent extends Model
     protected $fillable = [
         'statistic_title_id',
         'nama',
+        'satuan',
         'is_sub',
         'urutan',
         'interpretasi_lebih_kecil',  

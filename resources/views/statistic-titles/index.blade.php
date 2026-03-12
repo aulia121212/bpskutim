@@ -166,9 +166,13 @@ function componentForm(existing = []) {
         editOpen: false,
         components: existing.length > 0 ? existing : [],
         addComponent(isSub = false) {
-            this.components.push({ nama: '', is_sub: isSub, showInterp: false,           // toggle expand
-        interpretasi_lebih_kecil: '',
-        interpretasi_lebih_besar: '', });
+            this.components.push({
+    nama: '', is_sub: isSub, showInterp: false,
+    satuan: '',                    
+    interpretasi_lebih_kecil: '',
+    interpretasi_lebih_besar: '',
+    interpretasi_tetap: '',
+});
         },
         removeComponent(i) {
             this.components.splice(i, 1);
@@ -184,8 +188,12 @@ function titleRow(existing = []) {
         editOpen: false,
         components: existing,
         addComponent(isSub = false) {
-            this.components.push({ nama: '', is_sub: isSub });
-        },
+this.components.push({
+    nama: '', is_sub: isSub, showInterp: false,
+    interpretasi_lebih_kecil: '',
+    interpretasi_lebih_besar: '',
+    interpretasi_tetap: '',   // ✅ tambah
+});        },
         removeComponent(i) {
             this.components.splice(i, 1);
         },

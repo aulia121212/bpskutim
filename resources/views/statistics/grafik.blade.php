@@ -24,8 +24,6 @@
 
             {{-- Chart Card --}}
             <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6">
-
-                {{-- GRAFIK VIEW --}}
                 <div id="view-grafik">
                     <div id="chart-header" class="mb-1">
                         <h2 id="chart-title" class="text-sm font-bold text-gray-800 dark:text-white">-</h2>
@@ -35,33 +33,21 @@
                         <canvas id="mainChart"></canvas>
                     </div>
                 </div>
-
-                {{-- TABEL VIEW --}}
                 <div id="view-tabel" class="hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm" id="data-table">
-                            <thead id="table-head">
-                                <tr class="border-b border-gray-100">
-                                    <th class="text-left px-4 py-3 font-semibold text-blue-600">Tahun</th>
-                                    <th class="text-left px-4 py-3 font-semibold text-blue-600">Nilai</th>
-                                    <th class="text-left px-4 py-3 font-semibold text-blue-600">Wilayah</th>
-                                    <th class="text-left px-4 py-3 font-semibold text-blue-600">Judul</th>
-                                </tr>
-                            </thead>
+                            <thead id="table-head"></thead>
                             <tbody id="table-body">
-                                <tr><td colspan="4" class="text-center py-8 text-gray-400">Pilih data untuk ditampilkan</td></tr>
+                                <tr><td colspan="5" class="text-center py-8 text-gray-400">Pilih data untuk ditampilkan</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-
             </div>
 
             {{-- INTERPRETASI --}}
-            <div id="interpretasi-section" class="hidden">
-
-                {{-- Ringkasan Tren --}}
-                <div id="tren-card" class="flex items-center justify-between gap-4 p-5 rounded-2xl border mb-4">
+            <div id="interpretasi-section" class="hidden space-y-4">
+                <div id="tren-card" class="flex items-center justify-between gap-4 p-5 rounded-2xl border">
                     <div class="text-center">
                         <p class="text-xs text-gray-400 mb-0.5" id="tren-tahun-awal">-</p>
                         <p class="text-2xl font-black text-gray-800 dark:text-white" id="tren-nilai-awal">-</p>
@@ -76,8 +62,6 @@
                         <p class="text-2xl font-black text-gray-800 dark:text-white" id="tren-nilai-akhir">-</p>
                     </div>
                 </div>
-
-                {{-- Teks Interpretasi --}}
                 <div id="interpretasi-card" class="rounded-2xl border p-5">
                     <div class="flex items-start gap-3">
                         <div id="interpretasi-icon-wrap" class="mt-0.5 shrink-0 w-8 h-8 rounded-xl flex items-center justify-center">
@@ -89,9 +73,8 @@
                         </div>
                     </div>
                 </div>
-
+                <div id="interpretasi-pairs" class="space-y-3"></div>
             </div>
-
         </div>
 
         {{-- Right: Filter Panel --}}
@@ -99,23 +82,44 @@
 
             <h3 class="text-sm font-bold text-gray-700 dark:text-white">Sesuaikan tampilan grafik</h3>
 
-            {{-- Filter: Judul Data --}}
+            {{-- Filter: Judul Data (digroup per judul unik) --}}
             <div>
                 <label class="block text-sm font-semibold text-blue-500 mb-2">Judul data</label>
                 <div class="relative">
                     <select id="filter-judul"
                         class="w-full appearance-none border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="">Pilih judul data...</option>
-                        @foreach($statistics as $stat)
-                            <option value="{{ $stat->id }}"
-    data-judul="{{ $stat->judul_data }}"
-    data-wilayah="{{ $stat->wilayah_data }}"
-    data-updated="{{ $stat->updated_at->format('F Y') }}"
-    data-interp-kecil="{{ addslashes($stat->interpretasi_lebih_kecil) }}"
-    data-interp-besar="{{ addslashes($stat->interpretasi_lebih_besar) }}"
-    data-values='@json($stat->values)'
-    data-components='@json($stat->components ?? [])'>
-                                {{ $stat->judul_data }}
+                        @php
+                            // Group statistics by statistic_title_id, ambil unik per judul
+                            $grouped = $statistics->groupBy('statistic_title_id');
+                        @endphp
+                        @foreach($grouped as $titleId => $group)
+                            @php
+                                $first = $group->first();
+                                // Kumpulkan semua wilayah + values untuk judul ini
+                                // Group by wilayah, gabungkan values jika wilayah sama
+                                $allWilayah = $group->groupBy('wilayah_data')->map(function($wGroup) {
+                                    $wFirst  = $wGroup->first();
+                                    $allVals = $wGroup->flatMap(fn($s) => $s->values)->values();
+                                    return [
+                                        'wilayah'      => $wFirst->wilayah_data,
+                                        'updated'      => $wFirst->updated_at->format('F Y'),
+                                        'values'       => $allVals,
+                                        'interp_kecil' => $wFirst->interpretasi_lebih_kecil ?? '',
+                                        'interp_besar' => $wFirst->interpretasi_lebih_besar ?? '',
+                                        'interp_tetap' => $wFirst->interpretasi_tetap ?? '',
+                                    ];
+                                })->values();
+                            @endphp
+                            <option value="{{ $titleId }}"
+                                data-judul="{{ $first->judul_data }}"
+                                data-updated="{{ $first->updated_at->format('F Y') }}"
+                                data-interp-kecil="{{ addslashes($first->interpretasi_lebih_kecil ?? '') }}"
+                                data-interp-besar="{{ addslashes($first->interpretasi_lebih_besar ?? '') }}"
+                                data-interp-tetap="{{ addslashes($first->interpretasi_tetap ?? '') }}"
+                                data-wilayah-list="{{ htmlspecialchars(json_encode($allWilayah), ENT_QUOTES, 'UTF-8') }}"
+                                data-components="{{ htmlspecialchars(json_encode($first->statisticTitle->components ?? []), ENT_QUOTES, 'UTF-8') }}">
+                                {{ $first->judul_data }}
                             </option>
                         @endforeach
                     </select>
@@ -123,20 +127,15 @@
                 </div>
             </div>
 
-            {{-- Filter: Wilayah --}}
+            {{-- Filter: Wilayah (dinamis sesuai judul dipilih) --}}
             <div>
                 <label class="block text-sm font-semibold text-blue-500 mb-2">Wilayah data</label>
                 <div id="filter-wilayah" class="space-y-2">
-                    @foreach($statistics->pluck('wilayah_data')->unique() as $wilayah)
-                    <label class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
-                        <input type="checkbox" value="{{ $wilayah }}" class="wilayah-check rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                        {{ $wilayah }}
-                    </label>
-                    @endforeach
+                    <p class="text-xs text-gray-400">Pilih judul data dulu</p>
                 </div>
             </div>
 
-            {{-- Filter: Komponen/Kategori — RADIO pilih 1 --}}
+            {{-- Filter: Komponen/Kategori --}}
             <div>
                 <label class="block text-sm font-semibold text-blue-500 mb-2">Komponen / Kategori</label>
                 <div id="filter-kategori" class="space-y-1.5">
@@ -144,23 +143,32 @@
                 </div>
             </div>
 
-            {{-- Filter: Tahun — Checkbox --}}
+            {{-- Filter: Tahun --}}
             <div>
                 <label class="block text-sm font-semibold text-blue-500 mb-2">Tahun data</label>
                 <div id="filter-tahun" class="space-y-1.5">
                     <p class="text-xs text-gray-400">Pilih kategori dulu</p>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-let chartInstance = null;
-let currentData   = {};  // { judul, wilayah, updated, interpKecil, interpBesar }
-let allValues     = [];  // raw array dari data-values
+// ── State ─────────────────────────────────────────────────────────────────
+let chartInstance  = null;
+let currentData    = {};   // { judul, interpKecil, interpBesar, interpTetap }
+let wilayahList    = [];   // [{ wilayah, updated, values:[{x_label,y_label,value}], interp_* }]
+let allComponents  = [];   // komponen dari statistic_title
+
+const COLORS = [
+    { border: '#2563eb', bg: 'rgba(37,99,235,0.10)' },
+    { border: '#dc2626', bg: 'rgba(220,38,38,0.10)' },
+    { border: '#16a34a', bg: 'rgba(22,163,74,0.10)' },
+    { border: '#d97706', bg: 'rgba(217,119,6,0.10)' },
+    { border: '#7c3aed', bg: 'rgba(124,58,237,0.10)' },
+];
 
 // ── Tab switch ────────────────────────────────────────────────────────────
 function switchTab(tab) {
@@ -173,197 +181,208 @@ function switchTab(tab) {
     document.getElementById('tab-tabel').className = !isG
         ? 'inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition bg-blue-600 text-white'
         : 'inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition border border-gray-200 text-gray-600 hover:bg-gray-50';
-    if (!isG) renderTable();
+    if (!isG) applyFilters();
 }
 
 // ── Pilih judul data ──────────────────────────────────────────────────────
 document.getElementById('filter-judul').addEventListener('change', function () {
     const opt = this.options[this.selectedIndex];
-    if (!opt.value) {
-        document.getElementById('interpretasi-section').classList.add('hidden');
-        document.getElementById('filter-kategori').innerHTML = '<p class="text-xs text-gray-400">Pilih judul data dulu</p>';
-        document.getElementById('filter-tahun').innerHTML    = '<p class="text-xs text-gray-400">Pilih kategori dulu</p>';
-        return;
-    }
+    resetAll();
+    if (!opt.value) return;
 
     currentData = {
         judul:       opt.dataset.judul,
-        wilayah:     opt.dataset.wilayah,
-        updated:     opt.dataset.updated,
-        interpKecil: opt.dataset.interpKecil,
-        interpBesar: opt.dataset.interpBesar,
+        interpKecil: opt.dataset.interpKecil || '',
+        interpBesar: opt.dataset.interpBesar || '',
+        interpTetap: opt.dataset.interpTetap || '',
     };
 
-    // Parse semua nilai dari data-values
-    // Format kemungkinan: [{x_label, y_label, year, value}, ...]
-    allValues = JSON.parse(opt.dataset.values || '[]');
-const components = JSON.parse(opt.dataset.components || '[]');
-    // Normalisasi: pastikan x_label dan y_label terisi
-    allValues = allValues.map((v, i) => ({
-    ...v,
-    x_label: v.x_label || (components[i] ? components[i].nama : null),
-    y_label: v.y_label || (v.year ? String(v.year) : null),
-    year:    v.year    || null,
-}));
-    // Ambil semua kategori unik dari x_label
-let categories = [];
+    const decode = s => { const t = document.createElement('textarea'); t.innerHTML = s; return t.value; };
+    wilayahList   = JSON.parse(decode(opt.getAttribute('data-wilayah-list') || '[]'));
+    allComponents = JSON.parse(decode(opt.getAttribute('data-components')   || '[]'));
 
-if (components.length) {
-    categories = components.map(c => c.nama);
-} else {
-    categories = [...new Set(allValues.map(v => v.x_label).filter(Boolean))];
+    // Normalisasi values tiap wilayah
+    wilayahList = wilayahList.map(w => ({
+        ...w,
+        values: (w.values || []).map((v, i) => ({
+            ...v,
+            x_label: v.x_label || (allComponents[i] ? allComponents[i].nama : null),
+            y_label: v.y_label || (v.year ? String(v.year) : null),
+        }))
+    }));
+
+    // Build wilayah checkboxes
+    const wilDiv = document.getElementById('filter-wilayah');
+    wilDiv.innerHTML = wilayahList.map((w, wi) => {
+        const color = COLORS[wi % COLORS.length].border;
+        return `<label class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
+            <input type="checkbox" value="${escH(w.wilayah)}" checked class="wilayah-check rounded accent-blue-600"
+                onchange="applyFilters()">
+            <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:${color}"></span>
+            ${escH(w.wilayah)}
+        </label>`;
+    }).join('');
+
+    // Build kategori
+    buildKategoriFilter();
+});
+
+function resetAll() {
+    document.getElementById('interpretasi-section').classList.add('hidden');
+    document.getElementById('filter-wilayah').innerHTML  = '<p class="text-xs text-gray-400">Pilih judul data dulu</p>';
+    document.getElementById('filter-kategori').innerHTML = '<p class="text-xs text-gray-400">Pilih judul data dulu</p>';
+    document.getElementById('filter-tahun').innerHTML    = '<p class="text-xs text-gray-400">Pilih kategori dulu</p>';
+    if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+    document.getElementById('chart-title').textContent    = '-';
+    document.getElementById('chart-subtitle').textContent = '-';
 }
+
+function buildKategoriFilter() {
+    // Hanya tampilkan kategori utama (bukan sub, prefix '· ')
+    const categories = allComponents.length
+        ? allComponents.filter(c => !c.is_sub).map(c => c.nama)
+        : [...new Set(wilayahList.flatMap(w => w.values.map(v => v.x_label)).filter(Boolean))].filter(n => !n.startsWith('· '));
 
     const katDiv = document.getElementById('filter-kategori');
 
     if (categories.length > 0) {
-        // Ada x_label → data 2D, render radio TANPA auto-select
         katDiv.innerHTML = `<p class="text-xs text-blue-400 font-semibold mb-2">Pilih salah satu ↓</p>`
-            + categories.map((cat) => {
-            const isSub  = cat.startsWith('· ');
-            const label  = isSub ? cat.slice(2) : cat;
-            return `<label class="flex items-center gap-2 text-xs cursor-pointer hover:text-blue-600 transition
-                        ${isSub ? 'pl-3 text-gray-400 italic' : 'text-gray-600 font-medium'}">
-                <input type="radio" name="kat_radio" value="${escH(cat)}"
-                    class="kat-radio shrink-0 accent-blue-600"
-                    onchange="onKategoriChange()">
-                ${isSub ? '<span class="text-indigo-300">·</span>' : ''}
-                <span class="truncate" title="${escH(label)}">${escH(label)}</span>
-            </label>`;
-        }).join('');
+            + categories.map(cat => {
+                const isSub = cat.startsWith('· ');
+                const label = isSub ? cat.slice(2) : cat;
+                return `<label class="flex items-center gap-2 text-xs cursor-pointer hover:text-blue-600 transition ${isSub ? 'pl-3 text-gray-400 italic' : 'text-gray-600 font-medium'}">
+                    <input type="radio" name="kat_radio" value="${escH(cat)}" class="kat-radio shrink-0 accent-blue-600" onchange="onKategoriChange()">
+                    ${isSub ? '<span class="text-indigo-300">·</span>' : ''}
+                    <span class="truncate" title="${escH(label)}">${escH(label)}</span>
+                </label>`;
+            }).join('');
 
-        // Tahun: ambil semua unique dari semua values (bukan per kategori)
-        const allYears = [...new Set(allValues.map(v => v.y_label || String(v.year)).filter(Boolean))].sort();
-        buildTahunFilter(allYears, false); // false = belum dicentang
-
-        // Sembunyikan chart sampai kategori dipilih
-        hideChart();
-
+        // Tahun dari semua wilayah gabungan
+        const allYears = [...new Set(
+            wilayahList.flatMap(w => w.values.map(v => v.y_label || String(v.year))).filter(Boolean)
+        )].sort();
+        buildTahunFilter(allYears);
+        // Disable tahun sampai kategori dipilih
+        document.getElementById('filter-tahun').querySelectorAll('.tahun-check').forEach(cb => cb.disabled = true);
     } else {
-        // Tidak ada x_label → data 1D (hanya tahun + nilai)
         katDiv.innerHTML = '<p class="text-xs text-gray-400 italic">Data tidak memiliki kategori</p>';
-        buildTahunFilter1D();
+        const allYears = [...new Set(
+            wilayahList.flatMap(w => w.values.map(v => v.y_label || String(v.year))).filter(Boolean)
+        )].sort();
+        buildTahunFilter(allYears);
+        applyFilters();
     }
-});
-
-function hideChart() {
-    document.getElementById('interpretasi-section').classList.add('hidden');
-    if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
-    document.getElementById('chart-title').textContent  = '-';
-    document.getElementById('chart-subtitle').textContent = '-';
-    document.getElementById('filter-tahun').querySelectorAll('.tahun-check')
-        .forEach(cb => cb.disabled = true);
 }
 
-// ── Saat kategori (radio) berubah → enable tahun + render ────────────────
 function onKategoriChange() {
-    const selectedCat = document.querySelector('.kat-radio:checked')?.value;
-    if (!selectedCat) return;
-
-    // Enable semua checkbox tahun
     document.getElementById('filter-tahun').querySelectorAll('.tahun-check')
         .forEach(cb => { cb.disabled = false; cb.checked = true; });
-
     applyFilters();
 }
 
-// ── Build filter tahun (untuk data 2D) ───────────────────────────────────
 function buildTahunFilter(years) {
     const tahunDiv = document.getElementById('filter-tahun');
-    if (!years.length) {
-        tahunDiv.innerHTML = '<p class="text-xs text-gray-400">Tidak ada data tahun</p>';
-        return;
-    }
+    if (!years.length) { tahunDiv.innerHTML = '<p class="text-xs text-gray-400">Tidak ada data tahun</p>'; return; }
     tahunDiv.innerHTML = years.map(y => `
         <label class="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 cursor-pointer hover:text-blue-600 transition">
-            <input type="checkbox" value="${y}" checked class="tahun-check rounded accent-blue-600">
-            ${y}
-        </label>
-    `).join('');
-    tahunDiv.querySelectorAll('.tahun-check').forEach(cb =>
-        cb.addEventListener('change', applyFilters)
-    );
-}
-
-// ── Build filter tahun (untuk data 1D) ───────────────────────────────────
-function buildTahunFilter1D() {
-    const years = [...new Set(allValues.map(v => v.y_label || String(v.year)).filter(Boolean))].sort();
-    buildTahunFilter(years);
-    applyFilters();
+            <input type="checkbox" value="${y}" checked class="tahun-check rounded accent-blue-600"> ${y}
+        </label>`).join('');
+    tahunDiv.querySelectorAll('.tahun-check').forEach(cb => cb.addEventListener('change', applyFilters));
 }
 
 // ── Apply filter & render ─────────────────────────────────────────────────
 function applyFilters() {
-    if (!allValues.length) return;
+    if (!wilayahList.length) return;
 
-    const selectedCat  = document.querySelector('.kat-radio:checked')?.value ?? null;
-    const checkedYears = [...document.querySelectorAll('.tahun-check:checked')].map(c => c.value);
+    const selectedCat    = document.querySelector('.kat-radio:checked')?.value ?? null;
+    const checkedYears   = [...document.querySelectorAll('.tahun-check:checked')].map(c => c.value);
+    const checkedWilayah = [...document.querySelectorAll('.wilayah-check:checked')].map(c => c.value);
 
-    let labels = [];
-    let values = [];
+    // Build dataset per wilayah yang dicentang
+    const datasets = [];
+    wilayahList.forEach((w, wi) => {
+        if (!checkedWilayah.includes(w.wilayah)) return;
 
-    if (selectedCat) {
-        // 2D: filter berdasarkan kategori + tahun
-        const rows = allValues
-            .filter(v => v.x_label === selectedCat)
+        const rows = w.values
+            .filter(v => !selectedCat || v.x_label === selectedCat)
             .filter(v => checkedYears.includes(v.y_label || String(v.year)))
             .sort((a, b) => String(a.y_label || a.year).localeCompare(String(b.y_label || b.year)));
 
-        labels = rows.map(v => v.y_label || String(v.year));
-        values = rows.map(v => parseFloat(v.value));
+        if (!rows.length) return;
 
+        const color = COLORS[wi % COLORS.length];
+        datasets.push({
+            wilayah: w.wilayah,
+            updated: w.updated,
+            labels:  rows.map(v => v.y_label || String(v.year)),
+            values:  rows.map(v => parseFloat(v.value)),
+            color,
+            interp_kecil: w.interp_kecil,
+            interp_besar: w.interp_besar,
+            interp_tetap: w.interp_tetap,
+        });
+    });
+
+    renderChart(datasets, selectedCat);
+    renderTable(datasets, selectedCat);
+
+    // Interpretasi: pakai dataset pertama yang dipilih
+    if (datasets.length > 0) {
+        const komponen = allComponents.find(c => c.nama === selectedCat) || null;
+        renderInterpretasi(datasets[0].labels, datasets[0].values, selectedCat, datasets[0], komponen);
     } else {
-        // 1D: hanya filter tahun
-        const rows = allValues
-            .filter(v => checkedYears.includes(v.y_label || String(v.year)))
-            .sort((a, b) => String(a.y_label || a.year).localeCompare(String(b.y_label || b.year)));
-
-        labels = rows.map(v => v.y_label || String(v.year));
-        values = rows.map(v => parseFloat(v.value));
+        document.getElementById('interpretasi-section').classList.add('hidden');
     }
-
-    renderChart(labels, values, selectedCat);
-    renderTable(labels, values, selectedCat);
-    renderInterpretasi(labels, values);
 }
 
-// ── Render chart ──────────────────────────────────────────────────────────
-function renderChart(labels, values, kategori) {
+// ── Render chart (multi-line) ─────────────────────────────────────────────
+function renderChart(datasets, kategori) {
+    if (!datasets.length) return;
+
     const katLabel = kategori
         ? (kategori.startsWith('· ') ? kategori.slice(2) : kategori)
         : currentData.judul;
 
-    document.getElementById('chart-title').textContent =
-        currentData.judul + ' — ' + (kategori ? katLabel : currentData.wilayah);
-    document.getElementById('chart-subtitle').textContent =
-        currentData.wilayah + ' · Update Terakhir: ' + currentData.updated;
+    const wilayahNames = datasets.map(d => d.wilayah).join(', ');
+    document.getElementById('chart-title').textContent    = currentData.judul + ' — ' + katLabel;
+    document.getElementById('chart-subtitle').textContent = wilayahNames + ' · Update Terakhir: ' + datasets[0].updated;
+
+    // Gabungkan semua labels unik
+    const allLabels = [...new Set(datasets.flatMap(d => d.labels))].sort();
 
     if (chartInstance) chartInstance.destroy();
-
     const ctx = document.getElementById('mainChart').getContext('2d');
     chartInstance = new Chart(ctx, {
         type: 'line',
         data: {
-            labels,
-            datasets: [{
-                label:            katLabel,
-                data:             values,
-                borderColor:      '#2563eb',
-                backgroundColor:  'rgba(37,99,235,0.08)',
-                borderWidth:      2,
-                pointBackgroundColor: '#2563eb',
-                pointRadius:      5,
-                pointHoverRadius: 7,
-                fill:             true,
-                tension:          0.3,
-            }]
+            labels: allLabels,
+            datasets: datasets.map(d => ({
+                label:               d.wilayah,
+                data:                allLabels.map(lbl => {
+                    const idx = d.labels.indexOf(lbl);
+                    return idx >= 0 ? d.values[idx] : null;
+                }),
+                borderColor:         d.color.border,
+                backgroundColor:     d.color.bg,
+                borderWidth:         2,
+                pointBackgroundColor: d.color.border,
+                pointRadius:         5,
+                pointHoverRadius:    7,
+                fill:                datasets.length === 1,
+                tension:             0.3,
+                spanGaps:            true,
+            }))
         },
         options: {
             responsive:          true,
             maintainAspectRatio: false,
             plugins: {
-                legend:  { display: false },
-                tooltip: { callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + ctx.parsed.y } },
+                legend: {
+                    display:  datasets.length > 1,
+                    position: 'top',
+                    labels:   { boxWidth: 12, font: { size: 11 } }
+                },
+                tooltip: { mode: 'index', intersect: false },
             },
             scales: {
                 x: { title: { display: true, text: 'Tahun', font: { size: 11 } }, grid: { display: false } },
@@ -373,38 +392,50 @@ function renderChart(labels, values, kategori) {
     });
 }
 
-// ── Render tabel ──────────────────────────────────────────────────────────
-function renderTable(labels, values, kategori) {
+// ── Render tabel (multi-wilayah, dengan satuan) ───────────────────────────
+function renderTable(datasets, kategori) {
     const katLabel = kategori
         ? (kategori.startsWith('· ') ? kategori.slice(2) : kategori)
         : currentData.judul;
 
+    // Cari satuan dari komponen
+    const komponen = allComponents.find(c => c.nama === kategori);
+    const satuan   = komponen?.satuan || '';
+
     document.getElementById('table-head').innerHTML = `
         <tr class="border-b border-gray-100">
             <th class="text-left px-4 py-3 font-semibold text-blue-600">Tahun</th>
-            <th class="text-left px-4 py-3 font-semibold text-blue-600">Nilai</th>
             <th class="text-left px-4 py-3 font-semibold text-blue-600">Kategori</th>
-            <th class="text-left px-4 py-3 font-semibold text-blue-600">Wilayah</th>
+            <th class="text-left px-4 py-3 font-semibold text-blue-600">Satuan</th>
+            ${datasets.map(d => `<th class="text-left px-4 py-3 font-semibold text-blue-600">${escH(d.wilayah)}</th>`).join('')}
         </tr>`;
 
-    if (!labels.length) {
+    if (!datasets.length) {
         document.getElementById('table-body').innerHTML =
             '<tr><td colspan="4" class="text-center py-8 text-gray-400">Tidak ada data</td></tr>';
         return;
     }
 
-    document.getElementById('table-body').innerHTML = labels.map((y, i) => `
-        <tr class="border-b border-gray-50 hover:bg-gray-50/50 transition">
+    // Semua tahun unik
+    const allLabels = [...new Set(datasets.flatMap(d => d.labels))].sort();
+
+    document.getElementById('table-body').innerHTML = allLabels.map(y => {
+        const cells = datasets.map(d => {
+            const idx = d.labels.indexOf(y);
+            const val = idx >= 0 ? d.values[idx] : '-';
+            return `<td class="px-4 py-3 text-gray-700 text-sm font-semibold">${val !== '-' ? val : '-'}</td>`;
+        }).join('');
+        return `<tr class="border-b border-gray-50 hover:bg-gray-50/50 transition">
             <td class="px-4 py-3 text-gray-700 text-sm">${y}</td>
-            <td class="px-4 py-3 text-gray-700 text-sm font-semibold">${values[i]}</td>
             <td class="px-4 py-3 text-gray-500 text-xs">${escH(katLabel)}</td>
-            <td class="px-4 py-3 text-gray-500 text-xs">${escH(currentData.wilayah)}</td>
-        </tr>
-    `).join('');
+            <td class="px-4 py-3 text-gray-400 text-xs">${escH(satuan)}</td>
+            ${cells}
+        </tr>`;
+    }).join('');
 }
 
 // ── Render interpretasi ───────────────────────────────────────────────────
-function renderInterpretasi(labels, values) {
+function renderInterpretasi(labels, values, selectedCat, dataset, komponen) {
     const section = document.getElementById('interpretasi-section');
     if (!labels || labels.length < 2) { section.classList.add('hidden'); return; }
 
@@ -415,94 +446,90 @@ function renderInterpretasi(labels, values) {
     const selisih    = nilaiAkhir - nilaiAwal;
     const tren       = selisih > 0 ? 'naik' : selisih < 0 ? 'turun' : 'tetap';
 
-    const cfg = {
-        naik:  { color: 'red',   icon: 'ti-trending-up',   label: 'Naik',  sign: '+', teks: currentData.interpBesar || 'Data mengalami kenaikan.' },
-        turun: { color: 'green', icon: 'ti-trending-down',  label: 'Turun', sign: '',  teks: currentData.interpKecil || 'Data mengalami penurunan.' },
-        tetap: { color: 'gray',  icon: 'ti-minus',          label: 'Tetap', sign: '',  teks: 'Data tidak berubah secara signifikan.' },
-    }[tren];
+    const interpKecil = komponen?.interpretasi_lebih_kecil || dataset?.interp_kecil || currentData.interpKecil || '';
+    const interpBesar = komponen?.interpretasi_lebih_besar || dataset?.interp_besar || currentData.interpBesar || '';
+    const interpTetap = komponen?.interpretasi_tetap       || dataset?.interp_tetap || currentData.interpTetap || '';
 
-    // Ringkasan keseluruhan
+    const cfgMap = {
+        naik:  { color: 'red',   icon: 'ti-trending-up',   label: 'Naik',  sign: '+', teks: interpBesar || 'Data mengalami kenaikan.' },
+        turun: { color: 'green', icon: 'ti-trending-down',  label: 'Turun', sign: '',  teks: interpKecil || 'Data mengalami penurunan.' },
+        tetap: { color: 'gray',  icon: 'ti-minus',          label: 'Tetap', sign: '',  teks: interpTetap || 'Data tidak berubah secara signifikan.' },
+    };
+    const cfg = cfgMap[tren];
+
     document.getElementById('tren-tahun-awal').textContent  = 'Tahun ' + tahunAwal;
     document.getElementById('tren-nilai-awal').textContent  = nilaiAwal.toFixed(2);
     document.getElementById('tren-tahun-akhir').textContent = 'Tahun ' + tahunAkhir;
     document.getElementById('tren-nilai-akhir').textContent = nilaiAkhir.toFixed(2);
-    document.getElementById('tren-card').className =
-        `flex items-center justify-between gap-4 p-5 rounded-2xl border mb-4 bg-${cfg.color}-50 dark:bg-${cfg.color}-900/20 border-${cfg.color}-100 dark:border-${cfg.color}-800`;
-    document.getElementById('tren-icon').className      = `text-3xl ti ${cfg.icon} text-${cfg.color}-500`;
-    document.getElementById('tren-label').className     = `text-xs font-bold uppercase tracking-widest text-${cfg.color}-500`;
-    document.getElementById('tren-label').textContent   = cfg.label;
-    document.getElementById('tren-selisih').className   = `text-xs font-semibold text-${cfg.color}-400`;
-    document.getElementById('tren-selisih').textContent = cfg.sign + Math.abs(selisih).toFixed(2);
+    document.getElementById('tren-card').className          = `flex items-center justify-between gap-4 p-5 rounded-2xl border bg-${cfg.color}-50 dark:bg-${cfg.color}-900/20 border-${cfg.color}-100 dark:border-${cfg.color}-800`;
+    document.getElementById('tren-icon').className          = `text-3xl ti ${cfg.icon} text-${cfg.color}-500`;
+    document.getElementById('tren-label').className         = `text-xs font-bold uppercase tracking-widest text-${cfg.color}-500`;
+    document.getElementById('tren-label').textContent       = cfg.label;
+    document.getElementById('tren-selisih').className       = `text-xs font-semibold text-${cfg.color}-400`;
+    document.getElementById('tren-selisih').textContent     = cfg.sign + Math.abs(selisih).toFixed(2);
 
-    document.getElementById('interpretasi-card').className =
-        `rounded-2xl border p-5 border-${cfg.color}-100 dark:border-${cfg.color}-800 bg-${cfg.color}-50/50 dark:bg-${cfg.color}-900/10`;
-    document.getElementById('interpretasi-icon-wrap').className =
-        `mt-0.5 shrink-0 w-8 h-8 rounded-xl flex items-center justify-center bg-${cfg.color}-100 dark:bg-${cfg.color}-900/30`;
-    document.getElementById('interpretasi-icon').className    = `ti ${cfg.icon} text-${cfg.color}-500 text-lg`;
-    document.getElementById('interpretasi-label').className   = `text-xs font-bold uppercase tracking-widest mb-2 text-${cfg.color}-500`;
-    document.getElementById('interpretasi-label').textContent = `Interpretasi Keseluruhan ${tahunAwal}–${tahunAkhir}`;
-    document.getElementById('interpretasi-teks').textContent  = cfg.teks;
+    document.getElementById('interpretasi-card').className      = `rounded-2xl border p-5 border-${cfg.color}-100 dark:border-${cfg.color}-800 bg-${cfg.color}-50/50 dark:bg-${cfg.color}-900/10`;
+    document.getElementById('interpretasi-icon-wrap').className = `mt-0.5 shrink-0 w-8 h-8 rounded-xl flex items-center justify-center bg-${cfg.color}-100 dark:bg-${cfg.color}-900/30`;
+    document.getElementById('interpretasi-icon').className      = `ti ${cfg.icon} text-${cfg.color}-500 text-lg`;
+    document.getElementById('interpretasi-label').className     = `text-xs font-bold uppercase tracking-widest mb-2 text-${cfg.color}-500`;
+    document.getElementById('interpretasi-label').textContent   = `Interpretasi Keseluruhan ${tahunAwal}–${tahunAkhir}`;
+    document.getElementById('interpretasi-teks').textContent    = cfg.teks;
 
-    // Per pasangan tahun
-    let pairsDiv = document.getElementById('interpretasi-pairs');
-    if (!pairsDiv) {
-        pairsDiv = document.createElement('div');
-        pairsDiv.id = 'interpretasi-pairs';
-        pairsDiv.className = 'space-y-3 mt-4';
-        document.getElementById('interpretasi-section').appendChild(pairsDiv);
-    }
-
+    const pairsDiv = document.getElementById('interpretasi-pairs');
     let html = `
         <div class="flex items-center gap-2 mb-1">
-            <div class="flex-1 h-px bg-gray-100"></div>
+            <div class="flex-1 h-px bg-gray-100 dark:bg-gray-700"></div>
             <span class="text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Perubahan Per Periode</span>
-            <div class="flex-1 h-px bg-gray-100"></div>
+            <div class="flex-1 h-px bg-gray-100 dark:bg-gray-700"></div>
         </div>`;
 
-    // Pasangan berurutan — pass labels & values agar generateInterpretasiTeks bisa akses total periode
     for (let i = 0; i < labels.length - 1; i++) {
-        html += buildPairCard(labels[i], labels[i+1], values[i], values[i+1], false, labels, values);
+        html += buildPairCard(labels[i], labels[i+1], values[i], values[i+1], false, labels, values, komponen, dataset);
     }
 
     if (labels.length > 2) {
         html += `
             <div class="flex items-center gap-2 mt-4 mb-1">
-                <div class="flex-1 h-px bg-gray-100"></div>
+                <div class="flex-1 h-px bg-gray-100 dark:bg-gray-700"></div>
                 <span class="text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Perubahan Total</span>
-                <div class="flex-1 h-px bg-gray-100"></div>
+                <div class="flex-1 h-px bg-gray-100 dark:bg-gray-700"></div>
             </div>`;
-        html += buildPairCard(tahunAwal, tahunAkhir, nilaiAwal, nilaiAkhir, true, labels, values);
+        html += buildPairCard(tahunAwal, tahunAkhir, nilaiAwal, nilaiAkhir, true, labels, values, komponen, dataset);
     }
 
     pairsDiv.innerHTML = html;
     section.classList.remove('hidden');
 }
 
-// ── Auto-generate teks interpretasi ──────────────────────────────────────
-function generateInterpretasiTeks(tA, tB, vA, vB, selisih, pct, tren, isTotal, allLabels) {
-    const judulData = currentData.judul   || 'data';
-    const wilayah   = currentData.wilayah || 'wilayah ini';
+// ── Generate teks interpretasi ────────────────────────────────────────────
+function generateInterpretasiTeks(tA, tB, vA, vB, selisih, pct, tren, isTotal, allLabels, komponen, dataset) {
+    const judulData  = currentData.judul   || 'data';
+    const wilayah    = dataset?.wilayah    || 'wilayah ini';
     const absSelisih = Math.abs(selisih).toFixed(2);
     const absPct     = Math.abs(parseFloat(pct)).toFixed(1);
     const mag        = Math.abs(parseFloat(pct));
     const skala      = mag < 2 ? 'kecil' : mag < 5 ? 'sedang' : 'besar';
 
+    let teksAdmin = '';
     if (tren === 'tetap') {
-        return `Nilai ${judulData} di ${wilayah} tidak mengalami perubahan antara tahun ${tA} dan ${tB}, ` +
-               `tetap berada di angka ${vA.toFixed(2)}.`;
+        teksAdmin = komponen?.interpretasi_tetap       || dataset?.interp_tetap || currentData.interpTetap || '';
+    } else if (tren === 'naik') {
+        teksAdmin = komponen?.interpretasi_lebih_besar || dataset?.interp_besar || currentData.interpBesar || '';
+    } else {
+        teksAdmin = komponen?.interpretasi_lebih_kecil || dataset?.interp_kecil || currentData.interpKecil || '';
+    }
+
+    if (tren === 'tetap') {
+        let teks = `Nilai ${judulData} di ${wilayah} tidak mengalami perubahan antara tahun ${tA} dan ${tB}, tetap berada di angka ${vA.toFixed(2)}. `;
+        if (teksAdmin) teks += teksAdmin;
+        return teks.trim();
     }
 
     const arah     = tren === 'naik' ? 'meningkat'   : 'menurun';
     const arahkata = tren === 'naik' ? 'Peningkatan' : 'Penurunan';
-    const teksAdmin = tren === 'naik'
-        ? (currentData.interpBesar || '')
-        : (currentData.interpKecil || '');
 
-    // Kalimat 1: fakta perubahan
-    let teks = `Pada periode ${tA}–${tB}, nilai ${judulData} di ${wilayah} ${arah} sebesar ${absSelisih} (${absPct}%), ` +
-               `dari ${vA.toFixed(2)} menjadi ${vB.toFixed(2)}. `;
+    let teks = `Pada periode ${tA}–${tB}, nilai ${judulData} di ${wilayah} ${arah} sebesar ${absSelisih} (${absPct}%), dari ${vA.toFixed(2)} menjadi ${vB.toFixed(2)}. `;
 
-    // Kalimat 2: konteks magnitude
     if (skala === 'kecil') {
         teks += `Perubahan ini tergolong kecil dan kondisi relatif stabil. `;
     } else if (skala === 'sedang') {
@@ -511,27 +538,21 @@ function generateInterpretasiTeks(tA, tB, vA, vB, selisih, pct, tren, isTotal, a
         teks += `${arahkata} yang cukup besar ini memerlukan perhatian khusus dari pemangku kebijakan. `;
     }
 
-    // Kalimat 3: teks dari admin jika ada
-    if (teksAdmin) {
-        teks += teksAdmin + ' ';
-    }
+    if (teksAdmin) teks += teksAdmin + ' ';
 
-    // Kalimat tambahan untuk kartu total
     if (isTotal && allLabels && allLabels.length > 2) {
-        teks += `Secara keseluruhan selama ${allLabels.length} periode pengamatan (${tA}–${tB}), ` +
-                `tren menunjukkan ${arah === 'meningkat' ? 'kenaikan' : 'penurunan'} kumulatif.`;
+        teks += `Secara keseluruhan selama ${allLabels.length} periode pengamatan (${tA}–${tB}), tren menunjukkan ${tren === 'naik' ? 'kenaikan' : 'penurunan'} kumulatif.`;
     }
 
-    return teks;
+    return teks.trim();
 }
 
 // ── Build kartu satu pasangan tahun ──────────────────────────────────────
-function buildPairCard(tA, tB, vA, vB, isTotal, allLabels, allValues) {
+function buildPairCard(tA, tB, vA, vB, isTotal, allLabels, allVals, komponen, dataset) {
     const selisih = vB - vA;
     const pct     = vA !== 0 ? ((selisih / Math.abs(vA)) * 100).toFixed(1) : '0.0';
     const tren    = selisih > 0 ? 'naik' : selisih < 0 ? 'turun' : 'tetap';
-
-    const cfg = {
+    const cfg     = {
         naik:  { color: 'red',   icon: 'ti-trending-up',   label: 'Naik',  sign: '+' },
         turun: { color: 'green', icon: 'ti-trending-down',  label: 'Turun', sign: ''  },
         tetap: { color: 'gray',  icon: 'ti-minus',          label: 'Tetap', sign: ''  },
@@ -542,15 +563,12 @@ function buildPairCard(tA, tB, vA, vB, isTotal, allLabels, allValues) {
     const borderCls    = isTotal
         ? `border-2 border-${cfg.color}-300 dark:border-${cfg.color}-700`
         : `border border-${cfg.color}-100 dark:border-${cfg.color}-800`;
-
-    const teksInterp = generateInterpretasiTeks(tA, tB, vA, vB, selisih, pct, tren, isTotal, allLabels);
+    const teksInterp   = generateInterpretasiTeks(tA, tB, vA, vB, selisih, pct, tren, isTotal, allLabels, komponen, dataset);
 
     return `
         <div class="rounded-2xl p-4 bg-${cfg.color}-50/60 dark:bg-${cfg.color}-900/10 ${borderCls}">
             <div class="flex items-center justify-between mb-3">
-                <span class="text-xs font-bold uppercase tracking-widest text-${cfg.color}-500">
-                    ${isTotal ? '⭐ ' : ''}${tA} → ${tB}
-                </span>
+                <span class="text-xs font-bold uppercase tracking-widest text-${cfg.color}-500">${isTotal ? '⭐ ' : ''}${tA} → ${tB}</span>
                 <span class="inline-flex items-center gap-1 text-xs font-bold text-${cfg.color}-500 bg-${cfg.color}-100 dark:bg-${cfg.color}-900/30 px-2 py-0.5 rounded-lg">
                     <i class="ti ${cfg.icon}"></i> ${cfg.label}
                 </span>
@@ -582,6 +600,5 @@ function buildPairCard(tA, tB, vA, vB, isTotal, allLabels, allValues) {
 function escH(str) {
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-
 </script>
 @endsection

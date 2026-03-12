@@ -53,7 +53,7 @@
                     </select>
                     <i class="ti ti-chevron-down absolute right-3 top-3 text-gray-400 pointer-events-none"></i>
                 </div>
-                <div x-show="kecil || besar" x-cloak
+                <div x-show="kecil || besar || tetap" x-cloak
                     class="mt-3 rounded-2xl border border-blue-100 dark:border-blue-900/40 bg-blue-50/50 p-3 space-y-2">
                     <p class="text-[10px] font-black uppercase tracking-widest text-blue-400">Preview Interpretasi</p>
                     <div x-show="kecil">
@@ -63,6 +63,10 @@
                     <div x-show="besar">
                         <p class="text-[10px] font-bold text-red-400 mb-0.5"><i class="ti ti-trending-up"></i> Naik</p>
                         <p class="text-xs text-gray-500 leading-relaxed line-clamp-2" x-text="besar"></p>
+                    </div>
+                    <div x-show="tetap">
+                        <p class="text-[10px] font-bold text-gray-400 mb-0.5"><i class="ti ti-minus"></i> Tetap</p>
+                        <p class="text-xs text-gray-500 leading-relaxed line-clamp-2" x-text="tetap"></p>
                     </div>
                 </div>
             </div>
@@ -516,7 +520,7 @@ function createStatistic() {
 
 function judulPicker() {
     return {
-        kecil: '', besar: '',
+        kecil: '', besar: '', tetap: '',
         init() {
             const oldId = '{{ old('statistic_title_id') }}';
             if (oldId) this.fetchInterpretasi(oldId);
@@ -528,6 +532,7 @@ function judulPicker() {
                 const data = await (await fetch(`/statistic-titles/${id}/interpretasi`)).json();
                 this.kecil = data.interpretasi_lebih_kecil || '';
                 this.besar = data.interpretasi_lebih_besar || '';
+                 this.tetap = data.interpretasi_tetap || '';
 
                 // Jika ada komponen terdaftar, load ke grid otomatis
                 if (data.components && data.components.length > 0) {
