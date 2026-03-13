@@ -99,15 +99,17 @@ public function index()
         return response()->json([
             'interpretasi_lebih_kecil' => $statisticTitle->interpretasi_lebih_kecil,
             'interpretasi_lebih_besar' => $statisticTitle->interpretasi_lebih_besar,
+            'interpretasi_tetap'       => $statisticTitle->interpretasi_tetap,
+
             'judul_kolom'              => $statisticTitle->judul_kolom,
             'components'               => $statisticTitle->components->map(function ($c) {
                 return [
                     'nama'   => $c->nama,
                     'is_sub' => $c->is_sub,
-                     'satuan'                   => $c->satuan,                   // ✅ tambah
+                     'satuan'                   => $c->satuan,                   
         'urutan'                   => $c->urutan,
-        'interpretasi_lebih_kecil' => $c->interpretasi_lebih_kecil, // ✅ tambah
-        'interpretasi_lebih_besar' => $c->interpretasi_lebih_besar, // ✅ tambah
+        'interpretasi_lebih_kecil' => $c->interpretasi_lebih_kecil, 
+        'interpretasi_lebih_besar' => $c->interpretasi_lebih_besar, 
         'interpretasi_tetap'       => $c->interpretasi_tetap, 
                 ];
             })

@@ -92,9 +92,9 @@
 
         {{-- Right: Filter Panel --}}
         <div class="w-64 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-5 h-fit space-y-5">
-
+<!-- 
             {{-- BPS Logo --}}
-            <!-- <div class="flex items-center gap-2 pb-3 border-b border-gray-100 dark:border-gray-700">
+            <div class="flex items-center gap-2 pb-3 border-b border-gray-100 dark:border-gray-700">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Logo_BPS.svg/200px-Logo_BPS.svg.png"
                      alt="Logo BPS" class="h-8 w-auto">
                 <div>
@@ -672,11 +672,12 @@ function renderInterpretasiTabel(datasets, selectedCat) {
 
     if (!datasets.length) { section.classList.add('hidden'); return; }
 
-    // Kumpulkan semua komponen/kategori unik dari rawRows
-    const allKats = allComponents.filter(c => !c.is_sub).map(c => c.nama);
-    const katsFromData = allKats.length
-        ? allKats
-        : [...new Set(datasets.flatMap(d => (d.rawRows || []).map(r => r.x_label)).filter(Boolean))];
+    // Semua komponen termasuk sub-kategori
+    const allKatsRaw = allComponents.length
+        ? allComponents
+        : [...new Set(datasets.flatMap(d => (d.rawRows || []).map(r => r.x_label)).filter(Boolean))]
+            .map(n => ({ nama: n, is_sub: n.startsWith('· ') }));
+    const katsFromData = allKatsRaw.map(c => c.nama);
 
     if (!katsFromData.length) { section.classList.add('hidden'); return; }
 
@@ -687,7 +688,13 @@ function renderInterpretasiTabel(datasets, selectedCat) {
     </div>`;
 
     katsFromData.forEach(kat => {
+        const kompMeta = allKatsRaw.find(c => c.nama === kat) || null;
         const komponen = allComponents.find(c => c.nama === kat) || null;
+        const isSub    = kompMeta?.is_sub || kat.startsWith('· ');
+        const katLabel = isSub ? kat.replace(/^· /, '') : kat;
+        const headerBg = isSub
+            ? 'bg-indigo-50/40 dark:bg-indigo-900/10 border-indigo-100 dark:border-indigo-900'
+            : 'border-gray-100 dark:border-gray-800';
 
         // Ambil data per wilayah untuk komponen ini
         const katDatasets = datasets.map(d => {
@@ -708,10 +715,10 @@ function renderInterpretasiTabel(datasets, selectedCat) {
 
         if (!katDatasets.length) return;
 
-        html += `<div class="rounded-2xl border border-gray-100 dark:border-gray-800 p-4 space-y-3">
-            <div class="flex items-center gap-2">
-                <i class="ti ti-category text-blue-500 text-sm"></i>
-                <span class="text-sm font-bold text-gray-700 dark:text-white">${escH(kat)}</span>
+        html += `<div class="rounded-2xl border p-4 space-y-3 ${headerBg}">
+            <div class="flex items-center gap-2 ${isSub ? 'pl-3' : ''}">
+                <i class="ti ${isSub ? 'ti-minus text-indigo-300' : 'ti-category text-blue-500'} text-sm"></i>
+                <span class="text-sm font-${isSub ? 'medium text-gray-500 italic' : 'bold text-gray-700 dark:text-white'}">${isSub ? '<span class="text-indigo-300 mr-1">·</span>' : ''}${escH(katLabel)}</span>
                 ${komponen?.satuan ? `<span class="text-xs text-gray-400">(${escH(komponen.satuan)})</span>` : ''}
             </div>`;
 
@@ -779,7 +786,7 @@ function renderInterpretasiTabel(datasets, selectedCat) {
     section.classList.remove('hidden');
 }
 
-// ── Render tabel (multi-wilayah, semua komponen) ──────────────────────────
+// ── Render tabel (multi-wilayah, semua komponen termasuk sub) ────────────
 function renderTable(datasets, kategori) {
     if (!datasets.length) {
         document.getElementById('table-body').innerHTML =
@@ -787,11 +794,12 @@ function renderTable(datasets, kategori) {
         return;
     }
 
-    // Kumpulkan semua kombinasi (tahun, kategori) dari rawRows
-    const allKats  = allComponents.filter(c => !c.is_sub).map(c => c.nama);
-    const katsFromData = allKats.length
-        ? allKats
-        : [...new Set(datasets.flatMap(d => (d.rawRows || []).map(r => r.x_label)).filter(Boolean))];
+    // Semua komponen termasuk sub-kategori, urut sesuai urutan master
+    const allKats  = allComponents.length
+        ? allComponents.map(c => ({ nama: c.nama, is_sub: c.is_sub, satuan: c.satuan }))
+        : [...new Set(datasets.flatMap(d => (d.rawRows || []).map(r => r.x_label)).filter(Boolean))]
+            .map(n => ({ nama: n, is_sub: n.startsWith('· '), satuan: '' }));
+    const katsFromData = allKats.map(k => k.nama);
 
     const allYears = [...new Set(datasets.flatMap(d =>
         (d.rawRows || d.labels.map((l, i) => ({ y_label: l }))).map(r => r.y_label || String(r.year))
@@ -808,9 +816,23 @@ function renderTable(datasets, kategori) {
     let bodyHtml = '';
 
     if (katsFromData.length > 0) {
-        katsFromData.forEach(kat => {
+        allKats.forEach(({ nama: kat, is_sub: isSub, satuan: satuanMeta }) => {
             const komp   = allComponents.find(c => c.nama === kat);
-            const satuan = komp?.satuan || '';
+            const satuan = komp?.satuan || satuanMeta || '';
+            const katDisplay = isSub ? kat.replace(/^· /, '') : kat;
+            const colSpan = datasets.length + 3; // Kategori + Satuan + Tahun + N wilayah
+
+            if (isSub) {
+                // Sub-kategori: 1 baris penuh sebagai separator/header grup
+                bodyHtml += `<tr class="border-b border-indigo-100 bg-indigo-50/40">
+                    <td colspan="${colSpan}" class="px-4 py-2 text-xs font-semibold text-indigo-400 italic">
+                        <span class="text-indigo-300 mr-1">·</span>${escH(katDisplay)}
+                    </td>
+                </tr>`;
+                return;
+            }
+
+            // Kategori biasa: 1 baris per tahun
             allYears.forEach((year, yi) => {
                 const cells = datasets.map(d => {
                     const row = (d.rawRows || []).find(r => r.x_label === kat && (r.y_label || String(r.year)) === year);
@@ -819,7 +841,7 @@ function renderTable(datasets, kategori) {
                 }).join('');
                 const isFirstRow = yi === 0;
                 bodyHtml += `<tr class="border-b border-gray-50 hover:bg-gray-50/50 transition">
-                    ${isFirstRow ? `<td class="px-4 py-2.5 text-gray-700 text-sm font-medium" rowspan="${allYears.length}">${escH(kat)}</td>
+                    ${isFirstRow ? `<td class="px-4 py-2.5 text-gray-800 text-sm font-medium" rowspan="${allYears.length}">${escH(katDisplay)}</td>
                     <td class="px-4 py-2.5 text-gray-400 text-xs" rowspan="${allYears.length}">${escH(satuan)}</td>` : ''}
                     <td class="px-4 py-2.5 text-gray-700 text-sm">${year}</td>
                     ${cells}
@@ -851,7 +873,9 @@ function downloadTable() {
     const datasets = getCurrentDatasets();
     if (!datasets.length) { alert('Tidak ada data untuk di-download'); return; }
 
-    const allKats  = allComponents.filter(c => !c.is_sub).map(c => c.nama);
+    const allKats  = allComponents.length
+        ? allComponents.map(c => c.nama)
+        : [...new Set(datasets.flatMap(d => (d.rawRows || []).map(r => r.x_label)).filter(Boolean))];
     const allYears = [...new Set(datasets.flatMap(d =>
         (d.rawRows || d.labels.map((l, i) => ({ y_label: l }))).map(r => r.y_label || String(r.year))
     ).filter(Boolean))].sort();
@@ -861,13 +885,22 @@ function downloadTable() {
     if (allKats.length) {
         allKats.forEach(kat => {
             const komp   = allComponents.find(c => c.nama === kat);
+            const isSub  = komp?.is_sub || kat.startsWith('· ');
             const satuan = komp?.satuan || '';
+            const katDisplay = kat.replace(/^· /, '');
+
+            if (isSub) {
+                // Sub-kategori: 1 baris separator tanpa nilai
+                csv += `"· ${katDisplay}","","","${datasets.map(() => '').join('","')}"\n`;
+                return;
+            }
+
             allYears.forEach(year => {
                 const vals = datasets.map(d => {
                     const row = (d.rawRows || []).find(r => r.x_label === kat && (r.y_label || String(r.year)) === year);
                     return row ? parseFloat(row.value).toFixed(2) : '';
                 }).join(',');
-                csv += `"${kat}","${satuan}","${year}",${vals}\n`;
+                csv += `"${katDisplay}","${satuan}","${year}",${vals}\n`;
             });
         });
     } else {
