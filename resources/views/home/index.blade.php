@@ -195,7 +195,7 @@
 <!-- NAVBAR -->
 <nav>
     <a href="/" class="nav-logo">
-        <img src="{{ asset('images/logo-bps.png') }}" alt="BPS Kutai Timur" onerror="this.style.display='none'">
+        <img src="{{ asset('images/bpslogo.svg') }}" alt="BPS Kutai Timur" onerror="this.style.display='none'">
         <div>
             <div style="font-size:13px;font-weight:700;color:#1e293b;line-height:1.2">BPS Kutai Timur</div>
             <div style="font-size:11px;color:#64748b">Badan Pusat Statistik</div>
@@ -367,7 +367,7 @@
     <div class="footer-grid">
         <div>
             <div class="footer-brand">
-                <img src="{{ asset('images/logo-bps.png') }}" alt="BPS" onerror="this.style.display='none'">
+                <img src="{{ asset('images/bpslogo.svg') }}" alt="BPS" onerror="this.style.display='none'">
                 <div>
                     <div style="font-size:13px;font-weight:700;color:#1e293b">BPS Kutai Timur</div>
                     <div style="font-size:11px;color:#64748b">Badan Pusat Statistik</div>

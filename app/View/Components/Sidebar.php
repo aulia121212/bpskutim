@@ -73,7 +73,7 @@ class Sidebar extends Component
                     [
                         'name' => 'Profil',
                         'icon' => 'user-circle',
-                        'activePattern' => 'profile',
+                        'activePattern' => 'profile.index',
                         'route' => 'profile',
                     ],
                 ]

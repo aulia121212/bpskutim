@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
@@ -17,6 +14,24 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+
+            // ── Tambahan baru ──────────────────────────────────────────
+            $table->enum('role', [
+                'super_admin',
+                'admin_pelayanan',
+                'admin_statistik',
+                'user',
+            ])->default('user');
+            $table->string('no_whatsapp')->nullable();
+            $table->string('instansi')->nullable();
+            $table->string('jabatan')->nullable();
+            $table->string('tim')->nullable();
+            $table->string('alamat')->nullable();
+            $table->string('foto_profil')->nullable();
+            $table->string('google_id')->nullable();
+            $table->boolean('is_active')->default(true);
+            // ──────────────────────────────────────────────────────────
+
             $table->rememberToken();
             $table->timestamps();
         });
@@ -37,9 +52,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('users');

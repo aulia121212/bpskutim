@@ -2,47 +2,103 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    // ── Role constants ────────────────────────────────────────────────────
+    const ROLE_SUPER_ADMIN      = 'super_admin';
+    const ROLE_ADMIN_PELAYANAN  = 'admin_pelayanan';
+    const ROLE_ADMIN_STATISTIK  = 'admin_statistik';
+    const ROLE_USER             = 'user';
+
+    // ── Role labels (untuk tampilan UI) ───────────────────────────────────
+    const ROLE_LABELS = [
+        'super_admin'     => 'Super Admin',
+        'admin_pelayanan' => 'Admin Pelayanan',
+        'admin_statistik' => 'Admin Data Statistik',
+        'user'            => 'Pengguna',
+    ];
+
     protected $fillable = [
         'name',
         'email',
+        'no_whatsapp',
         'password',
+        'role',
+        'instansi',
+        'jabatan',
+        'tim',
+        'alamat',
+        'foto_profil',
+        'google_id',
+        'is_active',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
+        'google_id',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password'          => 'hashed',
+        'is_active'         => 'boolean',
+    ];
+
+    // ── Role helpers ──────────────────────────────────────────────────────
+    public function isSuperAdmin(): bool
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->role === self::ROLE_SUPER_ADMIN;
+    }
+
+    public function isAdminPelayanan(): bool
+    {
+        return $this->role === self::ROLE_ADMIN_PELAYANAN;
+    }
+
+    public function isAdminStatistik(): bool
+    {
+        return $this->role === self::ROLE_ADMIN_STATISTIK;
+    }
+
+    public function isUser(): bool
+    {
+        return $this->role === self::ROLE_USER;
+    }
+
+    public function isAdmin(): bool
+    {
+        return in_array($this->role, [
+            self::ROLE_SUPER_ADMIN,
+            self::ROLE_ADMIN_PELAYANAN,
+            self::ROLE_ADMIN_STATISTIK,
+        ]);
+    }
+
+    public function hasRole(string|array $roles): bool
+    {
+        return in_array($this->role, (array) $roles);
+    }
+
+    public function getRoleLabelAttribute(): string
+    {
+        return self::ROLE_LABELS[$this->role] ?? $this->role;
+    }
+
+    // ── Redirect sesuai role ──────────────────────────────────────────────
+    public function dashboardRoute(): string
+    {
+        return match ($this->role) {
+            self::ROLE_SUPER_ADMIN     => route('dashboard'),
+            self::ROLE_ADMIN_PELAYANAN => route('dashboard'),
+            self::ROLE_ADMIN_STATISTIK => route('dashboard'),
+            default                    => route('home'),
+        };
     }
 }
