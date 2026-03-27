@@ -110,4 +110,9 @@ class UserController extends Controller
         return redirect()->route('laravel.users.index')
             ->with('success', 'Pengguna berhasil dihapus.');
     }
+
+    public function reservasi()
+{
+    return $this->hasMany(\App\Models\Reservasi::class, 'user_id');
+}
 }

@@ -91,14 +91,18 @@ class User extends Authenticatable
         return self::ROLE_LABELS[$this->role] ?? $this->role;
     }
 
+    public function reservasi()
+    {
+        return $this->hasMany(ReservasiKonsultasi::class, 'id_user');
+    }
     // ── Redirect sesuai role ──────────────────────────────────────────────
     public function dashboardRoute(): string
     {
         return match ($this->role) {
-            self::ROLE_SUPER_ADMIN     => route('dashboard'),
-            self::ROLE_ADMIN_PELAYANAN => route('dashboard'),
-            self::ROLE_ADMIN_STATISTIK => route('dashboard'),
-            default                    => route('home'),
-        };
+    self::ROLE_SUPER_ADMIN     => route('superadmin.dashboard'),
+    self::ROLE_ADMIN_PELAYANAN => route('dashboard.index'),
+    self::ROLE_ADMIN_STATISTIK => route('dashboard.index'),
+    default                    => route('home'),
+};
     }
 }

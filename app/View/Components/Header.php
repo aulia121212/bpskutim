@@ -66,12 +66,7 @@ class Header extends Component
         // Simulasi Data Search
         $this->searchItems = [
             ['title' => 'Analytics Dashboard', 'category' => 'Page', 'icon' => 'ti-chart-bar', 'url' => route('dashboard.analytics')],
-            ['title' => 'E-commerce Overview', 'category' => 'Page', 'icon' => 'ti-shopping-cart', 'url' => route('dashboard.ecommerce')],
-            ['title' => 'CRM Management', 'category' => 'Page', 'icon' => 'ti-users', 'url' => route('dashboard.crm')],
-            ['title' => 'Macbook Pro M3 Max', 'category' => 'Product', 'icon' => 'ti-device-laptop', 'url' => '#'],
-            ['title' => 'Sony WH-1000XM5', 'category' => 'Product', 'icon' => 'ti-headphones', 'url' => '#'],
-            ['title' => 'Alex Rivera', 'category' => 'User', 'icon' => 'ti-user', 'url' => '#'],
-            ['title' => 'System Settings', 'category' => 'Settings', 'icon' => 'ti-settings', 'url' => '#']
+            
         ];
 
         // Simulasi Data Keranjang

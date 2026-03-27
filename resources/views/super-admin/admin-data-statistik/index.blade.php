@@ -38,7 +38,7 @@
             <tbody>
                 @forelse($admins as $admin)
                 <tr class="border-b border-gray-50 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition">
-                    <td class="px-6 py-4 font-medium text-gray-800 dark:text-gray-200">{{ $admin->nama_lengkap }}</td>
+                    <td class="px-6 py-4 font-medium text-gray-800 dark:text-gray-200">{{ $admin->name }}</td>
                     <td class="px-6 py-4 text-gray-600 dark:text-gray-400">{{ $admin->email }}</td>
                     <td class="px-6 py-4 text-gray-600 dark:text-gray-400 tracking-widest">••••••••••</td>
                     <td class="px-6 py-4 text-gray-600 dark:text-gray-400">{{ $admin->no_whatsapp ?? '-' }}</td>

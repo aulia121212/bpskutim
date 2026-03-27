@@ -1,0 +1,427 @@
+
+        :root {
+            --blue: #1a56db;
+            --blue-dark: #1341b0;
+            --blue-light: #e8f0fe;
+            --blue-soft: #f0f5ff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --bg: #f8fafc;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text); background: #fff; }
+
+        /* ── HERO ─────────────────────────────────────────── */
+        .hero {
+            margin-top: 72px;
+            padding: 60px 80px;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            min-height: 480px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-left {
+            width: 320px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .hero-card {
+            background: #fff;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            padding: 32px;
+            box-shadow: 0 8px 32px rgba(26,86,219,.08);
+            text-align: center;
+        }
+
+        .hero-card-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        .hero-card-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 48px;
+        }
+
+        .hero-card-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f0fdf4;
+            color: #16a34a;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin-top: 12px;
+            border: 1px solid #bbf7d0;
+        }
+
+        .hero-tag-left {
+            position: absolute;
+            left: -16px;
+            top: 40px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text);
+            box-shadow: 0 4px 12px rgba(0,0,0,.06);
+            white-space: nowrap;
+        }
+
+        .hero-right { flex: 1; }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1.15;
+            color: var(--text);
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .hero-desc {
+            font-size: 15px;
+            color: var(--muted);
+            line-height: 1.8;
+            max-width: 460px;
+            margin-bottom: 32px;
+        }
+
+        .hero-desc strong { color: var(--blue); }
+
+        .hero-features { display: flex; flex-direction: column; gap: 14px; margin-bottom: 36px; }
+
+        .hero-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .hero-feature-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--blue-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--blue);
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .hero-feature h4 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+        .hero-feature p  { font-size: 13px; color: var(--muted); }
+
+        .hero-btns { display: flex; gap: 12px; align-items: center; }
+
+        .btn-primary {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--blue); color: #fff; text-decoration: none;
+            padding: 13px 28px; border-radius: 12px; font-weight: 700; font-size: 14px;
+            transition: all .2s; box-shadow: 0 4px 16px rgba(26,86,219,.3); border: none; cursor: pointer;
+        }
+        .btn-primary:hover { background: var(--blue-dark); transform: translateY(-1px); }
+
+        .btn-secondary {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: #fff; color: var(--text); text-decoration: none;
+            padding: 13px 28px; border-radius: 12px; font-weight: 600; font-size: 14px;
+            border: 1.5px solid var(--border); transition: all .2s;
+        }
+        .btn-secondary:hover { border-color: var(--blue); color: var(--blue); }
+
+        /* ── CARA RESERVASI ───────────────────────────────── */
+        .cara-section {
+            padding: 80px;
+            background: #fff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 800;
+            text-align: center;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .section-sub {
+            text-align: center;
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 12px;
+        }
+
+        .section-sub a { color: var(--blue); font-weight: 600; text-decoration: none; }
+
+        .btn-konsultasi-sm {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--blue); color: #fff; text-decoration: none;
+            padding: 9px 20px; border-radius: 10px; font-weight: 600; font-size: 13px;
+            transition: all .2s; margin-bottom: 48px;
+        }
+        .btn-konsultasi-sm:hover { background: var(--blue-dark); }
+
+        .steps-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 48px;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .step-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px;
+            position: relative;
+            transition: all .2s;
+        }
+        .step-card:hover { border-color: var(--blue); box-shadow: 0 4px 20px rgba(26,86,219,.1); }
+
+        .step-number {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--blue);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .step-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .step-card p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+        .step-card .step-note { font-size: 12px; color: var(--blue); margin-top: 8px; font-weight: 600; }
+
+        /* ── RESERVASI PETUGAS ────────────────────────────── */
+        .reservasi-section {
+            padding: 80px;
+            background: var(--bg);
+        }
+
+        .petugas-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 900px;
+            margin: 0 auto 32px;
+        }
+
+        .petugas-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 24px;
+            transition: all .2s;
+        }
+        .petugas-card:hover { border-color: var(--blue); box-shadow: 0 4px 20px rgba(26,86,219,.1); transform: translateY(-2px); }
+
+        .petugas-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+
+        .petugas-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #dbeafe, #93c5fd);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .petugas-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        .petugas-name { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+        .petugas-instansi { font-size: 12px; color: var(--muted); margin-bottom: 2px; }
+        .petugas-role { font-size: 12px; color: var(--blue); font-weight: 600; }
+
+        .petugas-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+
+        .petugas-tag {
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 8px;
+        }
+
+        .btn-reservasi {
+            width: 100%;
+            background: var(--blue);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 11px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .2s;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+        .btn-reservasi:hover { background: var(--blue-dark); }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 32px;
+        }
+
+        .page-btn {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: #fff;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 13px; font-weight: 600;
+            transition: all .2s; color: var(--text);
+        }
+        .page-btn:hover, .page-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+        .page-btn.nav { color: var(--muted); }
+
+        /* ── TOPIK KONSULTASI ─────────────────────────────── */
+        .topik-section { padding: 80px; background: #fff; }
+
+        .topik-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .btn-filter {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--blue-light); color: var(--blue);
+            border: none; padding: 9px 18px; border-radius: 10px;
+            font-size: 13px; font-weight: 600; cursor: pointer; transition: all .2s;
+        }
+        .btn-filter:hover { background: var(--blue); color: #fff; }
+
+        .topik-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .topik-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all .2s;
+            text-decoration: none;
+            color: var(--text);
+        }
+        .topik-card:hover {
+            border-color: var(--blue);
+            background: var(--blue-soft);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(26,86,219,.12);
+        }
+
+        .topik-icon {
+            width: 56px; height: 56px;
+            border-radius: 14px;
+            background: #fff;
+            border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 26px;
+            transition: all .2s;
+        }
+        .topik-card:hover .topik-icon { background: var(--blue-light); border-color: var(--blue); }
+
+        .topik-name { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.4; }
+
+        /* ── LAYANAN KHUSUS ───────────────────────────────── */
+        .layanan-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            max-width: 400px;
+            margin: 40px auto 0;
+        }
+
+        .layanan-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all .2s;
+            text-decoration: none;
+            color: var(--text);
+        }
+        .layanan-card:hover { border-color: var(--blue); background: var(--blue-soft); }
+        .layanan-card .layanan-icon { font-size: 32px; margin-bottom: 8px; }
+        .layanan-card p { font-size: 12px; font-weight: 600; color: var(--muted); }
+
+        /* ── RESPONSIVE ───────────────────────────────────── */
+        @media (max-width: 1024px) {
+            .hero, .cara-section, .reservasi-section, .topik-section { padding: 40px; }
+            .hero { flex-direction: column; }
+            .hero-left { width: 100%; max-width: 400px; }
+        }
+
+        @media (max-width: 768px) {
+            .steps-grid, .petugas-grid { grid-template-columns: 1fr; }
+            .topik-grid { grid-template-columns: repeat(3, 1fr); }
+            .hero-title { font-size: 36px; }
+        }

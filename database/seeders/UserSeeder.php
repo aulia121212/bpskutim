@@ -1,19 +1,4 @@
 <?php
-// ══════════════════════════════════════════════════════════════════════════
-// 1. DAFTARKAN MIDDLEWARE di bootstrap/app.php (Laravel 12)
-// ══════════════════════════════════════════════════════════════════════════
-//
-// Di file bootstrap/app.php, tambahkan:
-//
-// ->withMiddleware(function (Middleware $middleware) {
-//     $middleware->alias([
-//         'role' => \App\Http\Middleware\RoleMiddleware::class,
-//     ]);
-// })
-//
-// ══════════════════════════════════════════════════════════════════════════
-// 2. SEEDER — buat akun default semua role
-// ══════════════════════════════════════════════════════════════════════════
 
 namespace Database\Seeders;
 
@@ -27,35 +12,62 @@ class UserSeeder extends Seeder
     {
         $users = [
             [
-                'name'     => 'Super Admin',
-                'email'    => 'superadmin@bpskutim.go.id',
-                'password' => Hash::make('superadmin123'),
-                'role'     => User::ROLE_SUPER_ADMIN,
+                'name'         => 'Super Admin',
+                'email'        => 'superadmin@bpskutim.go.id',
+                'password'     => Hash::make('superadmin123'),
+                'role'         => User::ROLE_SUPER_ADMIN,
+                'no_whatsapp'  => '081111111111',
+                'instansi'     => 'BPS Kutai Timur',
+                'jabatan'      => 'Kepala Admin',
+                'tim'          => 'IT',
+                'alamat'       => 'Kutai Timur',
+                'is_active'    => true,
             ],
             [
-                'name'     => 'Admin Pelayanan',
-                'email'    => 'pelayanan@bpskutim.go.id',
-                'password' => Hash::make('pelayanan123'),
-                'role'     => User::ROLE_ADMIN_PELAYANAN,
+                'name'         => 'Admin Pelayanan',
+                'email'        => 'pelayanan@bpskutim.go.id',
+                'password'     => Hash::make('pelayanan123'),
+                'role'         => User::ROLE_ADMIN_PELAYANAN,
+                'no_whatsapp'  => '082222222222',
+                'instansi'     => 'BPS Kutai Timur',
+                'jabatan'      => 'Petugas Layanan',
+                'tim'          => 'Pelayanan',
+                'alamat'       => 'Sangatta',
+                'is_active'    => true,
             ],
             [
-                'name'     => 'Admin Data Statistik',
-                'email'    => 'statistik@bpskutim.go.id',
-                'password' => Hash::make('statistik123'),
-                'role'     => User::ROLE_ADMIN_STATISTIK,
+                'name'         => 'Admin Data Statistik',
+                'email'        => 'statistik@bpskutim.go.id',
+                'password'     => Hash::make('statistik123'),
+                'role'         => User::ROLE_ADMIN_STATISTIK,
+                'no_whatsapp'  => '083333333333',
+                'instansi'     => 'BPS Kutai Timur',
+                'jabatan'      => 'Staff Statistik',
+                'tim'          => 'Data',
+                'alamat'       => 'Sangatta',
+                'is_active'    => true,
             ],
             [
-                'name'     => 'Pengguna Contoh',
-                'email'    => 'user@example.com',
-                'password' => Hash::make('user12345'),
-                'role'     => User::ROLE_USER,
+                'name'         => 'Pengguna Contoh',
+                'email'        => 'user@example.com',
+                'password'     => Hash::make('user12345'),
+                'role'         => User::ROLE_USER,
+                'no_whatsapp'  => '084444444444',
+                'instansi'     => 'Umum',
+                'jabatan'      => '-',
+                'tim'          => '-',
+                'alamat'       => '-',
+                'is_active'    => true,
             ],
         ];
 
         foreach ($users as $data) {
-            User::updateOrCreate(['email' => $data['email']], $data);
+            User::updateOrCreate(
+                ['email' => $data['email']],
+                $data
+            );
         }
 
-        $this->command->info('✅ User seeder selesai — 4 akun dibuat.');
+        $this->command->info('✅ User seeder selesai — 4 akun lengkap dibuat.');
     }
 }

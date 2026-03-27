@@ -12,10 +12,19 @@
         <a href="/data-statistik" class="{{ request()->is('data-statistik') ? 'active' : '' }}">Data Statistik</a>
         <a href="/konsultasi" class="{{ request()->is('konsultasi') ? 'active' : '' }}">Konsultasi Statistik</a>
         @auth
-            <a href="{{ route('dashboard') }}" class="btn-nav">Dashboard</a>
-        @else
-            <a href="{{ route('login') }}" class="btn-nav">Daftar/Masuk</a>
-        @endauth
+    <a href="{{ route('user.profile') }}" class="btn-nav" style="display:flex;align-items:center;gap:8px;padding:6px 16px 6px 6px!important;">
+        <div style="width:32px;height:32px;border-radius:50%;background:#e8f0fe;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;">
+            @if(auth()->user()->foto)
+                <img src="{{ asset(auth()->user()->foto) }}" style="width:100%;height:100%;object-fit:cover;">
+            @else
+                <i class="ti ti-user" style="color:#1a56db;font-size:16px;"></i>
+            @endif
+        </div>
+        {{ auth()->user()->name }}
+    </a>
+@else
+    <a href="{{ route('login') }}" class="btn-nav">Daftar/Masuk</a>
+@endauth
     </div>
 </nav>
 
