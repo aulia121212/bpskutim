@@ -82,7 +82,7 @@ body #main-nav.scrolled {
 /* glass card */
 .slide-card {
      margin-left: 80px;
-    width: 580px;
+    width: min(480px, 42%);
     z-index: 2;
     position: relative;
     
@@ -158,7 +158,7 @@ body #main-nav.scrolled {
     top: 0;
     bottom: 0;
     /* mulai dari tengah slide, overlap dengan card */
-    left: 35%;
+    left: calc(var(--card-width, 420px) - 80px);
     z-index: 1;   /* di belakang card (card z-index: 2) */
     display: flex;
     align-items: flex-end;
@@ -266,64 +266,262 @@ body #main-nav.scrolled {
     font-size: 14px;
 }
 
-/* ── PUBLIKASI ────────────────────────────────── */
+/* ═══════════════════════════════════════════════
+   PUBLIKASI SECTION - Overlay Card on Image
+   ═══════════════════════════════════════════════ */
+
 .publikasi {
+    position: relative;
+    width: 100%;
+    background: #fff;
+    overflow: hidden;
+    padding: 60px 0;
+}
+.publikasi-container {
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: 550px;
     display: flex;
     align-items: center;
-    gap: 60px;
-    padding: 80px;
-    background: #fff;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 0 80px;
+}
+
+/* Gambar background - full width */
+.publikasi-img {
     position: relative;
-    overflow: hidden;
+    flex: 0 0 45%;
+    max-width: 45%;
+    z-index: 1;
 }
-.publikasi::before {
-    content: '';
-    position: absolute;
-    left: -150px; top: -150px;
-    width: 500px; height: 500px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(14,165,233,.06) 0%, transparent 70%);
+.publikasi-img img {
+    width: 100%;
+    height: auto;
+    max-height: 450px;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
 }
-.publikasi-content { flex: 1; z-index: 2; }
+
+/* Card wrapper - positioning */
+.publikasi-card-wrapper {
+    flex: 0 0 48%;
+    max-width: 48%;
+    z-index: 2;
+}
+/* Card style - overlay di atas gambar */
+.publikasi-card {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.75); /* Lebih transparan */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 28px;
+    padding: 48px 44px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+}
+
+.publikasi-card:hover {
+    background: rgba(255, 255, 255, 0.85); /* Sedikit lebih solid saat hover */
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Content styling */
+.publikasi-content {
+    text-align: left;
+}
+
 .publikasi-title {
     font-size: 44px;
-    line-height: 1.1;
+    line-height: 1.2;
     font-weight: 700;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
+    color: var(--text, #1e293b);
 }
+
 .publikasi-title em {
     font-family: 'Playfair Display', serif;
     font-style: italic;
-    color: var(--blue);
+    color: var(--blue, #1a56db);
     display: block;
+    font-size: 48px;
+    margin-bottom: 8px;
 }
+
 .publikasi-desc {
     font-size: 15px;
-    color: var(--muted);
-    line-height: 1.8;
-    max-width: 420px;
-    margin-bottom: 28px;
+    color: var(--muted, #64748b);
+    line-height: 1.7;
+    margin-bottom: 32px;
 }
+
+/* Button styling */
 .btn-outline {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    border: 2px solid var(--blue);
-    color: var(--blue);
+    gap: 10px;
+    background: transparent;
+    border: 2px solid var(--blue, #1a56db);
+    color: var(--blue, #1a56db);
     text-decoration: none;
     padding: 12px 28px;
-    border-radius: 12px;
+    border-radius: 14px;
     font-weight: 700;
     font-size: 14px;
-    transition: all .2s;
+    transition: all 0.25s ease;
+    cursor: pointer;
 }
-.btn-outline:hover { background: var(--blue); color: #fff; }
-.publikasi-img { flex: 0 0 420px; }
-.publikasi-img img {
-    width: 100%;
-    border-radius: 24px;
-    object-fit: cover;
-    box-shadow: 0 8px 40px rgba(26,86,219,.12);
+
+.btn-outline i {
+    font-size: 18px;
+    transition: transform 0.2s ease;
+}
+
+.btn-outline:hover {
+    background: var(--blue, #1a56db);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(26, 86, 219, 0.25);
+}
+
+.btn-outline:hover i {
+    transform: translateX(4px);
+}
+
+/* Optional: Gradient overlay on image for better text visibility */
+.publikasi-img::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+   
+    pointer-events: none;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .publikasi-card-wrapper {
+        padding: 0 60px;
+    }
+    
+    .publikasi-card {
+        max-width: 480px;
+        padding: 40px 36px;
+    }
+    
+    .publikasi-title {
+        font-size: 38px;
+    }
+    
+    .publikasi-title em {
+        font-size: 42px;
+    }
+}
+
+@media (max-width: 992px) {
+    .publikasi-card-wrapper {
+        padding: 0 40px;
+    }
+    
+    .publikasi-card {
+        max-width: 440px;
+        padding: 36px 32px;
+    }
+    
+    .publikasi-title {
+        font-size: 34px;
+    }
+    
+    .publikasi-title em {
+        font-size: 38px;
+    }
+}
+
+@media (max-width: 768px) {
+    .publikasi-container {
+        min-height: auto;
+    }
+    
+    .publikasi-card-wrapper {
+        position: relative;
+        padding: 40px 24px;
+        background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    }
+    
+    .publikasi-card {
+        max-width: 100%;
+        padding: 32px 28px;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+    }
+    
+    .publikasi-img {
+        min-height: 300px;
+        margin-top: -20px;
+    }
+    
+    .publikasi-img img {
+        object-position: center 30%;
+    }
+    
+    .publikasi-title {
+        font-size: 30px;
+    }
+    
+    .publikasi-title em {
+        font-size: 34px;
+    }
+    
+    .publikasi-desc {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .publikasi-card-wrapper {
+        padding: 32px 20px;
+    }
+    
+    .publikasi-card {
+        padding: 28px 24px;
+    }
+    
+    .publikasi-title {
+        font-size: 28px;
+    }
+    
+    .publikasi-title em {
+        font-size: 32px;
+    }
+    
+    .btn-outline {
+        padding: 10px 24px;
+        font-size: 13px;
+    }
+}
+
+/* Animation for card on load */
+@keyframes cardFadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.publikasi-card {
+    animation: cardFadeInUp 0.6s ease-out;
 }
 
 /* ── DATA TERBARU ─────────────────────────────── */

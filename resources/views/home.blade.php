@@ -109,21 +109,30 @@
 
 {{-- ══ PUBLIKASI ════════════════════════════════════════════════ --}}
 <section class="publikasi">
-    <div class="publikasi-content">
-        <h2 class="publikasi-title">
-            <em>Publikasi</em>
-            BPS Kutai Timur
-        </h2>
-        <p class="publikasi-desc">
-            Temukan berbagai publikasi statistik resmi yang menyajikan data, analisis, dan informasi terkini
-            sebagai referensi terpercaya untuk memahami perkembangan daerah.
-        </p>
-        <a href="/publikasi" class="btn-outline">
-            <i class="ti ti-link"></i> Akses Publikasi
-        </a>
-    </div>
-    <div class="publikasi-img">
-        <img src="{{ asset('images/bg_publikasi.png') }}" alt="Publikasi BPS">
+    <div class="publikasi-container">
+        {{-- Card di atas gambar --}}
+        <div class="publikasi-card-wrapper">
+            <div class="publikasi-card">
+                <div class="publikasi-content">
+                    <h2 class="publikasi-title">
+                        <em>Publikasi</em>
+                        BPS Kutai Timur
+                    </h2>
+                    <p class="publikasi-desc">
+                        Temukan berbagai publikasi statistik resmi yang menyajikan data, analisis,
+                        dan informasi terkini sebagai referensi terpercaya untuk memahami perkembangan daerah.
+                    </p>
+                    <a href="/publikasi" class="btn-outline">
+                        <i class="ti ti-link"></i> Akses Publikasi
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {{-- Gambar background full width --}}
+        <div class="publikasi-img">
+            <img src="{{ asset('images/bg_publikasi.png') }}" alt="Publikasi BPS">
+        </div>
     </div>
 </section>
 
