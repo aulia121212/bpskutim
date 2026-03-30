@@ -1,0 +1,472 @@
+/* ═══════════════════════════════════════════════
+   home.css — BPS Kutai Timur Homepage
+   ═══════════════════════════════════════════════ */
+
+:root {
+    --blue:       #1a56db;
+    --blue-dark:  #1341b0;
+    --blue-light: #e8f0fe;
+    --blue-soft:  #f0f6ff;
+    --text:       #1e293b;
+    --muted:      #64748b;
+    --border:     #e2e8f0;
+    --bg:         #f0f6ff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text); background: #fff; }
+
+/* Navbar selalu solid di home karena bg terang */
+body #main-nav {
+    background: rgba(240,246,255,0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+body #main-nav.scrolled {
+    background: #ffffff;
+    border-bottom-color: #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* ── HERO SLIDER ──────────────────────────────── */
+.hero {
+    margin-top: 72px;
+    position: relative;
+    background: var(--bg);
+    overflow: hidden;
+}
+
+.slider-wrap { position: relative; overflow: hidden; }
+
+.slider-track {
+    display: flex;
+    transition: transform .55s cubic-bezier(.4,0,.2,1);
+}
+
+/* SLIDE */
+.slide {
+    min-width: 100%;
+    min-height: 520px;
+
+    display: flex;
+    align-items: center;
+
+    position: relative;
+    overflow: hidden;
+
+    padding: 60px 100px;
+    background: var(--bg);
+}
+
+/* full-bleed background image — blurred */
+.slide-bg {
+    position: absolute;
+    inset: 0; z-index: 0;
+}
+.slide-bg img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center right;
+    opacity: 0.22;
+    filter: blur(3px) saturate(1.3);
+}
+.slide-bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg,
+        rgba(240,246,255,0.55) 0%,
+        rgba(240,246,255,0.30) 60%,
+        rgba(240,246,255,0.05) 100%);
+}
+
+/* glass card */
+.slide-card {
+     margin-left: 80px;
+    width: 580px;
+    z-index: 2;
+    position: relative;
+    
+    padding: 40px 36px;
+
+    background: rgba(255, 255, 255, 0.35); /* lebih transparan */
+    backdrop-filter: blur(30px) saturate(1.6);
+    -webkit-backdrop-filter: blur(30px) saturate(1.6);
+
+    border: 1px solid rgba(255,255,255,0.6);
+    border-radius: 24px;
+
+    box-shadow: 
+        0 10px 40px rgba(26,86,219,.12),
+        inset 0 1px 0 rgba(255,255,255,.8);
+
+
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.slide-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(26,86,219,.10);
+    color: var(--blue);
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 5px 13px;
+    border-radius: 999px;
+    margin-bottom: 18px;
+    letter-spacing: .02em;
+}
+
+.slide-title {
+    font-size: 42px;
+    line-height: 1.1;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 14px;
+    letter-spacing: -.5px;
+}
+
+.slide-title em {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--blue);
+}
+
+.slide-lead {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+
+.slide-desc {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.75;
+    margin-bottom: 28px;
+    max-width: 100%;
+}
+
+/* ── IMAGE (right) ────────────────────────────── */
+.slide-img {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    /* mulai dari tengah slide, overlap dengan card */
+    left: 35%;
+    z-index: 1;   /* di belakang card (card z-index: 2) */
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+@keyframes imgIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.slide-img img {
+    height: 100%;
+    max-height: 500px;
+    width: 100%;
+    object-fit: contain;
+    object-position: bottom center;
+    filter: drop-shadow(0 8px 24px rgba(26,86,219,.08));
+}
+
+/* ── SLIDER NAV BUTTONS ───────────────────────── */
+.slider-btn {
+    position: absolute;
+    top: 50%; transform: translateY(-50%);
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(8px);
+    border: 1.5px solid var(--border);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 20;
+    transition: all .2s;
+    box-shadow: 0 2px 10px rgba(0,0,0,.08);
+    color: var(--text);
+    font-size: 15px;
+}
+.slider-btn:hover { background: var(--blue); color: #fff; border-color: var(--blue); }
+.slider-btn.prev  { left: 16px; }
+.slider-btn.next  { right: 16px; }
+
+/* ── DOTS BAR ─────────────────────────────────── */
+.slider-dots {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 80px;
+    background: var(--bg);
+}
+
+.slider-prev-dot, .slider-next-dot {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--muted);
+    transition: all .2s;
+}
+.slider-prev-dot:hover, .slider-next-dot:hover {
+    border-color: var(--blue); color: var(--blue);
+}
+
+.dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #c7d7f0;
+    border: none;
+    cursor: pointer;
+    transition: all .25s;
+    padding: 0;
+}
+.dot.active {
+    background: var(--blue);
+    width: 28px;
+    border-radius: 5px;
+}
+
+/* ── CTA BUTTON ───────────────────────────────── */
+.btn-hero {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--blue);
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all .2s;
+    box-shadow: 0 4px 16px rgba(26,86,219,.28);
+    border: none;
+    cursor: pointer;
+}
+.btn-hero:hover { background: var(--blue-dark); transform: translateY(-2px); }
+.btn-hero .btn-icon {
+    width: 30px; height: 30px;
+    background: rgba(255,255,255,.2);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+}
+
+/* ── PUBLIKASI ────────────────────────────────── */
+.publikasi {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    padding: 80px;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+}
+.publikasi::before {
+    content: '';
+    position: absolute;
+    left: -150px; top: -150px;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(14,165,233,.06) 0%, transparent 70%);
+}
+.publikasi-content { flex: 1; z-index: 2; }
+.publikasi-title {
+    font-size: 44px;
+    line-height: 1.1;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+.publikasi-title em {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--blue);
+    display: block;
+}
+.publikasi-desc {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 420px;
+    margin-bottom: 28px;
+}
+.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 2px solid var(--blue);
+    color: var(--blue);
+    text-decoration: none;
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all .2s;
+}
+.btn-outline:hover { background: var(--blue); color: #fff; }
+.publikasi-img { flex: 0 0 420px; }
+.publikasi-img img {
+    width: 100%;
+    border-radius: 24px;
+    object-fit: cover;
+    box-shadow: 0 8px 40px rgba(26,86,219,.12);
+}
+
+/* ── DATA TERBARU ─────────────────────────────── */
+.data-section { padding: 80px; background: var(--bg); }
+
+.section-header { text-align: center; margin-bottom: 48px; }
+.section-title {
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.15;
+}
+.section-title em {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--blue);
+    display: block;
+}
+
+.btn-search {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    background: var(--blue-light);
+    color: var(--blue);
+    border: none;
+    padding: 10px 24px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all .2s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.btn-search:hover { background: var(--blue); color: #fff; }
+
+.charts-slider { position: relative; overflow: hidden; }
+.charts-track  { display: flex; gap: 20px; transition: transform .4s ease; padding: 4px 2px; }
+
+.chart-card {
+    min-width: 360px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.05);
+    transition: transform .2s, box-shadow .2s;
+}
+.chart-card:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(0,0,0,.09); }
+.chart-card-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.chart-card-sub   { font-size: 11px; color: var(--muted); margin-bottom: 14px; }
+
+.chart-nav { display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 28px; }
+.nav-btn {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .2s;
+    color: var(--text);
+    font-size: 14px;
+}
+.nav-btn:hover { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+.dots { display: flex; gap: 6px; }
+.chart-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    border: none; cursor: pointer;
+    transition: all .2s; padding: 0;
+}
+.chart-dot.active { background: var(--blue); }
+
+/* ── POPUP BANNER ─────────────────────────────── */
+.popup-banner {
+    margin: 0 80px 80px;
+    border-radius: 24px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 52px 64px;
+    position: relative;
+}
+.popup-banner::before {
+    content: '';
+    position: absolute;
+    right: -80px; top: -80px;
+    width: 360px; height: 360px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,.3) 0%, transparent 70%);
+}
+.popup-banner-content h2 {
+    font-size: 34px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 24px;
+}
+.popup-banner-content h2 span { color: var(--blue); }
+.btn-konsultasi {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--blue);
+    color: #fff;
+    text-decoration: none;
+    padding: 14px 32px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 15px;
+    box-shadow: 0 4px 20px rgba(26,86,219,.35);
+    transition: all .2s;
+}
+.btn-konsultasi:hover { background: var(--blue-dark); transform: translateY(-2px); }
+.popup-banner-img { position: relative; z-index: 2; }
+.popup-banner-img img { width: 300px; border-radius: 16px; }
+
+/* ── RESPONSIVE ───────────────────────────────── */
+@media (max-width: 1024px) {
+    .slide { padding: 40px; gap: 32px; }
+    .slide-card { flex: 0 0 360px; }
+    .publikasi, .data-section { padding: 48px 40px; }
+    .popup-banner { margin: 0 40px 60px; padding: 40px; }
+    .slide-title { font-size: 36px; }
+    .slider-dots { padding: 18px 40px; }
+}
+
+@media (max-width: 768px) {
+    .slide { flex-direction: column; padding: 32px 24px; min-height: auto; }
+    .slide-card { flex: none; width: 100%; }
+    .slide-img { justify-content: center; }
+    .slide-img img { max-height: 240px; }
+    .slide-title { font-size: 30px; }
+    .publikasi { flex-direction: column; padding: 48px 24px; }
+    .publikasi-img { flex: none; width: 100%; }
+    .data-section { padding: 48px 24px; }
+    .popup-banner { flex-direction: column; margin: 0 24px 48px; padding: 36px 28px; gap: 24px; }
+    .popup-banner-img img { width: 220px; }
+    .slider-dots { padding: 16px 24px; }
+}
