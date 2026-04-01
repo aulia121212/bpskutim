@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class StatisticTitle extends Model
 {
     protected $fillable = [
+        'indikator_data',
         'judul_data',
         'judul_kolom',
         'interpretasi_lebih_kecil',

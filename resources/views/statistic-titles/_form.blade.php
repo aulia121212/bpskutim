@@ -5,6 +5,21 @@
 --}}
 <div class="space-y-4">
 
+{{-- Indikator --}}
+        <div>
+            <label class="block text-sm font-semibold text-blue-500 mb-1">
+                Indikator
+            </label>
+            <select name="indikator_data"
+                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500">
+                <option value="">Pilih Indikator</option>
+                <option value="indikator_ekonomi">Indikator Ekonomi</option>
+                <option value="indikator_ketenagakerjaan">Indikator Ketenagakerjaan</option>
+                <option value="indikator_sosial">Indikator Sosial</option>
+                <option value="indikator_pembangunan_manusia">Indikator Pembangunan Manusia</option>
+            </select>
+        </div>
+
     {{-- Judul Data --}}
     <div>
         <label class="block text-xs font-semibold text-blue-500 mb-1">Judul Data <span class="text-red-400">*</span></label>

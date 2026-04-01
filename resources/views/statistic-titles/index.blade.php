@@ -25,7 +25,8 @@
         <table class="w-full text-sm">
             <thead>
                 <tr class="border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50">
-                    <th class="text-left px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest w-8">#</th>
+                    <th class="text-left px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest w-8">No</th>
+                    <th class="text-left px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Indikator Data</th>
                     <th class="text-left px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Judul Data</th>
                     <th class="text-left px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Judul Kolom</th>
                     <th class="text-left px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Komponen</th>
@@ -38,7 +39,13 @@
            @forelse ($titles as $title)
                 <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition group"
                     x-data="titleRow({{ $title->components->toJson() }})">
-                    <td class="px-6 py-4 text-gray-400">{{ $loop->iteration }}</td>
+                   <td class="px-6 py-4 text-gray-400">
+    {{ $loop->iteration }}
+</td>
+
+<td class="px-6 py-4 text-xs font-semibold text-blue-500">
+    {{ Str::replace('_', ' ', $title->indikator_data) }}
+</td>
                     <td class="px-6 py-4 font-semibold text-gray-800 dark:text-white max-w-[200px]">
                         <p class="line-clamp-2">{{ $title->judul_data }}</p>
                     </td>

@@ -171,7 +171,7 @@
     <div class="p-4 border-t border-gray-100 dark:border-gray-800 space-y-2">
 
         {{-- Profil --}}
-        <a href="{{ route('profile.index') }}"
+        <a href="{{ route('user.profile') }}"
             class="flex items-center py-2.5 rounded-xl transition-all duration-300 text-gray-500 hover:bg-gray-50"
             @mouseenter="showTooltip($event, 'Profil Akun')">
 

@@ -26,6 +26,7 @@ public function index()
     public function store(Request $request)
     {
         $request->validate([
+            'indikator_data' => 'required|string|max:255',
             'judul_data'  => 'required|string|max:255',
             'judul_kolom' => 'nullable|string|max:255',
         ]);
@@ -33,6 +34,7 @@ public function index()
         DB::transaction(function () use ($request) {
 
             $title = StatisticTitle::create([
+                'indikator_data'         => $request->indikator_data, 
                 'judul_data'               => $request->judul_data,
                 'judul_kolom'              => $request->judul_kolom,
                 'interpretasi_lebih_kecil' => $request->interpretasi_lebih_kecil,
@@ -50,6 +52,7 @@ public function index()
     public function update(Request $request, StatisticTitle $statisticTitle)
     {
         $request->validate([
+            'indikator_data' => 'required|string|max:255',
             'judul_data'  => 'required|string|max:255',
             'judul_kolom' => 'nullable|string|max:255',
         ]);
@@ -57,6 +60,7 @@ public function index()
         DB::transaction(function () use ($request, $statisticTitle) {
 
             $statisticTitle->update([
+                'indikator_data'         => $request->indikator_data,
                 'judul_data'               => $request->judul_data,
                 'judul_kolom'              => $request->judul_kolom,
                 'interpretasi_lebih_kecil' => $request->interpretasi_lebih_kecil,

@@ -16,7 +16,7 @@ return new class extends Migration
         $table->enum('indikator_data', ['indikator_ekonomi', 'indikator_ketenagakerjaan', 'indikator_sosial', 'indikator_pembangunan_manusia']);
         $table->string('judul_data');
         $table->string('wilayah_data');
-        $table->string('file_data');   
+        $table->string('file_data')->nullable(); 
         $table->string('interpretasi_lebih_kecil');
         $table->string('interpretasi_lebih_besar');
         $table->enum('status', ['draft', 'published'])->default('draft');

@@ -23,7 +23,8 @@
             <div>
                 <label class="block text-sm font-semibold text-blue-500 mb-1">Indikator</label>
                 <div class="relative">
-                    <select name="indikator_data"
+                    {{-- x-model untuk tracking pilihan indikator --}}
+                    <select name="indikator_data" x-model="selectedIndikator" @change="resetJudul()"
                         class="w-full appearance-none border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="">Pilih Indikator</option>
                         <option value="indikator_ekonomi">Indikator Ekonomi</option>
@@ -35,7 +36,7 @@
                 </div>
             </div>
 
-            <div x-data="judulPicker()" x-init="init()">
+            <div>
                 <div class="flex items-center justify-between mb-1">
                     <label class="block text-sm font-semibold text-blue-500">Judul Data</label>
                     <a href="{{ route('statistic-titles.index') }}" target="_blank"
@@ -44,17 +45,29 @@
                     </a>
                 </div>
                 <div class="relative">
-                    <select name="statistic_title_id" @change="fetchInterpretasi($event.target.value)"
-                        class="w-full appearance-none border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    {{-- :disabled akan mengunci dropdown jika indikator kosong --}}
+                    <select name="statistic_title_id" 
+                        x-model="selectedTitleId"
+                        :disabled="!selectedIndikator"
+                        @change="fetchInterpretasi($event.target.value)"
+                        class="w-full appearance-none border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm disabled:opacity-50 disabled:bg-gray-50 text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="">Pilih Judul Data</option>
                         @foreach($statisticTitles as $title)
-                            <option value="{{ $title->id }}">{{ $title->judul_data }}</option>
+                            {{-- x-show memfilter judul berdasarkan indikator yang dipilih --}}
+                            <option 
+                                value="{{ $title->id }}" 
+                                x-show="selectedIndikator === '{{ $title->indikator_data }}'"
+                                {{-- Kita juga disable opsinya agar tidak terpilih via keyboard jika hidden --}}
+                                :disabled="selectedIndikator !== '{{ $title->indikator_data }}'"
+                            >
+                                {{ $title->judul_data }}
+                            </option>
                         @endforeach
                     </select>
                     <i class="ti ti-chevron-down absolute right-3 top-3 text-gray-400 pointer-events-none"></i>
                 </div>
 
-                {{-- Preview Interpretasi — tampil jika minimal 1 ada isinya --}}
+                {{-- Preview Interpretasi --}}
                 <div x-show="hasAny" x-cloak
                     class="mt-3 rounded-2xl border border-blue-100 dark:border-blue-900/40 bg-blue-50/50 p-3 space-y-2">
                     <p class="text-[10px] font-black uppercase tracking-widest text-blue-400">Preview Interpretasi</p>
@@ -69,7 +82,6 @@
                         <p class="text-xs text-gray-500 leading-relaxed line-clamp-2" x-text="besar"></p>
                     </div>
 
-                    {{-- FIX: gunakan hasanya flag khusus bukan x-show="tetap" langsung --}}
                     <div x-show="hasTetap">
                         <p class="text-[10px] font-bold text-gray-400 mb-0.5"><i class="ti ti-minus"></i> Tetap</p>
                         <p class="text-xs text-gray-500 leading-relaxed line-clamp-2" x-text="tetap"></p>
@@ -105,11 +117,8 @@
             </div>
         </div>
 
-        {{-- ================================================================ --}}
-        {{-- NILAI DATA                                                        --}}
-        {{-- ================================================================ --}}
+        {{-- NILAI DATA (GRID TABLE) --}}
         <div class="border-t border-gray-100 dark:border-gray-800 pt-6">
-
             <div class="flex items-center justify-between mb-4">
                 <div>
                     <p class="text-sm font-semibold text-blue-500">Nilai Data</p>
@@ -118,19 +127,15 @@
                         Kolom = <span class="font-semibold text-gray-600 dark:text-gray-300">Tahun</span>
                     </p>
                 </div>
-                {{-- Hanya label, tanpa toggle tab --}}
                 <div class="flex items-center gap-2 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800">
                     <i class="ti ti-table text-blue-500 text-sm"></i>
                     <span class="text-xs font-bold text-blue-600">Tabel Grid</span>
                 </div>
             </div>
 
-            {{-- =================== TABEL GRID =================== --}}
             <div>
-
-                {{-- Toolbar: tambah tahun + tambah baris --}}
+                {{-- Toolbar --}}
                 <div class="flex items-center gap-3 mb-4 flex-wrap">
-                    {{-- Tambah Tahun --}}
                     <div class="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 rounded-xl px-3 py-2 border border-gray-200 dark:border-gray-700">
                         <input type="number" x-model="newYear" placeholder="2024" min="2000" max="2100"
                             class="w-20 bg-transparent text-sm text-gray-700 dark:text-gray-300 focus:outline-none"
@@ -143,31 +148,15 @@
 
                     <div class="h-5 w-px bg-gray-200 dark:bg-gray-700"></div>
 
-                    {{-- Tambah Kategori Utama --}}
                     <button type="button" @click="addCategory(false)"
                         class="flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800 bg-blue-50 dark:bg-blue-900/20 rounded-xl px-3 py-2 transition">
                         <i class="ti ti-layout-rows text-sm"></i> + Kategori
                     </button>
 
-                    {{-- Tambah Sub-kategori --}}
                     <button type="button" @click="addCategory(true)"
                         class="flex items-center gap-1.5 text-xs font-bold text-indigo-500 hover:text-indigo-700 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl px-3 py-2 transition">
                         <i class="ti ti-indent-increase text-sm"></i> + Sub-kategori
                     </button>
-
-                    <span class="text-xs text-gray-400 italic" x-show="years.length === 0">← Tambah tahun dulu</span>
-                </div>
-
-                {{-- Legend --}}
-                <div class="flex items-center gap-4 mb-3 text-[10px] font-semibold text-gray-400">
-                    <span class="flex items-center gap-1.5">
-                        <span class="w-3 h-3 rounded bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600"></span>
-                        Kategori Utama
-                    </span>
-                    <span class="flex items-center gap-1.5">
-                        <span class="w-3 h-3 rounded bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-700"></span>
-                        Sub-kategori <span class="opacity-60">(prefix "· " otomatis)</span>
-                    </span>
                 </div>
 
                 {{-- Grid Tabel --}}
@@ -198,14 +187,12 @@
                                         ? 'bg-indigo-50/40 dark:bg-indigo-900/10 hover:bg-indigo-50 dark:hover:bg-indigo-900/20'
                                         : 'bg-white dark:bg-gray-900 hover:bg-gray-50/50 dark:hover:bg-gray-800/30'">
 
-                                    {{-- Nama kategori --}}
                                     <td class="border-b border-r border-gray-100 dark:border-gray-700 px-2 py-1">
                                         <div class="flex items-center gap-2" :class="cat.isSub ? 'pl-5' : ''">
                                             <span x-show="cat.isSub" class="text-indigo-300 text-xs font-bold shrink-0">·</span>
                                             <input type="text"
                                                 :name="'grid[' + ci + '][category]'"
                                                 x-model="cat.name"
-                                                :placeholder="cat.isSub ? 'Nilai (Juta Rupiah)' : 'PDRB per Kapita'"
                                                 :class="cat.isSub
                                                     ? 'text-gray-600 dark:text-gray-400 italic text-xs'
                                                     : 'text-gray-800 dark:text-white font-semibold text-sm'"
@@ -213,26 +200,21 @@
                                         </div>
                                     </td>
 
-                                    {{-- Nilai per tahun --}}
                                     <template x-for="(year, yi) in years" :key="year">
                                         <td class="border-b border-r border-gray-100 dark:border-gray-700 px-2 py-1 text-center">
                                             <input type="text"
                                                 :name="'grid[' + ci + '][values][' + year + ']'"
                                                 x-model="cat.values[year]"
-                                                placeholder="-"
                                                 @blur="cat.values[year] = parseIndonesian(cat.values[year])"
                                                 :class="cat.isSub ? 'text-gray-500 text-xs' : 'text-gray-700 text-sm'"
                                                 class="w-full bg-transparent px-2 py-1.5 text-center dark:text-gray-300 focus:outline-none focus:bg-white dark:focus:bg-gray-800 rounded-lg transition">
                                         </td>
                                     </template>
 
-                                    {{-- Aksi --}}
                                     <td class="border-b border-gray-100 dark:border-gray-700 px-2 text-center">
                                         <div class="flex items-center justify-center gap-1">
-                                            <button type="button" @click="cat.isSub = !cat.isSub; syncPrefix(ci)"
-                                                :title="cat.isSub ? 'Jadikan kategori utama' : 'Jadikan sub-kategori'"
-                                                :class="cat.isSub ? 'text-indigo-400 hover:text-indigo-600' : 'text-gray-300 hover:text-indigo-400'"
-                                                class="w-6 h-6 flex items-center justify-center rounded transition">
+                                            <button type="button" @click="cat.isSub = !cat.isSub"
+                                                class="w-6 h-6 flex items-center justify-center rounded transition text-gray-300 hover:text-indigo-400">
                                                 <i class="ti ti-indent-increase text-xs"></i>
                                             </button>
                                             <button type="button" @click="removeCategory(ci)"
@@ -247,18 +229,9 @@
                     </table>
                 </div>
 
-                {{-- Empty state --}}
-                <div x-show="years.length === 0 || categories.length === 0"
-                    class="border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-2xl py-12 text-center">
-                    <i class="ti ti-table text-3xl text-gray-300 mb-3 block"></i>
-                    <p class="text-sm font-semibold text-gray-400">Tambah tahun dan kategori untuk mulai mengisi data</p>
-                </div>
-
-                <input type="hidden" name="input_mode" value="grid">
                 <input type="hidden" name="years_list" :value="JSON.stringify(years)">
                 <input type="hidden" name="grid_json" id="grid_json_input" value="">
             </div>
-
         </div>
 
         {{-- Actions --}}
@@ -277,29 +250,75 @@
     </form>
 </div>
 
+@push('scripts')
 <script>
 function createStatistic() {
     return {
-        inputMode: 'grid',
+        // State Baru
+        selectedIndikator: '{{ old('indikator_data') ?? '' }}',
+        selectedTitleId: '{{ old('statistic_title_id') ?? '' }}',
+        
+        // State Interpretasi
+        kecil: '',
+        besar: '',
+        tetap: '',
 
-        years:      [],
+        // State Grid
+        years: [],
         categories: [],
-        newYear:    '',
+        newYear: '',
         judulKolom: 'Kategori / Lapangan Usaha',
 
+        get hasAny() { return !!(this.kecil || this.besar || this.tetap); },
+        get hasTetap() { return !!(this.tetap); },
+
         init() {
+            // Re-fetch jika ada data lama (old input)
+            if (this.selectedTitleId) {
+                this.fetchInterpretasi(this.selectedTitleId);
+            }
+
             this.$el.addEventListener('load-components', (e) => {
                 const { components, judulKolom } = e.detail;
                 this.judulKolom = judulKolom || 'Kategori / Lapangan Usaha';
                 this.categories = components.map(c => {
                     const existing = this.categories.find(x => x.name === c.nama);
-                    const values   = existing ? existing.values : {};
+                    const values = existing ? existing.values : {};
                     this.years.forEach(y => { if (!(y in values)) values[y] = ''; });
                     return { name: c.nama, isSub: c.is_sub, values };
                 });
             });
         },
 
+        resetJudul() {
+            this.selectedTitleId = '';
+            this.kecil = '';
+            this.besar = '';
+            this.tetap = '';
+        },
+
+        async fetchInterpretasi(id) {
+            if (!id) return;
+            try {
+                const response = await fetch(`/statistic-titles/${id}/interpretasi`);
+                const data = await response.json();
+                
+                this.kecil = data.interpretasi_lebih_kecil || '';
+                this.besar = data.interpretasi_lebih_besar || '';
+                this.tetap = data.interpretasi_tetap || '';
+
+                if (data.components && data.components.length > 0) {
+                    this.$dispatch('load-components', {
+                        components: data.components,
+                        judulKolom: data.judul_kolom || 'Kategori'
+                    });
+                }
+            } catch(e) {
+                console.error('Error fetching data:', e);
+            }
+        },
+
+        // Fungsi Grid (Tetap Sama)
         addYear() {
             const y = parseInt(this.newYear);
             if (!y || this.years.includes(y)) return;
@@ -321,19 +340,11 @@ function createStatistic() {
         removeCategory(ci) {
             this.categories.splice(ci, 1);
         },
-        syncPrefix(ci) {},
-
         parseIndonesian(val) {
-            if (val === '' || val === '-' || val === null || val === undefined) return val;
+            if (!val || val === '-') return val;
             let s = String(val).trim();
             if (s.includes('.') && s.includes(',')) {
-                const dotPos   = s.lastIndexOf('.');
-                const commaPos = s.lastIndexOf(',');
-                if (commaPos > dotPos) {
-                    s = s.replace(/\./g, '').replace(',', '.');
-                } else {
-                    s = s.replace(/,/g, '');
-                }
+                s = s.lastIndexOf(',') > s.lastIndexOf('.') ? s.replace(/\./g, '').replace(',', '.') : s.replace(/,/g, '');
             } else if (s.includes(',')) {
                 s = s.replace(',', '.');
             }
@@ -343,59 +354,18 @@ function createStatistic() {
     }
 }
 
-function judulPicker() {
-    return {
-        kecil:    '',
-        besar:    '',
-        tetap:    '',
-        // FIX: computed flags — Alpine tidak bisa andalkan string truthy langsung untuk x-show
-        get hasAny()   { return !!(this.kecil || this.besar || this.tetap); },
-        get hasTetap() { return !!(this.tetap); },
-
-        init() {
-            const oldId = '{{ old('statistic_title_id') }}';
-            if (oldId) this.fetchInterpretasi(oldId);
-        },
-
-        async fetchInterpretasi(id) {
-            this.kecil = '';
-            this.besar = '';
-            this.tetap = '';
-            if (!id) return;
-            try {
-                const data = await (await fetch(`/statistic-titles/${id}/interpretasi`)).json();
-                // FIX: pastikan assign string kosong jika null/undefined agar getter bekerja benar
-                this.kecil = data.interpretasi_lebih_kecil || '';
-                this.besar = data.interpretasi_lebih_besar || '';
-                this.tetap = data.interpretasi_tetap       || '';
-
-                if (data.components && data.components.length > 0) {
-                    this.$dispatch('load-components', {
-                        components: data.components,
-                        judulKolom: data.judul_kolom || 'Kategori'
-                    });
-                }
-            } catch(e) {
-                console.error('fetchInterpretasi error:', e);
-            }
-        }
-    }
-}
-
 function submitStatisticForm() {
     const rows = [];
-
     const categoryInputs = document.querySelectorAll('input[name^="grid"][name$="[category]"]');
 
     categoryInputs.forEach(catInput => {
         const match = catInput.name.match(/grid\[(\d+)\]/);
         if (!match) return;
         const ci = match[1];
-
         const rawName = catInput.value.trim();
         if (!rawName) return;
 
-        const row   = catInput.closest('tr');
+        const row = catInput.closest('tr');
         const isSub = row && row.classList.toString().includes('indigo');
         const xLabel = isSub ? '· ' + rawName : rawName;
 
@@ -404,14 +374,12 @@ function submitStatisticForm() {
             const yearMatch = valInput.name.match(/\[values\]\[(\d+)\]/);
             if (!yearMatch) return;
             const year = yearMatch[1];
-            const raw  = valInput.value.trim();
+            const raw = valInput.value.trim();
             if (!raw || raw === '-') return;
 
             let s = raw;
             if (s.includes('.') && s.includes(',')) {
-                s = s.lastIndexOf(',') > s.lastIndexOf('.')
-                    ? s.replace(/\./g, '').replace(',', '.')
-                    : s.replace(/,/g, '');
+                s = s.lastIndexOf(',') > s.lastIndexOf('.') ? s.replace(/\./g, '').replace(',', '.') : s.replace(/,/g, '');
             } else if (s.includes(',')) {
                 s = s.replace(',', '.');
             }
@@ -426,4 +394,5 @@ function submitStatisticForm() {
     document.getElementById('statisticForm').submit();
 }
 </script>
+@endpush
 @endsection
