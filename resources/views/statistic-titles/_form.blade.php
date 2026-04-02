@@ -1,8 +1,3 @@
-{{--
-    Partial ini dipakai di modal Tambah dan Edit.
-    x-data harus sudah ada di parent (componentForm atau titleRow).
-    $title = opsional, dipakai saat edit.
---}}
 <div class="space-y-4">
 
 {{-- Indikator --}}
