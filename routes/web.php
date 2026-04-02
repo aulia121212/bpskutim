@@ -9,6 +9,7 @@ use App\Http\Controllers\PublikasiController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\DataStatistikController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,10 +60,20 @@ Route::middleware('auth')->group(function () {
     // ── ADMIN STATISTIK ──────────────────────────────────────────
     Route::middleware('role:admin_statistik,super_admin')->group(function () {
         Route::resource('statistics',       App\Http\Controllers\StatisticController::class)->except(['index', 'show']);
+        Route::post('/statistics/{id}/publish', [App\Http\Controllers\StatisticController::class, 'publish'])->name('statistics.publish');
         Route::resource('statistic-titles', App\Http\Controllers\StatisticTitleController::class)->except(['index', 'show']);
         Route::get('/statistics/preview/{id}', [App\Http\Controllers\StatisticController::class, 'preview'])->name('statistics.preview');
     });
 });
+
+// Halaman utama data statistik (dengan hero chart & kategori)
+Route::get('/data-statistik', [DataStatistikController::class, 'index'])->name('data-statistik.index');
+ 
+// Halaman list per indikator (indikator_klik.png)
+Route::get('/data-statistik/indikator/{slug}', [DataStatistikController::class, 'indikator'])->name('data-statistik.indikator');
+ 
+// Halaman detail / interpretasi (lihat_grafik.png)
+Route::get('/data-statistik/{id}', [DataStatistikController::class, 'show'])->name('data-statistik.show');
 
 // ── KONSULTASI (PUBLIC) ───────────────────────────────────────────────
 Route::get('/konsultasi', [App\Http\Controllers\KonsultasiController::class, 'index'])->name('konsultasi');

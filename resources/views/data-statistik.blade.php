@@ -49,19 +49,19 @@
 <section class="categories">
     <p class="cat-hint">Silakan pilih salah satu dari empat kategori indikator berikut untuk mulai menjelajahi data</p>
     <div class="cat-grid">
-        <a href="?indikator=indikator_ekonomi" class="cat-card {{ request('indikator') === 'indikator_ekonomi' ? 'active' : '' }}">
+        <a href="{{ route('data-statistik.indikator', 'indikator_ekonomi') }}" class="cat-card {{ request('indikator') === 'indikator_ekonomi' ? 'active' : '' }}">
             <div class="cat-icon" style="background:#fef3c7">💰</div>
             <div class="cat-name">Indikator Ekonomi</div>
         </a>
-        <a href="?indikator=indikator_ketenagakerjaan" class="cat-card {{ request('indikator') === 'indikator_ketenagakerjaan' ? 'active' : '' }}">
+        <a href="{{ route('data-statistik.indikator', 'indikator_ketenagakerjaan') }}" class="cat-card {{ request('indikator') === 'indikator_ketenagakerjaan' ? 'active' : '' }}">
             <div class="cat-icon" style="background:#fce7f3">👷</div>
             <div class="cat-name">Indikator Ketenagakerjaan</div>
         </a>
-        <a href="?indikator=indikator_sosial" class="cat-card {{ request('indikator') === 'indikator_sosial' ? 'active' : '' }}">
+        <a href="{{ route('data-statistik.indikator', 'indikator_sosial') }}" class="cat-card {{ request('indikator') === 'indikator_sosial' ? 'active' : '' }}">
             <div class="cat-icon" style="background:#d1fae5">👥</div>
             <div class="cat-name">Indikator Sosial</div>
         </a>
-        <a href="?indikator=indikator_pembangunan_manusia" class="cat-card {{ request('indikator') === 'indikator_pembangunan_manusia' ? 'active' : '' }}">
+        <a href="{{ route('data-statistik.indikator', 'indikator_pembangunan_manusia') }}" class="cat-card {{ request('indikator') === 'indikator_pembangunan_manusia' ? 'active' : '' }}">
             <div class="cat-icon" style="background:#e0f2fe">📊</div>
             <div class="cat-name">Indikator Pembangunan Manusia</div>
         </a>
