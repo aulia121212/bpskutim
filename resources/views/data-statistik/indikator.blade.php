@@ -271,6 +271,8 @@
 
 @include('partials.navbar')
 
+<!-- // <div class="max-w-7xl mx-auto px-6 py-10"> -->
+
 {{-- Breadcrumb --}}
 <div class="breadcrumb">
     <a href="/data-statistik">Data Statistik</a>
@@ -322,11 +324,23 @@
 <div class="data-list">
     @forelse($statistics as $stat)
     @php
-        $values = $stat->values->sortBy('year');
+        // {{--
+        //     Struktur: Statistictitle → statistics (per wilayah) → values
+        //     Untuk mini chart, ambil values dari statistic pertama (wilayah pertama)
+        // --}}
+        $firstStatistic = $stat->statistics->first();
+        $values = $firstStatistic ? $firstStatistic->values->sortBy('year') : collect();
         $labels = $values->pluck('year')->toArray();
         $vals   = $values->pluck('value')->toArray();
         $minY   = $values->min('year');
         $maxY   = $values->max('year');
+
+        $labelShortMap = [
+            'indikator_ekonomi'             => 'Indikator Ekonomi',
+            'indikator_ketenagakerjaan'     => 'Indikator Ketenagakerjaan',
+            'indikator_sosial'              => 'Indikator Sosial',
+            'indikator_pembangunan_manusia' => 'Indikator Pembangunan Manusia',
+        ];
     @endphp
     <a href="{{ route('data-statistik.show', $stat->id) }}" class="data-row">
         {{-- Mini chart --}}
@@ -342,9 +356,12 @@
             <div class="row-title">{{ $stat->judul_data }} {{ $minY }}–{{ $maxY }}</div>
             <div class="row-badge">
                 <i class="ti ti-tag" style="font-size:12px"></i>
-                {{ $stat->indikator_data }}
+                {{ $labelShortMap[$stat->indikator_data] ?? $stat->indikator_data }}
             </div>
-            <div class="row-meta">Update Terakhir: {{ $stat->updated_at?->translatedFormat('F Y') ?? '-' }}</div>
+            <div class="row-meta">
+                {{ $stat->statistics->count() }} wilayah
+                · Update Terakhir: {{ $stat->updated_at?->translatedFormat('F Y') ?? '-' }}
+            </div>
         </div>
     </a>
 

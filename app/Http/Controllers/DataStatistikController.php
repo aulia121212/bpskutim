@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Statistictitle;
+use App\Models\Statistic;
+use App\Models\StatisticTitle;
 use Illuminate\Http\Request;
 
 class DataStatistikController extends Controller
@@ -16,13 +17,9 @@ class DataStatistikController extends Controller
 
     public function index()
     {
-        // Eager load relasi sesuai nama di model Statistictitle
-        // Ganti 'statisticValues' jika nama relasi di model berbeda
-        $statistics = Statistictitle::with('statisticValues')->latest()->take(8)->get()
-            ->each(function ($stat) {
-                // Alias agar view tetap bisa pakai ->values
-                $stat->setRelation('values', $stat->statisticValues ?? collect());
-            });
+        $statistics = StatisticTitle::with(['statistics' => function ($q) {
+            $q->with('values')->where('status', 'published');
+        }])->latest()->take(8)->get();
 
         return view('data-statistik', compact('statistics'));
     }
@@ -30,10 +27,10 @@ class DataStatistikController extends Controller
     public function indikator(Request $request, string $slug)
     {
         abort_unless(array_key_exists($slug, $this->indikatorMap), 404);
-        $namaIndikator = $this->indikatorMap[$slug];
 
-        $query = Statistictitle::with('statisticValues')
-            ->where('indikator_data', $namaIndikator);
+        $query = StatisticTitle::with(['statistics' => function ($q) {
+            $q->with('values')->where('status', 'published');
+        }])->where('indikator_data', $slug);
 
         if ($search = $request->input('search')) {
             $query->where('judul_data', 'like', "%{$search}%");
@@ -41,28 +38,75 @@ class DataStatistikController extends Controller
 
         $statistics = $query->latest()->paginate(10)->withQueryString();
 
-        // Alias relasi
-        $statistics->each(fn($s) => $s->setRelation('values', $s->statisticValues ?? collect()));
-
         return view('data-statistik.indikator', [
             'statistics'    => $statistics,
             'slug'          => $slug,
-            'namaIndikator' => $namaIndikator,
+            'namaIndikator' => $this->indikatorMap[$slug],
             'indikatorMap'  => $this->indikatorMap,
         ]);
     }
 
+    /**
+     * HALAMAN DETAIL (SHOW)
+     * Disesuaikan dengan logika StatisticController@grafik
+     */
     public function show(int $id)
     {
-        $stat = Statistictitle::with(['statisticValues', 'components'])->findOrFail($id);
-        $stat->setRelation('values', $stat->statisticValues ?? collect());
+        // 1. Ambil Title beserta Statistics yang statusnya published
+        $statTitle = StatisticTitle::with([
+            'statistics' => fn($q) => $q->with('values')->where('status', 'published'),
+            'components'
+        ])->findOrFail($id);
 
-        $slug = array_search($stat->indikator_data, $this->indikatorMap) ?: 'indikator_ekonomi';
+        // 2. Olah data per wilayah (mirip logika grouped di StatisticController)
+        $allWilayahs = $statTitle->statistics->map(function ($s) use ($statTitle) {
+            // Normalisasi & Urutkan Values (X_label dan Y_label)
+            $processedValues = $s->values->map(function ($val) {
+                // Pastikan y_label ada (jika null, gunakan year)
+                if (is_null($val->y_label) && !is_null($val->year)) {
+                    $val->y_label = (string) $val->year;
+                }
+                // Pastikan x_label tidak null
+                if (is_null($val->x_label)) {
+                    $val->x_label = 'Lainnya';
+                }
+                return [
+                    'x_label' => $val->x_label,
+                    'y_label' => $val->y_label,
+                    'value'   => (float) $val->value,
+                ];
+            })->sortBy([
+                ['x_label', 'asc'],
+                ['y_label', 'asc'],
+            ])->values();
+
+            return [
+                'wilayah'      => $s->wilayah_data,
+                'values'       => $processedValues->toArray(),
+                // Ambil interpretasi dari level wilayah, jika kosong ambil dari level judul (Title)
+                'interp_kecil' => $s->interpretasi_lebih_kecil ?? $statTitle->interpretasi_lebih_kecil ?? '',
+                'interp_besar' => $s->interpretasi_lebih_besar ?? $statTitle->interpretasi_lebih_besar ?? '',
+                'interp_tetap' => $s->interpretasi_tetap       ?? $statTitle->interpretasi_tetap       ?? '',
+            ];
+        })->values();
+
+        // 3. Siapkan data komponen untuk filter checkbox
+        $components = $statTitle->components->map(fn($c) => [
+            'id'     => $c->id,
+            'nama'   => $c->nama,
+            'is_sub' => (bool) $c->is_sub,
+            'urutan' => $c->urutan,
+        ])->sortBy('urutan')->values();
 
         return view('data-statistik.show', [
-            'stat'         => $stat,
-            'slug'         => $slug,
+            'stat'         => $statTitle,
+            'slug'         => $statTitle->indikator_data,
+            'allWilayahs'  => $allWilayahs,
+            'components'   => $components,
             'indikatorMap' => $this->indikatorMap,
+
+                'judul' => $statTitle->judul_data,
+
         ]);
     }
 }

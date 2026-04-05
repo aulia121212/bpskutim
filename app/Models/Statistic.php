@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Relations\HasMany;
 class Statistic extends Model
 {
     protected $fillable = [
@@ -32,5 +32,14 @@ class Statistic extends Model
     public function statisticTitle()
     {
         return $this->belongsTo(StatisticTitle::class, 'statistic_title_id');
+    }
+    public function statistics(): HasMany // Sekarang HasMany akan merujuk ke Eloquent
+    {
+        return $this->hasMany(Statistic::class, 'statistic_title_id');
+    }
+
+    public function components(): HasMany
+    {
+        return $this->hasMany(StatisticTitleComponent::class);
     }
 }

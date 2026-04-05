@@ -46,43 +46,64 @@
     </div>
 </section>
 
+{{-- ── SECTION CATEGORIES ── --}}
 <section class="categories">
     <p class="cat-hint">Silakan pilih salah satu dari empat kategori indikator berikut untuk mulai menjelajahi data</p>
     <div class="cat-grid">
-        <a href="{{ route('data-statistik.indikator', 'indikator_ekonomi') }}" class="cat-card {{ request('indikator') === 'indikator_ekonomi' ? 'active' : '' }}">
+        <a href="{{ route('data-statistik.indikator', 'indikator_ekonomi') }}" class="cat-card {{ request()->routeIs('data-statistik.indikator') && request()->route('slug') === 'indikator_ekonomi' ? 'active' : '' }}">
             <div class="cat-icon" style="background:#fef3c7">💰</div>
             <div class="cat-name">Indikator Ekonomi</div>
         </a>
-        <a href="{{ route('data-statistik.indikator', 'indikator_ketenagakerjaan') }}" class="cat-card {{ request('indikator') === 'indikator_ketenagakerjaan' ? 'active' : '' }}">
+        <a href="{{ route('data-statistik.indikator', 'indikator_ketenagakerjaan') }}" class="cat-card">
             <div class="cat-icon" style="background:#fce7f3">👷</div>
             <div class="cat-name">Indikator Ketenagakerjaan</div>
         </a>
-        <a href="{{ route('data-statistik.indikator', 'indikator_sosial') }}" class="cat-card {{ request('indikator') === 'indikator_sosial' ? 'active' : '' }}">
+        <a href="{{ route('data-statistik.indikator', 'indikator_sosial') }}" class="cat-card">
             <div class="cat-icon" style="background:#d1fae5">👥</div>
             <div class="cat-name">Indikator Sosial</div>
         </a>
-        <a href="{{ route('data-statistik.indikator', 'indikator_pembangunan_manusia') }}" class="cat-card {{ request('indikator') === 'indikator_pembangunan_manusia' ? 'active' : '' }}">
+        <a href="{{ route('data-statistik.indikator', 'indikator_pembangunan_manusia') }}" class="cat-card">
             <div class="cat-icon" style="background:#e0f2fe">📊</div>
             <div class="cat-name">Indikator Pembangunan Manusia</div>
         </a>
     </div>
 </section>
-
+ 
+{{-- ── SECTION DATA (chart cards carousel) ── --}}
 <section class="data-section">
     <h2 class="section-title">Data Terbaru</h2>
     <div class="charts-wrapper">
         <div class="charts-track" id="chartsTrack">
-            @forelse($statistics as $stat)
-            <div class="chart-card" data-judul="{{ strtolower($stat->judul_data) }}" data-indikator="{{ $stat->indikator_data }}">
-                <div class="chart-card-title">{{ $stat->judul_data }} {{ $stat->values->min('year') }}–{{ $stat->values->max('year') }}</div>
-                <div class="chart-card-sub">{{ $stat->wilayah_data }} · Update: {{ $stat->updated_at?->format('M Y') }}</div>
-                <div style="height:180px"><canvas id="chart-{{ $stat->id }}"></canvas></div>
-                <div style="display:flex;justify-content:space-between;margin-top:16px;font-size:11px;color:var(--muted)">
-                    <span>Min: {{ $stat->values->min('value') }}</span>
-                    <span>Max: {{ $stat->values->max('value') }}</span>
+            @forelse($statistics as $statTitle)
+            @php
+            
+                $firstStat = $statTitle->statistics->first();
+                $previewVals = $firstStat
+                    ? $firstStat->values->sortBy('year')
+                    : collect();
+                $chartLabels = $previewVals->pluck('year')->toArray();
+                $chartVals   = $previewVals->pluck('value')->toArray();
+                $minYear = $previewVals->min('year');
+                $maxYear = $previewVals->max('year');
+            @endphp
+            <a href="{{ route('data-statistik.show', $statTitle->id) }}"
+               class="chart-card"
+               style="text-decoration:none;color:inherit;display:block"
+               data-judul="{{ strtolower($statTitle->judul_data) }}"
+               data-indikator="{{ $statTitle->indikator_data }}">
+                <div class="chart-card-title">{{ $statTitle->judul_data }} {{ $minYear }}–{{ $maxYear }}</div>
+                <div class="chart-card-sub">
+                    {{ $statTitle->statistics->count() }} wilayah
+                    · Update: {{ $statTitle->updated_at?->format('M Y') }}
                 </div>
-            </div>
+                <div style="height:180px"><canvas id="chart-{{ $statTitle->id }}"></canvas></div>
+                <div style="display:flex;justify-content:space-between;margin-top:16px;font-size:11px;color:var(--muted)">
+                    <span>Min: {{ $previewVals->min('value') }}</span>
+                    <span>Max: {{ $previewVals->max('value') }}</span>
+                </div>
+            </a>
             @empty
+            {{-- Demo data jika belum ada data --}}
             @php
                 $demoData = [
                     ['judul'=>'Persentase Penduduk Miskin','wilayah'=>'Kutai Timur','tahun'=>'2018-2024','values'=>[9.28,9.51,9.65,9.91,9.38,8.78,8.61],'labels'=>[2018,2019,2020,2021,2022,2023,2024]],
@@ -111,43 +132,30 @@
         <button class="nav-btn" id="chartNext"><i class="ti ti-chevron-right"></i></button>
     </div>
 </section>
-
-<section class="info-section" id="info">
-    <h2 class="info-title">Informasi Layanan Data Statistik</h2>
-    <p class="info-sub">Pelajari lebih lanjut tentang layanan data statistik BPS Kabupaten Kutai Timur,<br>mulai dari jenis data yang tersedia, sumber data, hingga cara menggunakannya.</p>
-    <div class="info-grid">
-        <div class="info-card"><div style="font-size:32px;margin-bottom:16px">📊</div><h3>Jenis Data</h3><p>Beragam data tersedia seperti indikator ekonomi, ketenagakerjaan, sosial, dan pembangunan manusia.</p></div>
-        <div class="info-card"><div style="font-size:32px;margin-bottom:16px">📚</div><h3>Sumber Data</h3><p>Data berasal dari publikasi resmi, survei, dan kegiatan statistik BPS sehingga dapat digunakan sebagai rujukan terpercaya.</p></div>
-        <div class="info-card"><div style="font-size:32px;margin-bottom:16px">📱</div><h3>Cara Menggunakan</h3><p>Cari data melalui fitur pencarian atau kategori, lihat dalam bentuk grafik atau tabel, lalu unduh sesuai kebutuhan.</p></div>
-        <div class="info-card highlight">
-            <div class="info-card-header">
-                <div style="display:flex;align-items:center;gap:16px">
-                    <div style="font-size:40px">💬</div>
-                    <div><h3 style="margin-bottom:4px">Bantuan</h3><p style="margin-bottom:0">Bingung memahami data? Gunakan fitur Layanan Konsultasi untuk mendapatkan bantuan dari petugas.</p></div>
-                </div>
-                <a href="/konsultasi" class="btn-primary" style="font-size:14px;padding:12px 24px"><i class="ti ti-headset"></i> Mulai Konsultasi</a>
-            </div>
-        </div>
-    </div>
-</section>
-
-@include('partials.footer')
-
-{{-- JS --}}
-<script src="{{ asset('js/data-statistik.js') }}?v={{ filemtime(public_path('js/data-statistik.js')) }}"></script><script>
+ 
+{{-- ── SCRIPT init chart cards ── --}}
+{{-- Ganti juga bagian <script> initStatChart di bawah halaman --}}
+<script>
+@foreach($statistics as $statTitle)
 @php
-    $heroStat   = $statistics->first();
-    $heroLabels = $heroStat ? $heroStat->values->sortBy('year')->pluck('year') : [2018,2019,2020,2021,2022,2023,2024];
-    $heroValues = $heroStat ? $heroStat->values->sortBy('year')->pluck('value') : [9.28,9.51,9.65,9.91,9.38,8.78,8.61];
+    $fs = $statTitle->statistics->first();
+    $pv = $fs ? $fs->values->sortBy('year') : collect();
 @endphp
-initHeroChart(@json($heroLabels), @json($heroValues));
-
-@foreach($statistics as $stat)
-initStatChart('chart-{{ $stat->id }}', {!! json_encode($stat->values->sortBy('year')->pluck('year')) !!}, {!! json_encode($stat->values->sortBy('year')->pluck('value')) !!});
+initStatChart('chart-{{ $statTitle->id }}',
+    @json($pv->pluck('year')->toArray()),
+    @json($pv->pluck('value')->toArray())
+);
 @endforeach
-
+ 
 @if($statistics->isEmpty())
-@php $demoCharts = [['labels'=>[2018,2019,2020,2021,2022,2023,2024],'values'=>[9.28,9.51,9.65,9.91,9.38,8.78,8.61]],['labels'=>[2019,2020,2021,2022,2023,2024],'values'=>[67.2,68.1,68.5,69.2,70.1,70.8]],['labels'=>[2019,2020,2021,2022,2023,2024],'values'=>[71.2,71.8,72.3,72.9,73.4,74.1]],['labels'=>[2019,2020,2021,2022,2023,2024],'values'=>[8.2,8.4,8.5,8.7,8.9,9.1]]]; @endphp
+@php
+    $demoCharts = [
+        ['labels'=>[2018,2019,2020,2021,2022,2023,2024],'values'=>[9.28,9.51,9.65,9.91,9.38,8.78,8.61]],
+        ['labels'=>[2019,2020,2021,2022,2023,2024],'values'=>[67.2,68.1,68.5,69.2,70.1,70.8]],
+        ['labels'=>[2019,2020,2021,2022,2023,2024],'values'=>[71.2,71.8,72.3,72.9,73.4,74.1]],
+        ['labels'=>[2019,2020,2021,2022,2023,2024],'values'=>[8.2,8.4,8.5,8.7,8.9,9.1]],
+    ];
+@endphp
 @foreach($demoCharts as $i => $d)
 initStatChart('demo-chart-{{ $i }}', @json($d['labels']), @json($d['values']));
 @endforeach

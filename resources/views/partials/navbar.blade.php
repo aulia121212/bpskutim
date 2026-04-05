@@ -1,8 +1,7 @@
 {{-- resources/views/partials/navbar-public.blade.php --}}
 <nav id="main-nav">
     <a href="/" class="nav-logo">
-       <img src="{{ asset('images/bpslogo.svg') }}" alt="BPS" height="40">
-             <div>
+<img src="{{ asset('images/bpslogo.svg') }}" alt="BPS" class="nav-logo-img">             <div>
             <div class="nav-logo-title">BADAN PUSAT STATISTIK</div>
             <div class="nav-logo-title">KABUPATEN KUTAI TIMUR</div>
         </div>
@@ -29,6 +28,12 @@
 </nav>
 
 <style>
+
+    .nav-logo-img {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
 #main-nav {
     position: fixed;
     top: 0;
