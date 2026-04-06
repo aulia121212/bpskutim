@@ -55,7 +55,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Pastikan state awal benar
     _applyTabVisibility("grafik");
-    applyFilters();
+
+    // Hanya auto-render jika TIDAK ada komponen (data tanpa kategori)
+    // Jika ada komponen, tunggu user pilih dulu → onKategoriChange() akan call applyFilters()
+    const mainComponents = allComponents.filter((c) => !c.is_sub);
+    if (mainComponents.length === 0) {
+        applyFilters();
+    }
 });
 
 // ── TAB SWITCH ────────────────────────────────────────────────────────────
@@ -68,30 +74,26 @@ function switchTab(tab) {
 function _applyTabVisibility(tab) {
     const isG = tab === "grafik";
 
-    // View panels
-    const vGrafik = document.getElementById("view-grafik");
-    const vTabel = document.getElementById("view-tabel");
-    if (vGrafik) {
-        vGrafik.style.display = isG ? "" : "none";
-        vGrafik.classList.toggle("hidden", !isG);
-    }
-    if (vTabel) {
-        vTabel.style.display = isG ? "none" : "";
-        vTabel.classList.toggle("hidden", isG);
-    }
+    // View panels — pakai classList (Tailwind hidden)
+    document.getElementById("view-grafik")?.classList.toggle("hidden", !isG);
+    document.getElementById("view-tabel")?.classList.toggle("hidden", isG);
 
     // Filter komponen — sembunyikan di tab tabel
-    const fKat = document.getElementById("filter-kategori-wrap");
-    if (fKat) {
-        fKat.style.display = isG ? "" : "none";
-        fKat.classList.toggle("hidden", !isG);
-    }
+    document
+        .getElementById("filter-kategori-wrap")
+        ?.classList.toggle("hidden", !isG);
 
-    // Tab button styling
+    // Tab button styling — identik grafik_blade
     const btnG = document.getElementById("tab-grafik");
     const btnT = document.getElementById("tab-tabel");
-    if (btnG) btnG.className = isG ? "show-tab active" : "show-tab";
-    if (btnT) btnT.className = !isG ? "show-tab active" : "show-tab";
+    if (btnG)
+        btnG.className = isG
+            ? "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition bg-blue-600 text-white"
+            : "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition border border-gray-200 text-gray-600 hover:bg-gray-50";
+    if (btnT)
+        btnT.className = !isG
+            ? "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition bg-blue-600 text-white"
+            : "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition border border-gray-200 text-gray-600 hover:bg-gray-50";
 }
 
 // ── BUILD FILTER WILAYAH ──────────────────────────────────────────────────
@@ -102,9 +104,9 @@ function buildWilayahFilter() {
     div.innerHTML = wilayahList
         .map((w, wi) => {
             const color = COLORS[wi % COLORS.length].border;
-            return `<label>
-            <input type="checkbox" value="${escH(w.wilayah)}" checked class="wilayah-check" onchange="applyFilters()">
-            <span class="w-2.5 h-2.5 rounded-full shrink-0" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};vertical-align:middle;margin-right:4px"></span>
+            return `<label class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
+            <input type="checkbox" value="${escH(w.wilayah)}" checked class="wilayah-check rounded accent-blue-600" onchange="applyFilters()">
+            <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:${color}"></span>
             ${escH(w.wilayah)}
         </label>`;
         })
@@ -125,8 +127,8 @@ function buildKategoriFilter() {
             mainComponents
                 .map((c) => {
                     const label = c.nama.replace(/^· /, "");
-                    return `<label>
-                    <input type="radio" name="kat_radio" value="${escH(c.nama)}" class="kat-radio" onchange="onKategoriChange()">
+                    return `<label class="flex items-center gap-2 text-xs cursor-pointer hover:text-blue-600 transition text-gray-600 font-medium">
+                    <input type="radio" name="kat_radio" value="${escH(c.nama)}" class="kat-radio shrink-0 accent-blue-600" onchange="onKategoriChange()">
                     <span class="truncate" title="${escH(label)}">${escH(label)}</span>
                 </label>`;
                 })
@@ -186,8 +188,8 @@ function buildTahunFilter(years) {
     tahunDiv.innerHTML = years
         .map(
             (y) => `
-        <label>
-            <input type="checkbox" value="${y}" checked class="tahun-check"> ${y}
+        <label class="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 cursor-pointer hover:text-blue-600 transition">
+            <input type="checkbox" value="${y}" checked class="tahun-check rounded accent-blue-600"> ${y}
         </label>`,
         )
         .join("");

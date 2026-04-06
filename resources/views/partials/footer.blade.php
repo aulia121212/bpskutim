@@ -8,7 +8,8 @@
                
             
 <a href="/" class="nav-logo">
-       <img src="{{ asset('images/bpslogo.svg') }}" alt="BPS" height="40">
+       <img src="{{ asset('images/bpslogo.svg') }}" alt="BPS" class="nav-logo-img">             
+
              <div>
             <div class="nav-logo-title">BADAN PUSAT STATISTIK</div>
             <div class="nav-logo-title">KABUPATEN KUTAI TIMUR</div>
@@ -65,6 +66,12 @@ footer {
     background: #fff;
     border-top: 2px solid #ffff;
     padding: 48px 80px 32px;
+}
+
+ .nav-logo-img {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
 }
 
 .footer-grid {

@@ -1,11 +1,12 @@
 {{-- resources/views/partials/navbar-public.blade.php --}}
 <nav id="main-nav">
     <a href="/" class="nav-logo">
-<img src="{{ asset('images/bpslogo.svg') }}" alt="BPS" class="nav-logo-img">             <div>
+<img src="{{ asset('images/bpslogo.svg') }}" alt="BPS" class="nav-logo-img">             
+<div>
             <div class="nav-logo-title">BADAN PUSAT STATISTIK</div>
             <div class="nav-logo-title">KABUPATEN KUTAI TIMUR</div>
         </div>
-    </a>
+    </a>                                      
     <div class="nav-links">
         <a href="/" class="{{ request()->is('/') ? 'active' : '' }}">Home</a>
         <a href="/data-statistik" class="{{ request()->is('data-statistik') ? 'active' : '' }}">Data Statistik</a>

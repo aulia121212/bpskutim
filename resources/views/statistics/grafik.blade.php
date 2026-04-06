@@ -92,16 +92,6 @@
 
         {{-- Right: Filter Panel --}}
         <div class="w-64 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-5 h-fit space-y-5">
-<!-- 
-            {{-- BPS Logo --}}
-            <div class="flex items-center gap-2 pb-3 border-b border-gray-100 dark:border-gray-700">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Logo_BPS.svg/200px-Logo_BPS.svg.png"
-                     alt="Logo BPS" class="h-8 w-auto">
-                <div>
-                    <p class="text-xs font-bold text-gray-700 dark:text-white leading-tight">Badan Pusat Statistik</p>
-                    <p class="text-[10px] text-gray-400 leading-tight">Statistics Indonesia</p>
-                </div>
-            </div> -->
 
             <h3 class="text-sm font-bold text-gray-700 dark:text-white">Sesuaikan tampilan grafik</h3>
 
@@ -171,6 +161,7 @@
                 </div>
             </div>
         </div>
+        
     </div>
 </div>
 

@@ -8,10 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Nunito+Sans:ital,wght@1,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    {{-- Tailwind — dibutuhkan agar komponen interpretasi sama persis dengan grafik_blade --}}
-    <script>
-        tailwind.config = { corePlugins: { preflight: false } }
-    </script>
+    <script>tailwind.config = { corePlugins: { preflight: false } }</script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ asset('css/show_data.css') }}?v={{ filemtime(public_path('css/show_data.css')) }}">
 </head>
@@ -19,6 +16,7 @@
 
 @include('partials.navbar')
 
+<main class="pt-10">
 <div class="show-page">
 
     {{-- Breadcrumb --}}
@@ -32,62 +30,58 @@
         <span>{{ $stat->judul_data }}</span>
     </nav>
 
-    {{-- Tab bar --}}
-    <div class="show-tabbar">
-        <div class="show-tabs">
-            <button id="tab-grafik" onclick="switchTab('grafik')" class="show-tab active">
-                <i class="ti ti-chart-line"></i> Grafik
-            </button>
-            <button id="tab-tabel" onclick="switchTab('tabel')" class="show-tab">
-                <i class="ti ti-table"></i> Tabel
-            </button>
-        </div>
-        <button onclick="scrollToInterpretasi()" class="show-interp-btn">
-            <i class="ti ti-lightbulb"></i> Interpretasi
+    {{-- Tab bar — identik grafik_blade --}}
+    <div class="flex gap-2 mb-6">
+        <button id="tab-grafik" onclick="switchTab('grafik')"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition bg-blue-600 text-white">
+            <i class="ti ti-chart-line"></i> Grafik
+        </button>
+        <button id="tab-tabel" onclick="switchTab('tabel')"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition border border-gray-200 text-gray-600 hover:bg-gray-50">
+            <i class="ti ti-table"></i> Tabel
         </button>
     </div>
 
-    <div style="display:flex;gap:24px">
+    <div class="flex gap-6">
 
         {{-- Kiri --}}
-        <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:16px">
+        <div class="flex-1 space-y-4">
 
-            {{-- Card grafik/tabel — struktur IDENTIK dengan grafik_blade --}}
-            <div class="show-card" style="padding:24px">
+            {{-- Card Chart/Table — identik grafik_blade --}}
+            <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6">
 
                 {{-- Grafik --}}
                 <div id="view-grafik">
-                    <div id="chart-header" style="margin-bottom:4px">
-                        <h2 id="chart-title" style="font-size:14px;font-weight:700;color:#1e293b">-</h2>
-                        <p id="chart-subtitle" style="font-size:12px;color:#64748b">-</p>
+                    <div id="chart-header" class="mb-1">
+                        <h2 id="chart-title" class="text-sm font-bold text-gray-800 dark:text-white">-</h2>
+                        <p id="chart-subtitle" class="text-xs text-gray-400">-</p>
                     </div>
-                    <div style="position:relative;margin-top:16px;height:320px">
+                    <div class="relative mt-4" style="height:320px">
                         <canvas id="mainChart"></canvas>
                     </div>
                 </div>
 
                 {{-- Tabel --}}
                 <div id="view-tabel" class="hidden">
-                    <div class="show-table-top">
-                        <h3 class="table-title">Data Tabel</h3>
-                        <div class="table-actions">
-                            <button onclick="downloadTable()" class="dl-btn primary">
-                                <i class="ti ti-download"></i> Download CSV
-                            </button>
-                        </div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-sm font-semibold text-gray-700">Data Tabel</h3>
+                        <button onclick="downloadTable()"
+                            class="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition">
+                            <i class="ti ti-download"></i> Download CSV
+                        </button>
                     </div>
-                    <div class="show-table-wrap">
-                        <table id="data-table" class="data-table">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm" id="data-table">
                             <thead id="table-head"></thead>
                             <tbody id="table-body">
-                                <tr><td colspan="5" class="table-empty">Pilih data untuk ditampilkan</td></tr>
+                                <tr><td colspan="5" class="text-center py-8 text-gray-400">Pilih data untuk ditampilkan</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            {{-- Interpretasi — ID IDENTIK dengan grafik_blade --}}
+            {{-- Interpretasi — identik grafik_blade --}}
             <div id="interpretasi-section" class="hidden space-y-4">
 
                 <div id="tren-card" class="hidden flex items-center justify-between gap-4 p-5 rounded-2xl border">
@@ -125,52 +119,42 @@
             </div>
         </div>
 
-        {{-- Kanan: Filter sidebar --}}
-        <div class="show-sidebar">
-            <div class="sidebar-header">
-                <h3 class="sidebar-title">
-                    <i class="ti ti-adjustments-horizontal"></i> Filter Data
-                </h3>
-            </div>
+        {{-- Kanan: Filter — IDENTIK grafik_blade (w-64, compact) --}}
+        <div class="w-64 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-5 h-fit space-y-5">
 
-            <div class="filter-group">
-                <label class="filter-label"><i class="ti ti-map-pin"></i> Wilayah data</label>
-                <div id="filter-wilayah" class="filter-options">
-                    <p class="filter-empty">Memuat...</p>
+            <h3 class="text-sm font-bold text-gray-700 dark:text-white">Sesuaikan tampilan grafik</h3>
+
+            {{-- Wilayah --}}
+            <div>
+                <label class="block text-sm font-semibold text-blue-500 mb-2">Wilayah data</label>
+                <div id="filter-wilayah" class="space-y-2">
+                    <p class="text-xs text-gray-400">Memuat...</p>
                 </div>
             </div>
 
-            <div id="filter-kategori-wrap" class="filter-group">
-                <label class="filter-label"><i class="ti ti-list-details"></i> Komponen / Kategori</label>
-                <div id="filter-kategori" class="filter-options">
-                    <p class="filter-empty">Memuat...</p>
+            {{-- Komponen — hanya grafik --}}
+            <div id="filter-kategori-wrap">
+                <label class="block text-sm font-semibold text-blue-500 mb-2">Komponen / Kategori</label>
+                <div id="filter-kategori" class="space-y-1.5">
+                    <p class="text-xs text-gray-400">Memuat...</p>
                 </div>
             </div>
 
-            <div class="filter-group">
-                <label class="filter-label"><i class="ti ti-calendar"></i> Tahun data</label>
-                <div id="filter-tahun" class="filter-options">
-                    <p class="filter-empty">Pilih kategori dulu</p>
+            {{-- Tahun --}}
+            <div>
+                <label class="block text-sm font-semibold text-blue-500 mb-2">Tahun data</label>
+                <div id="filter-tahun" class="space-y-1.5">
+                    <p class="text-xs text-gray-400">Pilih kategori dulu</p>
                 </div>
             </div>
 
-            <div class="sidebar-actions">
-                <button onclick="resetFilters()" class="btn-reset">
-                    <i class="ti ti-refresh"></i> Reset
-                </button>
-                <button onclick="applyFilters()" class="btn-apply">
-                    <i class="ti ti-play"></i> Update Tampilan
-                    <div class="btn-pulse"></div>
-                </button>
-            </div>
         </div>
 
     </div>
 </div>
-
+</main>
 @include('partials.footer')
 
-{{-- ── Inject data dari controller — TIDAK ada PHP logic di sini ── --}}
 <script>
 window.DATA_CONFIG = {
     judul:       @json($judul),
