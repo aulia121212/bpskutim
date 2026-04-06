@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\User;
+
 
 use Illuminate\Http\Request;
 
@@ -118,8 +120,31 @@ public function popupDestroy($id)
     return redirect()->route('pelayanan.popup.index')->with('success', 'Pop up berhasil dihapus.');
 }
 
-    public function user()
-    {
-        return view('pelayanan.user');
+   public function user()
+{
+    $users = User::where('role', User::ROLE_USER)->latest()->get();
+
+    return view('pelayanan.user.index', compact('users'));
+}
+
+public function userShow($id)
+{
+    $user = User::findOrFail($id);
+
+    return view('pelayanan.user.show', compact('user'));
+}
+
+public function userDestroy($id)
+{
+    $user = User::findOrFail($id);
+
+    // Optional: cegah hapus super admin
+    if ($user->role === 'super_admin') {
+        return back()->with('error', 'Tidak bisa menghapus super admin');
     }
+
+    $user->delete();
+
+    return back()->with('success', 'User berhasil dihapus');
+}
 }

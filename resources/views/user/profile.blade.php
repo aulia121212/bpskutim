@@ -184,8 +184,7 @@
                         </span>
                     </td>
                     <td>
-                        <a href="{{ route('user.reservasi.detail', $r->id) }}" class="btn-detail">Detail</a>
-                    </td>
+<a href="{{ route('user.reservasi.detail', ['id' => $r->id_reservasi]) }}">                    </td>
                 </tr>
                 @endforeach
             </tbody>

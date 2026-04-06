@@ -101,7 +101,12 @@ Route::prefix('pelayanan')->name('pelayanan.')->group(function () {
     Route::delete('/popup/{id}',[PelayananController::class, 'popupDestroy'])->name('popup.destroy');
 
     Route::get('/user', [PelayananController::class, 'user'])->name('user.index');
-});
+    Route::get('/user/{id}', [PelayananController::class, 'userShow'])
+    ->name('user.show');
+    Route::delete('/user/{id}', [PelayananController::class, 'userDestroy'])->name('user.destroy');
+
+    
+    });
 
 // ── STATISTICS (PUBLIC) ───────────────────────────────────────────────
 Route::prefix('statistics')->name('statistics.')->group(function () {

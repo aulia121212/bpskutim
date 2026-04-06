@@ -2,6 +2,19 @@
 
 @section('content')
 <div class="p-6">
+
+@if(session('success'))
+<div class="mb-4 p-3 rounded-lg bg-green-100 text-green-700 text-sm">
+    {{ session('success') }}
+</div>
+@endif
+
+@if(session('error'))
+<div class="mb-4 p-3 rounded-lg bg-red-100 text-red-700 text-sm">
+    {{ session('error') }}
+</div>
+@endif
+
     <h1 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Manajemen User</h1>
 
     <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
@@ -26,10 +39,18 @@
                     <td class="px-6 py-4 text-gray-500 tracking-widest">••••••</td>
                     <td class="px-6 py-4">
                         <div class="flex items-center gap-2">
-                            <button class="p-1.5 text-gray-400 hover:text-red-500 transition"><i class="ti ti-trash"></i></button>
-                            <a href="#" class="inline-flex items-center gap-1 border border-blue-300 text-blue-600 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 transition">
-                                Detail <i class="ti ti-chevrons-right text-sm"></i>
-                            </a>
+                            <form action="{{ route('pelayanan.user.destroy', $u->id) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="p-1.5 text-gray-400 hover:text-red-500 transition" onclick="return confirm('Apakah Anda yakin ingin menghapus user ini?')">
+                                    <i class="ti ti-trash"></i>
+                                </button>
+                            </form>
+
+                            <a href="{{ route('pelayanan.user.show', $u->id) }}" 
+   class="inline-flex items-center gap-1 border border-blue-300 text-blue-600 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 transition">
+    Detail <i class="ti ti-chevrons-right text-sm"></i>
+</a>
                         </div>
                     </td>
                 </tr>
