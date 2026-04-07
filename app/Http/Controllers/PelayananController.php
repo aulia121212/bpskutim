@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
+use App\Models\ReservasiKonsultasi;
+use App\Models\RiwayatKonsultasi;
+
 
 
 use Illuminate\Http\Request;
@@ -79,14 +82,53 @@ public function jadwalStore(Request $request)
 }
 
     public function reservasi()
-    {
-        return view('pelayanan.reservasi');
-    }
+{
+    $reservasi = ReservasiKonsultasi::with(['user', 'petugas', 'riwayatTerbaru'])
+        ->latest('created_at')
+        ->get();
+
+    return view('pelayanan.reservasi.index', compact('reservasi'));
+}
+
+public function reservasiShow($id)
+{
+    $reservasi = ReservasiKonsultasi::with(['user', 'petugas', 'riwayatTerbaru'])
+        ->findOrFail($id);
+
+    return view('pelayanan.reservasi.show', compact('reservasi'));
+}
 
     public function popup()
 {
     $popups = \App\Models\PopupOverlay::latest()->get();
     return view('pelayanan.popup', compact('popups'));
+}
+
+public function reservasiUpdate(Request $request, $id)
+{
+    $reservasi = ReservasiKonsultasi::findOrFail($id);
+
+    $request->validate([
+        'status' => 'required|in:diajukan,dijadwalkan,dibatalkan',
+        'lokasi_konsultasi' => 'nullable|string',
+        'catatan_konsultasi' => 'nullable|string',
+        'alasan_pembatalan' => 'nullable|string',
+    ]);
+
+    // update field utama
+    $reservasi->update([
+        'lokasi_konsultasi' => $request->lokasi_konsultasi,
+    ]);
+
+    // simpan ke riwayat (status + catatan)
+    RiwayatKonsultasi::create([
+        'id_reservasi' => $reservasi->id_reservasi,
+        'status_pengajuan' => $request->status,
+        'catatan_konsultasi' => $request->catatan_konsultasi,
+        'alasan_pembatalan' => $request->alasan_pembatalan,
+    ]);
+
+    return back()->with('success', 'Reservasi berhasil diperbarui');
 }
 
 public function popupStore(Request $request)

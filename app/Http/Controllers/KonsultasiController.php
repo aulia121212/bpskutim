@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ReservasiKonsultasi;
 use App\Models\RiwayatKonsultasi;
-use App\Models\Petugas;  
+use App\Models\Petugas; 
+use App\Models\JadwalTidakTersedia;
 class KonsultasiController extends Controller
 {
     /**
@@ -31,7 +32,10 @@ $petugas = Petugas::paginate(6);
 
 $petugas = Petugas::findOrFail($id);
 
-        return view('konsultasi.reservasi', compact('petugas'));
+ $jadwal = JadwalTidakTersedia::all();
+    $jadwalMap = $jadwal->keyBy('tanggal');
+
+        return view('konsultasi.reservasi', compact('petugas', 'jadwalMap'));
     }
 
     /**
@@ -52,7 +56,31 @@ $petugas = Petugas::findOrFail($id);
             'tanggal.after_or_equal'  => 'Tanggal tidak boleh sebelum hari ini.',
             'topik_konsultasi.min'    => 'Topik konsultasi minimal 10 karakter.',
             'jenis_konsultasi.in'     => 'Pilih jenis konsultasi yang valid.',
+            'jam.required' => 'Jam wajib diisi.',
+            'jam.date_format' => 'Format jam tidak valid.',
+
         ]);
+
+        $tanggal = $request->tanggal;
+        $jam = $request->jam;
+
+if ($jam < '08:00' || $jam > '15:30') {
+    return back()
+        ->withErrors([
+            'jam' => 'Jam yang dipilih tidak valid. Pilih jam antara 08.00-15.30 WITA'
+        ])
+        ->withInput();
+}
+
+if (in_array(date('w', strtotime($tanggal)), [0,6])) {
+    return back()->withErrors(['tanggal' => 'Tidak bisa memilih hari Sabtu/Minggu']);
+}
+
+$blocked = \App\Models\JadwalTidakTersedia::where('tanggal', $tanggal)->exists();
+
+if ($blocked) {
+    return back()->withErrors(['tanggal' => 'Tanggal tidak tersedia']);
+}
 
 $petugas = Petugas::findOrFail($id);
 

@@ -222,7 +222,7 @@
                         </span>
                     </td>
                     <td>
-                        <a href="{{ route('user.reservasi.detail', $r->id) }}" class="btn-detail">Detail</a>
+<a href="{{ route('user.reservasi.detail', $r->id_reservasi) }}" class="btn-detail">Detail</a>
                     </td>
                 </tr>
                 @endforeach

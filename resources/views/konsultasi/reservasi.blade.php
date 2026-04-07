@@ -71,23 +71,47 @@
 
             {{-- Tanggal --}}
             <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;">
-                <label style="width:160px;font-size:14px;font-weight:700;color:#1e293b;flex-shrink:0;">Tanggal :</label>
-                <div style="position:relative;flex:1;">
-                    <input type="date" name="tanggal" value="{{ old('tanggal') }}"
-                        style="width:100%;border:1.5px solid #e2e8f0;border-radius:12px;padding:11px 40px 11px 14px;font-size:13px;color:#1e293b;font-family:'Plus Jakarta Sans',sans-serif;outline:none;background:#f8fafc;">
-                    <i class="ti ti-calendar" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:16px;pointer-events:none;"></i>
-                </div>
-            </div>
+    <label style="width:160px;font-size:14px;font-weight:700;color:#1e293b;flex-shrink:0;">
+        Tanggal :
+    </label>
+
+    <div style="position:relative;flex:1;">
+        <input type="date" name="tanggal" min="{{ date('Y-m-d') }}" id="tanggal" value="{{ old('tanggal') }}"
+            style="width:100%;border:1.5px solid #e2e8f0;border-radius:12px;padding:11px 40px 11px 14px;font-size:13px;color:#1e293b;font-family:'Plus Jakarta Sans',sans-serif;outline:none;background:#f8fafc;">
+
+        <i class="ti ti-calendar"
+            style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:16px;"></i>
+
+        {{-- 🔴 NOTIF VALIDASI TANGGAL --}}
+        <p id="tanggal-error"
+           style="font-size:12px;color:#dc2626;margin-top:6px;font-weight:bold;display:none;">
+        </p>
+    </div>
+</div>
 
             {{-- Jam --}}
-            <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;">
-                <label style="width:160px;font-size:14px;font-weight:700;color:#1e293b;flex-shrink:0;">Jam :</label>
-                <div style="position:relative;flex:1;">
-                    <input type="time" name="jam" value="{{ old('jam') }}"
-                        style="width:100%;border:1.5px solid #e2e8f0;border-radius:12px;padding:11px 40px 11px 14px;font-size:13px;color:#1e293b;font-family:'Plus Jakarta Sans',sans-serif;outline:none;background:#f8fafc;">
-                    <i class="ti ti-clock" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:16px;pointer-events:none;"></i>
-                </div>
-            </div>
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;">
+    <label style="width:160px;font-size:14px;font-weight:700;color:#1e293b;flex-shrink:0;">
+        Jam :
+    </label>
+
+    <div style="position:relative;flex:1;">
+        <input type="time" name="jam" id="jam" value="{{ old('jam') }}"
+    min="08:00" max="15:30"
+    style="width:100%;border:1.5px solid #e2e8f0;border-radius:12px;
+    padding:11px 40px 11px 14px;font-size:13px;color:#1e293b;
+    background:#f8fafc;font-family:'Plus Jakarta Sans',sans-serif;">
+            
+        <i class="ti ti-clock"
+            style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:16px;"></i>
+
+        {{-- 🔴 NOTIF VALIDASI --}}
+        <p id="jam-error"
+           style="font-size:12px;color:#dc2626;margin-top:6px;font-weight:bold;display:none;">
+            Jam yang dipilih tidak valid. Pilih jam antara 08.00-15.30 WITA
+        </p>
+    </div>
+</div>
 
             {{-- Jenis Konsultasi --}}
             <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;">
@@ -125,5 +149,72 @@
 
 @include('partials.footer')
 
+<script>
+const blockedDates = @json($jadwalMap ?? []);
+const tanggalInput = document.getElementById('tanggal');
+const tanggalError = document.getElementById('tanggal-error');
+
+tanggalInput.addEventListener('change', function() {
+    const value = this.value;
+
+    if (!value) {
+        tanggalError.style.display = 'none';
+        return;
+    }
+
+    const selected = new Date(value);
+    const day = selected.getDay(); // 0 = Minggu, 6 = Sabtu
+
+    // ❌ WEEKEND
+    if (day === 0 || day === 6) {
+        tanggalError.innerText = 'Hari yang dipilih tidak valid. Pilih hari kerja untuk reservasi konsultasi.';
+        tanggalError.style.display = 'block';
+        return;
+    }
+
+    // ❌ CEK DARI SISTEM
+    if (blockedDates[value]) {
+        const alasan = blockedDates[value].alasan;
+
+        let pesan = '';
+
+        if (alasan === 'Libur Nasional') {
+            pesan = 'Hari yang dipilih tidak valid/hari libur nasional. Pilih hari kerja untuk reservasi konsultasi.';
+        } else if (alasan === 'Cuti Bersama') {
+            pesan = 'Tanggal ini tidak tersedia karena cuti bersama.';
+        } else if (alasan === 'Cuti Pribadi') {
+            pesan = 'Tanggal ini tidak tersedia karena petugas sedang cuti pribadi.';
+        } else {
+            pesan = 'Tanggal tidak tersedia untuk konsultasi.';
+        }
+
+        tanggalError.innerText = pesan;
+        tanggalError.style.display = 'block';
+        return;
+    }
+
+    // ✅ VALID
+    tanggalError.style.display = 'none';
+});
+
+
+const jamInput = document.getElementById('jam');
+const jamError = document.getElementById('jam-error');
+
+jamInput.addEventListener('input', function () {
+    const jam = this.value;
+
+    if (!jam) {
+        jamError.style.display = 'none';
+        return;
+    }
+
+    if (jam < '08:00' || jam > '15:30') {
+        jamError.style.display = 'block';
+    } else {
+        jamError.style.display = 'none';
+    }
+});
+</script>
 </body>
 </html>

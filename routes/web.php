@@ -95,6 +95,10 @@ Route::prefix('pelayanan')->name('pelayanan.')->group(function () {
     Route::post('/jadwal', [PelayananController::class, 'jadwalStore'])->name('jadwal.store');
 
     Route::get('/reservasi', [PelayananController::class, 'reservasi'])->name('reservasi.index');
+    Route::get('/reservasi/{id}', [PelayananController::class, 'reservasiShow'])->name('reservasi.show');
+    Route::put('/reservasi/{id}', [PelayananController::class, 'reservasiUpdate'])
+    ->name('reservasi.update');
+
 
     Route::get('/popup',        [PelayananController::class, 'popup'])->name('popup.index');
     Route::post('/popup',       [PelayananController::class, 'popupStore'])->name('popup.store');

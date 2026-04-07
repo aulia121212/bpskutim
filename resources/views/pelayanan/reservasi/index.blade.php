@@ -20,9 +20,12 @@
                 @forelse($reservasi ?? [] as $r)
                 <tr class="border-b border-gray-50 hover:bg-gray-50 transition">
                     <td class="px-6 py-4 text-gray-700">{{ \Carbon\Carbon::parse($r->tanggal)->format('d-m-Y') }}</td>
-                    <td class="px-6 py-4 text-gray-700">{{ $r->nama }}</td>
-                    <td class="px-6 py-4 text-gray-700">{{ $r->nomor_wa }}</td>
-                    <td class="px-6 py-4 text-gray-700">{{ $r->petugas->nama_lengkap ?? '-' }}</td>
+<td class="px-6 py-4 text-gray-700">
+    {{ $r->user->name ?? '-' }}
+</td>                    
+<td class="px-6 py-4 text-gray-700">
+    {{ $r->user->no_whatsapp ?? '-' }}
+</td>                    <td class="px-6 py-4 text-gray-700">{{ $r->petugas->nama_lengkap ?? '-' }}</td>
                     <td class="px-6 py-4">
                         @php
                             $statusClass = match($r->status) {
@@ -44,9 +47,10 @@
                         <div class="flex items-center gap-2">
                             <button class="p-1.5 text-gray-400 hover:text-blue-600 transition"><i class="ti ti-pencil"></i></button>
                             <button class="p-1.5 text-gray-400 hover:text-red-500 transition"><i class="ti ti-trash"></i></button>
-                            <a href="#" class="inline-flex items-center gap-1 border border-blue-300 text-blue-600 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 transition">
-                                Detail <i class="ti ti-chevrons-right text-sm"></i>
-                            </a>
+                            <a href="{{ route('pelayanan.reservasi.show', $r->id_reservasi) }}" 
+   class="inline-flex items-center gap-1 border border-blue-300 text-blue-600 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 transition">
+    Detail <i class="ti ti-chevrons-right text-sm"></i>
+</a>
                         </div>
                     </td>
                 </tr>
