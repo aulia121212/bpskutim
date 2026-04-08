@@ -77,10 +77,10 @@
 
     <div style="position:relative;flex:1;">
         <input type="date" name="tanggal" min="{{ date('Y-m-d') }}" id="tanggal" value="{{ old('tanggal') }}"
-            style="width:100%;border:1.5px solid #e2e8f0;border-radius:12px;padding:11px 40px 11px 14px;font-size:13px;color:#1e293b;font-family:'Plus Jakarta Sans',sans-serif;outline:none;background:#f8fafc;">
+            style="width:100%;border:1.5px solid #e2e8f0;border-radius:12px;padding:11px 14px;font-size:13px;color:#1e293b;font-family:'Plus Jakarta Sans',sans-serif;outline:none;background:#f8fafc;">
 
-        <i class="ti ti-calendar"
-            style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:16px;"></i>
+        <!-- <i class="ti ti-calendar"
+            style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:16px;"></i> -->
 
         {{-- 🔴 NOTIF VALIDASI TANGGAL --}}
         <p id="tanggal-error"
@@ -99,12 +99,10 @@
         <input type="time" name="jam" id="jam" value="{{ old('jam') }}"
     min="08:00" max="15:30"
     style="width:100%;border:1.5px solid #e2e8f0;border-radius:12px;
-    padding:11px 40px 11px 14px;font-size:13px;color:#1e293b;
+    padding:11px 14px;font-size:13px;color:#1e293b;
     background:#f8fafc;font-family:'Plus Jakarta Sans',sans-serif;">
             
-        <i class="ti ti-clock"
-            style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:16px;"></i>
-
+        
         {{-- 🔴 NOTIF VALIDASI --}}
         <p id="jam-error"
            style="font-size:12px;color:#dc2626;margin-top:6px;font-weight:bold;display:none;">

@@ -42,11 +42,21 @@
                         class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm bg-gray-50 text-gray-500">
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">No. WhatsApp</label>
-                    <input type="text" value="{{ $reservasi->user->no_whatsapp ?? '-' }}" disabled
-                        class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm bg-gray-50 text-gray-500">
-                </div>
+               <div>
+    <label class="block text-sm font-semibold text-gray-700 mb-1">No. WhatsApp</label>
+
+    <div class="flex gap-2">
+        <input type="text" id="no_wa" value="{{ $reservasi->user->no_whatsapp ?? '-' }}" disabled
+            class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm bg-gray-50 text-gray-500">
+
+        <button type="button" onclick="kirimWA()"
+            class="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl text-sm font-semibold transition">
+
+            <i class="ti ti-brand-whatsapp"></i>
+            Kirim
+        </button>
+    </div>
+</div>
 
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-1">Tanggal Reservasi</label>
@@ -116,4 +126,32 @@
         </div>
     </form>
 </div>
+
+<script>
+function kirimWA() {
+    const no = document.getElementById('no_wa').value.replace(/^0/, '62');
+
+    const nama   = @json($reservasi->user->name ?? '-');
+    const tanggal = @json($reservasi->tanggal_konsultasi ?? '-');
+    const jam     = @json($reservasi->waktu_konsultasi ?? '-');
+    const jenis   = @json($reservasi->jenis_konsultasi ?? '-');
+    const lokasi  = document.querySelector('input[name="lokasi_konsultasi"]').value || '-';
+
+    const pesan = `Halo ${nama},
+
+Berikut adalah jadwal konsultasi Anda:
+
+📅 Tanggal : ${tanggal}
+⏰ Jam     : ${jam}
+💻 Jenis   : ${jenis}
+📍 Lokasi  : ${lokasi}
+
+Mohon hadir tepat waktu. Terima kasih 🙏
+BPS Kabupaten Kutai Timur`;
+
+    const url = `https://wa.me/${no}?text=${encodeURIComponent(pesan)}`;
+
+    window.open(url, '_blank');
+}
+</script>
 @endsection
