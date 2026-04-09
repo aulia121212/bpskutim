@@ -50,23 +50,27 @@
     </div>
 
     {{-- LOGO --}}
-    <div class="h-18 flex items-center p-4 border-b border-gray-100 dark:border-gray-800">
-        <a href="{{ route('dashboard.index') }}" class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center shadow-md">
-                <span class="text-white font-bold text-lg">B</span>
-            </div>
+   {{-- LOGO --}}
+<div class="h-[72px] flex items-center px-4 border-b border-gray-100 dark:border-gray-800">
+    
+    <a href="{{ route('dashboard.index') }}" class="flex items-center gap-3 w-full">
+        
+        <img src="{{ asset('images/bpslogo.svg') }}" 
+             alt="BPS" 
+             class="nav-logo-img shrink-0">
 
-            <div x-show="expanded" x-transition class="flex flex-col leading-none">
-                <span class="font-bold text-base dark:text-white">
-                    BPS Kutai Timur
-                </span>
-                <span class="text-xs text-gray-400">
-                    Super Admin 
-                </span>
+        <div x-show="expanded" x-transition class="leading-tight">
+            <div class="nav-logo-title">
+                BADAN PUSAT STATISTIK
             </div>
-        </a>
-    </div>
+            <div class="nav-logo-title">
+                KABUPATEN KUTAI TIMUR
+            </div>
+        </div>
 
+    </a>
+
+</div>
     {{-- MENU --}}
     <div class="flex-1 overflow-y-auto py-4 px-4">
         <nav class="space-y-6">
@@ -241,5 +245,33 @@
 
         </div>
     </div>
+
+    <style>
+
+    .nav-logo-img {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
+.nav-logo-title {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    font-style: italic;
+    color: #00A2E9;
+    line-height: 1.2;
+    transition: color 0.3s;
+}
+
+.nav-logo-subtitle {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 11px;
+    color: #00A2E9;
+    transition: color 0.3s;
+}
+
+
+</style>
 
 </aside>

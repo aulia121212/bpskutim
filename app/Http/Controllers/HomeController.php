@@ -14,11 +14,16 @@ class HomeController extends Controller
         ->where('status', 'published')
         ->latest()->take(6)->get();
 
-    $popups = PopupOverlay::whereDate('tanggal_mulai', '<=', today())
-        ->whereDate('tanggal_akhir', '>=', today())
-        ->get();
+    // $popups = PopupOverlay::whereDate('tanggal_mulai', '<=', today())
+    //     ->whereDate('tanggal_akhir', '>=', today())
+    //     ->get();
 
-    return view('home', compact('statistics', 'popups'));
+    $activePopup = \App\Models\PopupOverlay::where('tanggal_mulai', '<=', today())
+                     ->where('tanggal_akhir', '>=', today())
+                     ->latest()->first();
+        
+    
+    return view('home', compact('statistics', 'activePopup'));
 }
 
 // HomeController.php
@@ -31,4 +36,7 @@ public function dataStatistik()
 
     return view('data-statistik', compact('statistics'));
 }
+
+
+
 }

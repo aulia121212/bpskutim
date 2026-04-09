@@ -174,7 +174,7 @@
     </div>
 </section>
 
-{{-- ══ POPUP BANNER ════════════════════════════════════════════ --}}
+{{-- ══ BANNER ════════════════════════════════════════════ --}}
 @php $activeBanner = isset($popups) ? $popups->first() : null; @endphp
 <div class="popup-banner">
     <div class="popup-banner-content">
@@ -194,6 +194,26 @@
     </div>
 </div>
 
+
+@if(isset($activePopup) && $activePopup)
+<div id="popup-overlay"
+     style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);padding:16px">
+
+    <div style="position:relative;background:#fff;border-radius:20px;overflow:hidden;max-width:480px;width:100%;animation:popupIn .35s ease">
+
+        <img src="{{ asset($activePopup->foto) }}"
+             style="width:100%;max-height:70vh;object-fit:contain">
+
+        <button onclick="tutupPopup()"
+            style="position:absolute;top:12px;right:12px;background:#fff;border-radius:50%;width:32px;height:32px;border:none;cursor:pointer">
+            ✕
+        </button>
+
+    </div>
+</div>
+@endif
+
+
 @include('partials.footer')
 
 <script>
@@ -206,6 +226,29 @@ window.homeCharts = [
     },
     @endforeach
 ];
+</script>
+
+<script>
+window.popupData = {
+    id: "{{ $activePopup->id ?? '' }}"
+};
+</script>
+
+<script>
+function tutupPopup() {
+    const overlay = document.getElementById('popup-overlay');
+    if (overlay) {
+        overlay.style.display = 'none';
+    }
+}
+
+// Opsional: Tutup saat klik di luar area gambar
+window.onclick = function(event) {
+    const overlay = document.getElementById('popup-overlay');
+    if (event.target == overlay) {
+        tutupPopup();
+    }
+}
 </script>
 <script src="{{ asset('js/home.js') }}"></script>
 

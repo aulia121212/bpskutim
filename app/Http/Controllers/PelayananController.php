@@ -135,10 +135,35 @@ public function popupStore(Request $request)
 {
     $request->validate([
         'foto'          => 'required|image|mimes:jpg,jpeg,png|max:2048',
-        'tanggal_mulai' => 'required|date',
+        'tanggal_mulai' => 'required|date|after_or_equal:today',
         'tanggal_akhir' => 'required|date|after_or_equal:tanggal_mulai',
+    ], [
+        'tanggal_mulai.after_or_equal' => 'Tanggal mulai tidak boleh sebelum hari ini.',
+        'tanggal_akhir.after_or_equal' => 'Tanggal akhir tidak boleh sebelum tanggal mulai.',
     ]);
-
+ 
+    // ── Cek overlap dengan periode yang sudah ada ──────────────────
+    $mulai  = \Carbon\Carbon::parse($request->tanggal_mulai);
+    $akhir  = \Carbon\Carbon::parse($request->tanggal_akhir);
+ 
+    $overlap = \App\Models\PopupOverlay::where(function ($q) use ($mulai, $akhir) {
+        // overlap terjadi jika: existing.mulai <= baru.akhir AND existing.akhir >= baru.mulai
+        $q->where('tanggal_mulai', '<=', $akhir->toDateString())
+          ->where('tanggal_akhir', '>=', $mulai->toDateString());
+    })->first();
+ 
+    if ($overlap) {
+        return back()
+            ->withErrors([
+                'tanggal_mulai' => 'Periode ' . $mulai->format('d M Y') . ' – ' . $akhir->format('d M Y') .
+                    ' bertabrakan dengan pop up yang sudah ada (' .
+                    \Carbon\Carbon::parse($overlap->tanggal_mulai)->format('d M Y') . ' – ' .
+                    \Carbon\Carbon::parse($overlap->tanggal_akhir)->format('d M Y') . ').',
+            ])
+            ->withInput();
+    }
+ 
+    // ── Upload foto ────────────────────────────────────────────────
     $foto = null;
     if ($request->hasFile('foto')) {
         $file     = $request->file('foto');
@@ -146,16 +171,15 @@ public function popupStore(Request $request)
         $file->move(public_path('uploads/popup'), $filename);
         $foto = 'uploads/popup/' . $filename;
     }
-
+ 
     \App\Models\PopupOverlay::create([
         'foto'          => $foto,
         'tanggal_mulai' => $request->tanggal_mulai,
         'tanggal_akhir' => $request->tanggal_akhir,
     ]);
-
+ 
     return redirect()->route('pelayanan.popup.index')->with('success', 'Pop up berhasil ditambahkan.');
 }
-
 public function popupDestroy($id)
 {
     \App\Models\PopupOverlay::findOrFail($id)->delete();

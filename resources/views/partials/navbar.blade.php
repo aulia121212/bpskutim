@@ -1,4 +1,3 @@
-{{-- resources/views/partials/navbar-public.blade.php --}}
 <nav id="main-nav">
     <a href="/" class="nav-logo">
 <img src="{{ asset('images/bpslogo.svg') }}" alt="BPS" class="nav-logo-img">             

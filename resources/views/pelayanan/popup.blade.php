@@ -16,6 +16,27 @@
     </div>
     @endif
 
+    @if($errors->any())
+    <div class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl px-4 py-3 mb-4 space-y-1">
+        @foreach($errors->all() as $error)
+            <p class="flex items-center gap-2"><i class="ti ti-alert-circle"></i> {{ $error }}</p>
+        @endforeach
+    </div>
+    @endif
+
+    {{-- Info periode aktif --}}
+    @php
+        $today   = \Carbon\Carbon::today();
+        $aktif   = $popups->filter(fn($p) => $today->between(\Carbon\Carbon::parse($p->tanggal_mulai), \Carbon\Carbon::parse($p->tanggal_akhir)))->first();
+    @endphp
+    @if($aktif)
+    <div class="bg-blue-50 border border-blue-200 text-blue-700 text-sm rounded-xl px-4 py-3 mb-4 flex items-center gap-2">
+        <i class="ti ti-eye text-base"></i>
+        Pop up <strong>sedang aktif ditampilkan</strong> di website hingga
+        {{ \Carbon\Carbon::parse($aktif->tanggal_akhir)->translatedFormat('d F Y') }}.
+    </div>
+    @endif
+
     <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
         <table class="w-full text-sm">
             <thead>
@@ -23,26 +44,46 @@
                     <th class="text-left px-6 py-4 font-semibold text-blue-600">Foto Pop Up</th>
                     <th class="text-left px-6 py-4 font-semibold text-blue-600">Tanggal Mulai Display</th>
                     <th class="text-left px-6 py-4 font-semibold text-blue-600">Tanggal Akhir Display</th>
+                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Status</th>
                     <th class="text-left px-6 py-4 font-semibold text-blue-600">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($popups as $p)
+                @php
+                    $mulai  = \Carbon\Carbon::parse($p->tanggal_mulai);
+                    $akhir  = \Carbon\Carbon::parse($p->tanggal_akhir);
+                    $isAktif = $today->between($mulai, $akhir);
+                    $isAkan  = $mulai->isFuture();
+                    $isSeles = $akhir->isPast();
+                @endphp
                 <tr class="border-b border-gray-50 hover:bg-gray-50 transition">
                     <td class="px-6 py-4">
                         <img src="{{ asset($p->foto) }}" class="w-48 h-28 object-cover rounded-xl border border-gray-100">
                     </td>
                     <td class="px-6 py-4 text-gray-700">
-                        {{ \Carbon\Carbon::parse($p->tanggal_mulai)->translatedFormat('d F Y') }}
+                        {{ $mulai->translatedFormat('d F Y') }}
                     </td>
                     <td class="px-6 py-4 text-gray-700">
-                        {{ \Carbon\Carbon::parse($p->tanggal_akhir)->translatedFormat('d F Y') }}
+                        {{ $akhir->translatedFormat('d F Y') }}
+                    </td>
+                    <td class="px-6 py-4">
+                        @if($isAktif)
+                            <span class="inline-flex items-center gap-1 text-xs font-semibold bg-green-100 text-green-700 px-3 py-1 rounded-full">
+                                <span class="w-1.5 h-1.5 rounded-full bg-green-500 inline-block"></span> Aktif
+                            </span>
+                        @elseif($isAkan)
+                            <span class="inline-flex items-center gap-1 text-xs font-semibold bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">
+                                <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 inline-block"></span> Terjadwal
+                            </span>
+                        @else
+                            <span class="inline-flex items-center gap-1 text-xs font-semibold bg-gray-100 text-gray-500 px-3 py-1 rounded-full">
+                                <span class="w-1.5 h-1.5 rounded-full bg-gray-400 inline-block"></span> Selesai
+                            </span>
+                        @endif
                     </td>
                     <td class="px-6 py-4">
                         <div class="flex items-center gap-2">
-                            <button class="p-1.5 text-gray-400 hover:text-blue-600 transition">
-                                <i class="ti ti-pencil"></i>
-                            </button>
                             <form method="POST" action="{{ route('pelayanan.popup.destroy', $p->id) }}"
                                 onsubmit="return confirm('Hapus popup ini?')">
                                 @csrf @method('DELETE')
@@ -50,15 +91,16 @@
                                     <i class="ti ti-trash"></i>
                                 </button>
                             </form>
-                            <a href="#" class="inline-flex items-center gap-1 border border-blue-300 text-blue-600 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 transition">
+                            <button onclick="previewPopup('{{ asset($p->foto) }}')"
+                                class="inline-flex items-center gap-1 border border-blue-300 text-blue-600 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 transition">
                                 Preview <i class="ti ti-chevrons-right text-sm"></i>
-                            </a>
+                            </button>
                         </div>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="4" class="px-6 py-12 text-center text-gray-400">
+                    <td colspan="5" class="px-6 py-12 text-center text-gray-400">
                         <i class="ti ti-photo-off text-3xl block mb-2"></i>Belum ada pop up overlay
                     </td>
                 </tr>
@@ -68,7 +110,7 @@
     </div>
 </div>
 
-{{-- Modal Tambah --}}
+{{-- ── Modal Tambah ── --}}
 <div id="modal-popup" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40">
     <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md">
         <div class="flex justify-between items-center mb-4">
@@ -76,37 +118,106 @@
             <button onclick="document.getElementById('modal-popup').classList.add('hidden')"
                 class="text-gray-400 hover:text-gray-600"><i class="ti ti-x text-xl"></i></button>
         </div>
+
+        {{-- Info periode yang sudah ada untuk referensi user --}}
+        @if($popups->where('tanggal_akhir', '>=', now()->toDateString())->count())
+        <div class="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-4 text-xs text-amber-700 space-y-1">
+            <p class="font-semibold flex items-center gap-1"><i class="ti ti-calendar-event"></i> Periode yang sudah terdaftar:</p>
+            @foreach($popups->where('tanggal_akhir', '>=', now()->toDateString()) as $existing)
+            <p class="pl-4">
+                {{ \Carbon\Carbon::parse($existing->tanggal_mulai)->format('d M Y') }} –
+                {{ \Carbon\Carbon::parse($existing->tanggal_akhir)->format('d M Y') }}
+            </p>
+            @endforeach
+            <p class="pt-1">Pilih tanggal di luar periode di atas.</p>
+        </div>
+        @endif
+
         <form method="POST" action="{{ route('pelayanan.popup.store') }}" enctype="multipart/form-data">
-        @csrf
-        <div class="space-y-4">
-            <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1">Foto Pop Up</label>
-                <input type="file" name="foto" accept="image/*"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <p class="text-xs text-gray-400 mt-1">Format: JPG, JPEG, PNG (maks 2MB)</p>
+            @csrf
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-blue-500 mb-1">Foto Pop Up</label>
+                    <input type="file" name="foto" accept="image/*" required
+                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <p class="text-xs text-gray-400 mt-1">Format: JPG, JPEG, PNG (maks 2MB)</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-blue-500 mb-1">Tanggal Mulai Display</label>
+                    <input type="date" name="tanggal_mulai" id="inp-mulai" required
+                        min="{{ now()->toDateString() }}"
+                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-blue-500 mb-1">Tanggal Akhir Display</label>
+                    <input type="date" name="tanggal_akhir" id="inp-akhir" required
+                        min="{{ now()->toDateString() }}"
+                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
             </div>
-            <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1">Tanggal Mulai Display</label>
-                <input type="date" name="tanggal_mulai"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div class="flex justify-end gap-3 mt-6">
+                <button type="button" onclick="document.getElementById('modal-popup').classList.add('hidden')"
+                    class="px-5 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50">
+                    Batal
+                </button>
+                <button type="submit"
+                    class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold">
+                    Simpan
+                </button>
             </div>
-            <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1">Tanggal Akhir Display</label>
-                <input type="date" name="tanggal_akhir"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-            </div>
-        </div>
-        <div class="flex justify-end gap-3 mt-6">
-            <button type="button" onclick="document.getElementById('modal-popup').classList.add('hidden')"
-                class="px-5 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50">
-                Batal
-            </button>
-            <button type="submit"
-                class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold">
-                Simpan
-            </button>
-        </div>
         </form>
     </div>
 </div>
+
+{{-- ── Modal Preview ── --}}
+<div id="modal-preview" class="hidden fixed inset-0 z-50 flex items-center justify-center"
+     onclick="closePreview(event)">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+    <div class="relative z-10 flex flex-col items-center gap-3" onclick="event.stopPropagation()">
+        <div class="flex items-center gap-2 bg-white/10 backdrop-blur text-white text-xs font-semibold px-3 py-1.5 rounded-full border border-white/20">
+            <i class="ti ti-device-desktop"></i> Simulasi tampilan di website
+        </div>
+        <div class="relative bg-white rounded-2xl shadow-2xl overflow-hidden" style="max-width:min(480px,90vw)">
+            <img id="preview-img" src="" alt="Preview" class="w-full block" style="max-height:70vh;object-fit:contain">
+            <button onclick="closePreviewBtn()"
+                class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center bg-white/90 hover:bg-white rounded-full shadow-md text-gray-600 hover:text-gray-900 transition">
+                <i class="ti ti-x text-sm"></i>
+            </button>
+            <div class="px-5 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+                <span class="text-xs text-gray-400">BPS Kabupaten Kutai Timur</span>
+                <button onclick="closePreviewBtn()" class="text-xs font-semibold text-blue-600 hover:text-blue-700">Tutup</button>
+            </div>
+        </div>
+        <p class="text-white/50 text-xs">Klik di luar untuk menutup</p>
+    </div>
+</div>
+
+<script>
+// Buka kembali modal jika ada error validasi
+@if($errors->any())
+document.getElementById('modal-popup').classList.remove('hidden');
+@endif
+
+// Tanggal akhir min = tanggal mulai
+document.getElementById('inp-mulai')?.addEventListener('change', function() {
+    const akhir = document.getElementById('inp-akhir');
+    akhir.min = this.value;
+    if (akhir.value && akhir.value < this.value) akhir.value = this.value;
+});
+
+function previewPopup(url) {
+    document.getElementById('preview-img').src = url;
+    document.getElementById('modal-preview').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+function closePreviewBtn() {
+    document.getElementById('modal-preview').classList.add('hidden');
+    document.body.style.overflow = '';
+}
+function closePreview(e) {
+    if (e.target === document.getElementById('modal-preview') || e.target.classList.contains('absolute')) closePreviewBtn();
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePreviewBtn(); });
+</script>
+
 @endsection
