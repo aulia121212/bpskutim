@@ -12,6 +12,7 @@
                 <option value="indikator_ketenagakerjaan">Indikator Ketenagakerjaan</option>
                 <option value="indikator_sosial">Indikator Sosial</option>
                 <option value="indikator_pembangunan_manusia">Indikator Pembangunan Manusia</option>
+                <option value="gender">Gender</option>
             </select>
         </div>
 

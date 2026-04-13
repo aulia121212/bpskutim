@@ -41,7 +41,7 @@
                     </div>
                     <a href="{{ Storage::url($statistic->file_data) }}" target="_blank"
                         class="inline-flex items-center gap-1 bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-semibold px-3 py-2 rounded-lg transition whitespace-nowrap">
-                        Preview Saja <i class="ti ti-chevron-right"></i>
+                        Preview <i class="ti ti-chevron-right"></i>
                     </a>
                 </div>
             </div>

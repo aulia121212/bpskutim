@@ -74,15 +74,27 @@
                 <div class="mb-6">
                     <p class="text-sm font-semibold text-blue-500 mb-3">Nama Petugas :</p>
                     <div class="bg-gray-50 rounded-xl px-4 py-3 space-y-3">
-                        @forelse($petugas as $p)
-<label class="flex items-center gap-3 cursor-pointer">
-    <input type="radio" name="petugas" value="{{ $p->nama_lengkap }}" class="text-blue-600">
-    <span class="text-sm text-gray-700">{{ $p->nama_lengkap }}</span>
-</label>
-@empty
-<p class="text-xs text-gray-400">Belum ada petugas terdaftar</p>
-@endforelse
-                    </div>
+
+    {{-- Semua Petugas --}}
+    <label class="flex items-center gap-3 cursor-pointer">
+        <input type="checkbox" id="all-petugas" value="Semua Petugas" class="text-blue-600">
+        <span class="text-sm font-semibold text-gray-700">Semua Petugas</span>
+    </label>
+
+    <!-- <hr> -->
+
+    {{-- List Petugas --}}
+    @forelse($petugas as $p)
+    <label class="flex items-center gap-3 cursor-pointer">
+        <input type="checkbox" name="petugas" value="{{ $p->nama_lengkap }}" class="petugas-checkbox text-blue-600">
+        <span class="text-sm text-gray-700">{{ $p->nama_lengkap }}</span>
+    </label>
+    @empty
+    <p class="text-xs text-gray-400">Belum ada petugas terdaftar</p>
+    @endforelse
+
+</div>
+
                 </div>
 
                 <div class="flex justify-end">
@@ -148,7 +160,12 @@ function selectDate(key) {
     document.getElementById('form-tanggal-label').textContent = formatDateID(key);
     document.getElementById('form-judul').value = '';
     document.querySelectorAll('input[name="alasan"]').forEach(r => r.checked = false);
-    document.querySelectorAll('input[name="petugas"]').forEach(r => r.checked = false);
+    
+    
+// reset semua checkbox
+document.getElementById('all-petugas').checked = false;
+document.querySelectorAll('.petugas-checkbox').forEach(cb => cb.checked = false);
+
     const entry = blockedMap[key];
     if (entry) {
         document.getElementById('form-judul').value = entry.judul ?? '';
@@ -168,8 +185,25 @@ function saveJadwal() {
     document.getElementById('input-tanggal').value = selectedDate;
     document.getElementById('input-judul').value   = document.getElementById('form-judul').value;
     document.getElementById('input-alasan').value  = alasan;
-    document.getElementById('input-petugas').value = document.querySelector('input[name="petugas"]:checked')?.value ?? 'Semua Petugas';
+   
+   const selectedPetugas = [];
+
+// cek apakah semua dipilih
+if (allPetugasCheckbox.checked) {
+    selectedPetugas.push('Semua Petugas');
+} else {
+    document.querySelectorAll('.petugas-checkbox:checked').forEach(cb => {
+        selectedPetugas.push(cb.value);
+    });
+}
+
+document.getElementById('input-petugas').value = selectedPetugas.join(', ');
     document.getElementById('jadwal-form').submit();
+
+    if (!allPetugasCheckbox.checked && selectedPetugas.length === 0) {
+    alert('Pilih minimal 1 petugas');
+    return;
+}
 }
 
 function renderKeterangan() {
@@ -200,5 +234,28 @@ document.getElementById('prev-month').addEventListener('click', () => { current.
 document.getElementById('next-month').addEventListener('click', () => { current.setMonth(current.getMonth()+1); renderCalendar(); });
 renderCalendar();
 renderKeterangan();
+
+// Ambil semua checkbox petugas
+const allPetugasCheckbox = document.getElementById('all-petugas');
+
+function getPetugasCheckboxes() {
+    return document.querySelectorAll('.petugas-checkbox');
+}
+
+// Jika klik "Semua Petugas"
+allPetugasCheckbox?.addEventListener('change', function() {
+    const checkboxes = getPetugasCheckboxes();
+    checkboxes.forEach(cb => cb.checked = this.checked); cb.disabled = this.checked;
+});
+
+// Jika pilih alasan tertentu → auto semua petugas
+document.querySelectorAll('input[name="alasan"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        if (this.value === 'Libur Nasional' || this.value === 'Cuti Bersama') {
+            allPetugasCheckbox.checked = true;
+            getPetugasCheckboxes().forEach(cb => cb.checked = true); cb.disabled = true;
+        }
+    });
+});
 </script>
 @endsection

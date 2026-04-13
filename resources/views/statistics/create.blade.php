@@ -31,6 +31,7 @@
                         <option value="indikator_ketenagakerjaan">Indikator Ketenagakerjaan</option>
                         <option value="indikator_sosial">Indikator Sosial</option>
                         <option value="indikator_pembangunan_manusia">Indikator Pembangunan Manusia</option>
+                        <option value="gender  ">Gender</option>
                     </select>
                     <i class="ti ti-chevron-down absolute right-3 top-3 text-gray-400 pointer-events-none"></i>
                 </div>
@@ -97,8 +98,17 @@
                 <div class="relative">
                     <select name="wilayah_data"
                         class="w-full appearance-none border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">Pilih Wilayah</option>
-                        <option value="Kabupaten Kutai Timur">Kabupaten Kutai Timur</option>
+                        <option value="">Pilih Wilayah</option>                     
+                        <option value="Paser">Paser</option>
+                        <option value="Kutai Barat">Kutai Barat</option>
+                        <option value="Kutai Kartanegara">Kutai Kartanegara</option>
+                        <option value="Kabupaten Kutai Timur">Kutai Timur</option>
+                        <option value="Berau">Berau</option>
+                        <option value="Penajam Paser Utara">Penajam Paser Utara</option>
+                        <option value="Mahakam Ulu">Mahakam Ulu</option>
+                        <option value="Balikpapan">Balikpapan</option>
+                        <option value="Samarinda">Samarinda</option>
+                        <option value="Bontang">Bontang</option>
                         <option value="Kalimantan Timur">Kalimantan Timur</option>
                         <option value="Indonesia">Indonesia</option>
                     </select>

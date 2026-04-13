@@ -13,6 +13,7 @@ class DataStatistikController extends Controller
         'indikator_ketenagakerjaan'     => 'Indikator Ketenagakerjaan',
         'indikator_sosial'              => 'Indikator Sosial',
         'indikator_pembangunan_manusia' => 'Indikator Pembangunan Manusia',
+        'gender'                        => 'Gender',
     ];
 
     public function index()

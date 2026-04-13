@@ -48,7 +48,7 @@
 
 {{-- ── SECTION CATEGORIES ── --}}
 <section class="categories">
-    <p class="cat-hint">Silakan pilih salah satu dari empat kategori indikator berikut untuk mulai menjelajahi data</p>
+    <p class="cat-hint">Silakan pilih salah satu dari lima kategori indikator berikut untuk mulai menjelajahi data</p>
     <div class="cat-grid">
         <a href="{{ route('data-statistik.indikator', 'indikator_ekonomi') }}" class="cat-card {{ request()->routeIs('data-statistik.indikator') && request()->route('slug') === 'indikator_ekonomi' ? 'active' : '' }}">
             <div class="cat-icon" style="background:#fef3c7">💰</div>
@@ -66,6 +66,11 @@
             <div class="cat-icon" style="background:#e0f2fe">📊</div>
             <div class="cat-name">Indikator Pembangunan Manusia</div>
         </a>
+        <a href="{{ route('data-statistik.indikator', 'gender') }}" class="cat-card">
+            <div class="cat-icon" style="background:#f0f9ff">👩‍💼</div>
+            <div class="cat-name">Gender</div>
+        </a>
+
     </div>
 </section>
  
@@ -132,6 +137,8 @@
         <button class="nav-btn" id="chartNext"><i class="ti ti-chevron-right"></i></button>
     </div>
 </section>
+
+@include('partials.footer')
  
 {{-- ── SCRIPT init chart cards ── --}}
 {{-- Ganti juga bagian <script> initStatChart di bawah halaman --}}

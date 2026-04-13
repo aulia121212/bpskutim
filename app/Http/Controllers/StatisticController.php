@@ -25,7 +25,7 @@ class StatisticController extends Controller
     public function store(Request $request)
 {
     $request->validate([
-        'indikator_data'     => 'required',
+        'indikator_data'    => 'required|string|max:255',
         'statistic_title_id' => 'required|exists:statistic_titles,id',
         'wilayah_data'       => 'required',
         'file_data'          => 'nullable|file|mimes:pdf,xlsx,csv|max:2048',

@@ -340,6 +340,7 @@
             'indikator_ketenagakerjaan'     => 'Indikator Ketenagakerjaan',
             'indikator_sosial'              => 'Indikator Sosial',
             'indikator_pembangunan_manusia' => 'Indikator Pembangunan Manusia',
+            'gender'                         => 'Gender',
         ];
     @endphp
     <a href="{{ route('data-statistik.show', $stat->id) }}" class="data-row">
