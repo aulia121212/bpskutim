@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\DataStatistikController;
+use App\Http\Controllers\DashboardController;      // ← tambahan
 
 /*
 |--------------------------------------------------------------------------
@@ -39,18 +40,19 @@ Route::prefix('auth')->name('auth.')->group(function () {
 // ── AUTHENTICATED ─────────────────────────────────────────────────────
 Route::middleware('auth')->group(function () {
 
-    // User Profile (satu group, tidak duplikat)
-    Route::get('/profile',         [UserProfileController::class, 'index'])->name('user.profile');
-    Route::patch('/profile/update',[UserProfileController::class, 'update'])->name('user.profile.update');
-    Route::patch('/profile/photo', [UserProfileController::class, 'updatePhoto'])->name('user.profile.photo');
-    Route::get('/reservasi/{id}',  [UserProfileController::class, 'detailReservasi'])->name('user.reservasi.detail');
+    // User Profile
+    Route::get('/profile',          [UserProfileController::class, 'index'])->name('user.profile');
+    Route::patch('/profile/update', [UserProfileController::class, 'update'])->name('user.profile.update');
+    Route::patch('/profile/photo',  [UserProfileController::class, 'updatePhoto'])->name('user.profile.photo');
+    Route::get('/reservasi/{id}',   [UserProfileController::class, 'detailReservasi'])->name('user.reservasi.detail');
 
     // ── SUPER ADMIN ──────────────────────────────────────────────
     Route::middleware('role:super_admin')
         ->prefix('super-admin')
         ->name('superadmin.')
         ->group(function () {
-            Route::get('/dashboard', fn() => view('dashboard.index'))->name('dashboard');
+            // ↓ diganti: pakai DashboardController agar konsisten
+            Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
             Route::resource('admin-data-statistik', App\Http\Controllers\SuperAdmin\AdminDataStatistikController::class);
             Route::resource('admin-pelayanan',       App\Http\Controllers\SuperAdmin\AdminPelayananController::class);
             Route::resource('admins',                App\Http\Controllers\AdminController::class);
@@ -66,13 +68,9 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-// Halaman utama data statistik (dengan hero chart & kategori)
+// ── DATA STATISTIK (PUBLIC) ───────────────────────────────────────────
 Route::get('/data-statistik', [DataStatistikController::class, 'index'])->name('data-statistik.index');
- 
-// Halaman list per indikator (indikator_klik.png)
 Route::get('/data-statistik/indikator/{slug}', [DataStatistikController::class, 'indikator'])->name('data-statistik.indikator');
- 
-// Halaman detail / interpretasi (lihat_grafik.png)
 Route::get('/data-statistik/{id}', [DataStatistikController::class, 'show'])->name('data-statistik.show');
 
 // ── KONSULTASI (PUBLIC) ───────────────────────────────────────────────
@@ -94,23 +92,18 @@ Route::prefix('pelayanan')->name('pelayanan.')->group(function () {
     Route::get('/jadwal',  [PelayananController::class, 'jadwal'])->name('jadwal.index');
     Route::post('/jadwal', [PelayananController::class, 'jadwalStore'])->name('jadwal.store');
 
-    Route::get('/reservasi', [PelayananController::class, 'reservasi'])->name('reservasi.index');
+    Route::get('/reservasi',      [PelayananController::class, 'reservasi'])->name('reservasi.index');
     Route::get('/reservasi/{id}', [PelayananController::class, 'reservasiShow'])->name('reservasi.show');
-    Route::put('/reservasi/{id}', [PelayananController::class, 'reservasiUpdate'])
-    ->name('reservasi.update');
+    Route::put('/reservasi/{id}', [PelayananController::class, 'reservasiUpdate'])->name('reservasi.update');
 
+    Route::get('/popup',         [PelayananController::class, 'popup'])->name('popup.index');
+    Route::post('/popup',        [PelayananController::class, 'popupStore'])->name('popup.store');
+    Route::delete('/popup/{id}', [PelayananController::class, 'popupDestroy'])->name('popup.destroy');
 
-    Route::get('/popup',        [PelayananController::class, 'popup'])->name('popup.index');
-    Route::post('/popup',       [PelayananController::class, 'popupStore'])->name('popup.store');
-    Route::delete('/popup/{id}',[PelayananController::class, 'popupDestroy'])->name('popup.destroy');
-
-    Route::get('/user', [PelayananController::class, 'user'])->name('user.index');
-    Route::get('/user/{id}', [PelayananController::class, 'userShow'])
-    ->name('user.show');
-    Route::delete('/user/{id}', [PelayananController::class, 'userDestroy'])->name('user.destroy');
-
-    
-    });
+    Route::get('/user',          [PelayananController::class, 'user'])->name('user.index');
+    Route::get('/user/{id}',     [PelayananController::class, 'userShow'])->name('user.show');
+    Route::delete('/user/{id}',  [PelayananController::class, 'userDestroy'])->name('user.destroy');
+});
 
 // ── STATISTICS (PUBLIC) ───────────────────────────────────────────────
 Route::prefix('statistics')->name('statistics.')->group(function () {
@@ -128,9 +121,12 @@ Route::prefix('statistic-titles')->name('statistic-titles.')->group(function () 
 Route::resource('publikasi', PublikasiController::class);
 
 // ── DASHBOARD ─────────────────────────────────────────────────────────
-Route::get('/dashboard', fn() => view('dashboard.index'))->name('dashboard.index');
-Route::prefix('dashboard')->name('dashboard.')->group(function () {
-    Route::get('/analytics', fn() => view('dashboard.analytics'))->name('analytics');
+// ↓ diganti: pakai DashboardController, bukan fn() => view(...)
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::prefix('dashboard')->name('dashboard.')->group(function () {
+        Route::get('/analytics', [DashboardController::class, 'analytics'])->name('analytics');
+    });
 });
 
 // ── UI COMPONENTS (demo) ──────────────────────────────────────────────

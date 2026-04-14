@@ -50,28 +50,32 @@
     </div>
 
     {{-- LOGO --}}
-   {{-- LOGO --}}
-<div class="h-[72px] flex items-center px-4 border-b border-gray-100 dark:border-gray-800">
-    
-    <a href="{{ route('dashboard.index') }}" class="flex items-center gap-3 w-full">
-        
-        <img src="{{ asset('images/bpslogo.svg') }}" 
-             alt="BPS" 
-             class="nav-logo-img shrink-0">
+    {{--
+        Link logo diarahkan ke dashboard sesuai role masing-masing.
+        - super_admin      → route('superadmin.dashboard')
+        - admin_pelayanan  → route('dashboard.index')   (nanti bisa diganti route khusus)
+        - admin_statistik  → route('dashboard.index')   (nanti bisa diganti route khusus)
+        - user             → route('home')
+    --}}
+    <div class="h-[72px] flex items-center px-4 border-b border-gray-100 dark:border-gray-800">
+        <a href="{{ auth()->user()->dashboardRoute() }}" class="flex items-center gap-3 w-full">
+            <img src="{{ asset('images/bpslogo.svg') }}"
+                 alt="BPS"
+                 class="nav-logo-img shrink-0">
 
-        <div x-show="expanded" x-transition class="leading-tight">
-            <div class="nav-logo-title">
-                BADAN PUSAT STATISTIK
+            <div x-show="expanded" x-transition class="leading-tight">
+                <div class="nav-logo-title">BADAN PUSAT STATISTIK</div>
+                <div class="nav-logo-title">KABUPATEN KUTAI TIMUR</div>
             </div>
-            <div class="nav-logo-title">
-                KABUPATEN KUTAI TIMUR
-            </div>
-        </div>
+        </a>
+    </div>
 
-    </a>
-
-</div>
     {{-- MENU --}}
+    {{--
+        $menuGroups di-inject oleh SidebarMenuComposer (app/View/Composers/SidebarMenuComposer.php)
+        dan sudah difilter sesuai role user yang sedang login.
+        Tidak perlu ada @if role di sini — semua sudah ditangani di composer.
+    --}}
     <div class="flex-1 overflow-y-auto py-4 px-4">
         <nav class="space-y-6">
 
@@ -86,8 +90,8 @@
                         @foreach ($group['items'] as $item)
 
                         @php
-                            $isActive = isset($item['activePattern']) 
-                                ? request()->routeIs($item['activePattern']) 
+                            $isActive = isset($item['activePattern'])
+                                ? request()->routeIs($item['activePattern'])
                                 : false;
                         @endphp
 
@@ -174,6 +178,15 @@
     {{-- BOTTOM MENU --}}
     <div class="p-4 border-t border-gray-100 dark:border-gray-800 space-y-2">
 
+        {{-- Role Badge — tampilkan role user yang sedang login --}}
+        <div x-show="expanded" x-cloak
+             class="px-3 py-1.5 mb-1 rounded-lg bg-gray-50 dark:bg-gray-900 flex items-center gap-2">
+            <i class="ti ti-shield-check text-sm text-blue-500"></i>
+            <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                {{ auth()->user()->role_label }}
+            </span>
+        </div>
+
         {{-- Profil --}}
         <a href="{{ route('user.profile') }}"
             class="flex items-center py-2.5 rounded-xl transition-all duration-300 text-gray-500 hover:bg-gray-50"
@@ -247,31 +260,28 @@
     </div>
 
     <style>
-
     .nav-logo-img {
-    height: 40px;
-    width: auto;
-    object-fit: contain;
-}
+        height: 40px;
+        width: auto;
+        object-fit: contain;
+    }
 
-.nav-logo-title {
-    font-family: 'Nunito Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 800;
-    font-style: italic;
-    color: #00A2E9;
-    line-height: 1.2;
-    transition: color 0.3s;
-}
+    .nav-logo-title {
+        font-family: 'Nunito Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 800;
+        font-style: italic;
+        color: #00A2E9;
+        line-height: 1.2;
+        transition: color 0.3s;
+    }
 
-.nav-logo-subtitle {
-    font-family: 'Nunito Sans', sans-serif;
-    font-size: 11px;
-    color: #00A2E9;
-    transition: color 0.3s;
-}
-
-
-</style>
+    .nav-logo-subtitle {
+        font-family: 'Nunito Sans', sans-serif;
+        font-size: 11px;
+        color: #00A2E9;
+        transition: color 0.3s;
+    }
+    </style>
 
 </aside>
