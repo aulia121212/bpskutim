@@ -115,6 +115,17 @@ class SidebarMenuComposer
                     ],
                 ],
             ],
+            [
+                'title' => 'Konten',
+                'items' => [
+                    [
+                        'name'          => 'Publikasi',
+                        'icon'          => 'file-text',
+                        'route'         => 'superadmin.publikasi.index',
+                        'activePattern' => 'superadmin.publikasi.*',
+                    ],
+                ],
+            ],
         ];
     }
 

@@ -10,7 +10,8 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\DataStatistikController;
-use App\Http\Controllers\DashboardController;      // ← tambahan
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,7 +41,19 @@ Route::prefix('auth')->name('auth.')->group(function () {
 // ── AUTHENTICATED ─────────────────────────────────────────────────────
 Route::middleware('auth')->group(function () {
 
-    // User Profile
+    // ── PROFILE ADMIN (super_admin, admin_pelayanan, admin_statistik) ──
+    // Pakai layouts.app, tanpa tab reservasi
+    Route::middleware('role:super_admin,admin_pelayanan,admin_statistik')
+        ->prefix('admin')
+        ->name('admin.')
+        ->group(function () {
+            Route::get('/profile',        [AdminProfileController::class, 'index'])->name('profile');
+            Route::patch('/profile',      [AdminProfileController::class, 'update'])->name('profile.update');
+            Route::patch('/profile/foto', [AdminProfileController::class, 'updatePhoto'])->name('profile.photo');
+        });
+
+    // ── PROFILE USER BIASA ───────────────────────────────────────────
+    // Pakai layout publik, ada tab reservasi & riwayat
     Route::get('/profile',          [UserProfileController::class, 'index'])->name('user.profile');
     Route::patch('/profile/update', [UserProfileController::class, 'update'])->name('user.profile.update');
     Route::patch('/profile/photo',  [UserProfileController::class, 'updatePhoto'])->name('user.profile.photo');
@@ -51,12 +64,18 @@ Route::middleware('auth')->group(function () {
         ->prefix('super-admin')
         ->name('superadmin.')
         ->group(function () {
-            // ↓ diganti: pakai DashboardController agar konsisten
             Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
             Route::resource('admin-data-statistik', App\Http\Controllers\SuperAdmin\AdminDataStatistikController::class);
             Route::resource('admin-pelayanan',       App\Http\Controllers\SuperAdmin\AdminPelayananController::class);
             Route::resource('admins',                App\Http\Controllers\AdminController::class);
             Route::resource('statistic-titles',      App\Http\Controllers\StatisticTitleController::class);
+            // Publikasi — hanya super admin, max 1 link
+            Route::get('/publikasi',                   [App\Http\Controllers\PublikasiController::class, 'index'])->name('publikasi.index');
+            Route::get('/publikasi/create',            [App\Http\Controllers\PublikasiController::class, 'create'])->name('publikasi.create');
+            Route::post('/publikasi',                  [App\Http\Controllers\PublikasiController::class, 'store'])->name('publikasi.store');
+            Route::get('/publikasi/{publikasi}/edit',  [App\Http\Controllers\PublikasiController::class, 'edit'])->name('publikasi.edit');
+            Route::put('/publikasi/{publikasi}',       [App\Http\Controllers\PublikasiController::class, 'update'])->name('publikasi.update');
+            Route::delete('/publikasi/{publikasi}',    [App\Http\Controllers\PublikasiController::class, 'destroy'])->name('publikasi.destroy');
         });
 
     // ── ADMIN STATISTIK ──────────────────────────────────────────
@@ -117,8 +136,7 @@ Route::prefix('statistic-titles')->name('statistic-titles.')->group(function () 
     Route::get('/{statisticTitle}/interpretasi', [StatisticTitleController::class, 'getInterpretasi'])->name('interpretasi');
 });
 
-// ── PUBLIKASI ─────────────────────────────────────────────────────────
-Route::resource('publikasi', PublikasiController::class);
+// ── PUBLIKASI (route lama dihapus, sudah dipindah ke superadmin group di atas) ──
 
 // ── DASHBOARD ─────────────────────────────────────────────────────────
 // ↓ diganti: pakai DashboardController, bukan fn() => view(...)

@@ -5,31 +5,14 @@
 
     <div class="mb-8">
         <p class="text-xs text-gray-400 uppercase tracking-widest mb-1">Manajemen / Publikasi</p>
-        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">
-            {{ isset($publikasi) ? 'Edit Publikasi' : 'Tambah Publikasi' }}
-        </h1>
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Edit Publikasi</h1>
     </div>
 
     <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-8">
-        <form method="POST"
-            action="{{ isset($publikasi) ? route('publikasi.update', $publikasi->id) : route('publikasi.store') }}">
-            @csrf
-            @if(isset($publikasi)) @method('PUT') @endif
+        <form method="POST" action="{{ route('superadmin.publikasi.update', $publikasi->id) }}">
+            @csrf @method('PUT')
 
             <div class="space-y-5">
-
-                <!-- <div>
-                    <label class="block text-sm font-semibold text-blue-500 mb-1.5">
-                        Judul Publikasi <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" name="judul"
-                        value="{{ old('judul', $publikasi->judul ?? '') }}"
-                        placeholder="Contoh: Statistik Daerah Kutai Timur 2024"
-                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
-                        required>
-                    @error('judul')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                </div> -->
-
                 <div>
                     <label class="block text-sm font-semibold text-blue-500 mb-1.5">
                         Link Publikasi <span class="text-red-500">*</span>
@@ -39,24 +22,23 @@
                             <i class="ti ti-link"></i>
                         </span>
                         <input type="url" name="link"
-                            value="{{ old('link', $publikasi->link ?? '') }}"
+                            value="{{ old('link', $publikasi->link) }}"
                             placeholder="https://bps.go.id/publikasi/..."
                             class="w-full border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                             required>
                     </div>
                     @error('link')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
-
             </div>
 
             <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-100">
-                <a href="{{ route('publikasi.index') }}"
+                <a href="{{ route('superadmin.publikasi.index') }}"
                     class="px-6 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition">
                     Batal
                 </a>
                 <button type="submit"
                     class="px-8 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition shadow-sm">
-                    {{ isset($publikasi) ? 'Update' : 'Simpan' }}
+                    Update
                 </button>
             </div>
         </form>

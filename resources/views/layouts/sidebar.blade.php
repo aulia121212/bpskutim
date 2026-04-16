@@ -187,8 +187,13 @@
             </span>
         </div>
 
-        {{-- Profil --}}
-        <a href="{{ route('user.profile') }}"
+        {{-- Profil — admin ke admin.profile, user biasa ke user.profile --}}
+        @php
+            $profileRoute = auth()->user()->isAdmin()
+                ? route('admin.profile')
+                : route('user.profile');
+        @endphp
+        <a href="{{ $profileRoute }}"
             class="flex items-center py-2.5 rounded-xl transition-all duration-300 text-gray-500 hover:bg-gray-50"
             @mouseenter="showTooltip($event, 'Profil Akun')">
 

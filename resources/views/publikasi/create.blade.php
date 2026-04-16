@@ -9,20 +9,9 @@
     </div>
 
     <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-8">
-        <form method="POST" action="{{ route('publikasi.store') }}">
+        <form method="POST" action="{{ route('superadmin.publikasi.store') }}">
             @csrf
             <div class="space-y-5">
-                <!-- <div>
-                    <label class="block text-sm font-semibold text-blue-500 mb-1.5">
-                        Judul Publikasi <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" name="judul" value="{{ old('judul') }}"
-                        placeholder="Contoh: Statistik Daerah Kutai Timur 2024"
-                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
-                        required>
-                    @error('judul')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                </div> -->
-
                 <div>
                     <label class="block text-sm font-semibold text-blue-500 mb-1.5">
                         Link Publikasi <span class="text-red-500">*</span>
@@ -41,7 +30,7 @@
             </div>
 
             <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-100">
-                <a href="{{ route('publikasi.index') }}"
+                <a href="{{ route('superadmin.publikasi.index') }}"
                     class="px-6 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition">
                     Batal
                 </a>
