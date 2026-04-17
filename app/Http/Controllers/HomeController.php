@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Statistic;
 use App\Models\PopupOverlay;
+use App\Models\Publikasi;
+
 
 class HomeController extends Controller
 {
@@ -22,8 +24,9 @@ class HomeController extends Controller
                      ->where('tanggal_akhir', '>=', today())
                      ->latest()->first();
         
-    
-    return view('home', compact('statistics', 'activePopup'));
+    $publikasi = Publikasi::first();
+
+    return view('home', compact('statistics', 'activePopup', 'publikasi'));
 }
 
 // HomeController.php

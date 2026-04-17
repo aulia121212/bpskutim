@@ -85,7 +85,8 @@ class UserProfileController extends Controller
         $filename = 'foto_user_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
         $file->move(public_path('images/users'), $filename);
 
-        $user->foto = 'images/users/' . $filename;
+$user->foto_profil = 'images/users/' . $filename;        
+        
         $user->save();
 
         return redirect()->route('user.profile')

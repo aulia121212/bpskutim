@@ -1,8 +1,6 @@
-{{-- resources/views/partials/footer-public.blade.php --}}
 <footer>
     <div class="footer-grid">
 
-        {{-- Kolom 1: Logo + Alamat --}}
         <div>
             <div style="margin-bottom:20px">
                

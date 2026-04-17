@@ -81,27 +81,28 @@
     </div>
 
     {{-- ── TAB PROFIL ── --}}
-    <div id="tab-profil" class="tab-content active">
-        <div class="profile-grid">
-
-            {{-- Foto --}}
-            <div class="profile-photo-card">
-                <div class="profile-avatar">
-                    @if(auth()->user()->foto)
-                        <img src="{{ asset(auth()->user()->foto) }}" alt="Foto Profil">
-                    @else
-                        🧑‍💼
-                    @endif
-                </div>
-                <form method="POST" action="{{ route('user.profile.photo') }}" enctype="multipart/form-data" id="photoForm">
-                    @csrf @method('PATCH')
-                    <input type="file" name="foto" id="fotoInput" accept="image/*" style="display:none" onchange="document.getElementById('photoForm').submit()">
-                    <button type="button" class="profile-edit-btn" onclick="document.getElementById('fotoInput').click()">
-                        <i class="ti ti-pencil"></i> Edit Foto Profil
-                    </button>
-                </form>
+<div id="tab-profil" class="tab-content active">
+    <div class="profile-grid">
+        {{-- Foto --}}
+        <div class="profile-photo-card">
+            <div class="profile-avatar">
+                {{-- PERBAIKAN: Ganti 'foto' menjadi 'foto_profil' --}}
+                @if(auth()->user()->foto_profil)
+                    <img src="{{ asset(auth()->user()->foto_profil) }}" alt="Foto Profil">
+                @else
+                    <div style="font-size: 40px;">🧑‍💼</div>
+                @endif
             </div>
-
+            <form method="POST" action="{{ route('user.profile.photo') }}" enctype="multipart/form-data" id="photoForm">
+                @csrf @method('PATCH')
+                {{-- PERBAIKAN: Pastikan name input tetap sesuai yang diharapkan Controller --}}
+                <input type="file" name="foto" id="fotoInput" accept="image/*" style="display:none" onchange="document.getElementById('photoForm').submit()">
+                <button type="button" class="profile-edit-btn" onclick="document.getElementById('fotoInput').click()">
+                    <i class="ti ti-pencil"></i> Edit Foto Profil
+                </button>
+            </form>
+        </div>
+       
             {{-- Form --}}
             <div class="profile-form-card">
                 @if(session('success'))

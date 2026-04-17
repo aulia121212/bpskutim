@@ -1,7 +1,7 @@
 <nav id="main-nav">
     <a href="/" class="nav-logo">
-<img src="{{ asset('images/bpslogo.svg') }}" alt="BPS" class="nav-logo-img">             
-<div>
+        <img src="{{ asset('images/bpslogo.svg') }}" alt="BPS" class="nav-logo-img">             
+        <div>
             <div class="nav-logo-title">BADAN PUSAT STATISTIK</div>
             <div class="nav-logo-title">KABUPATEN KUTAI TIMUR</div>
         </div>
@@ -10,20 +10,71 @@
         <a href="/" class="{{ request()->is('/') ? 'active' : '' }}">Home</a>
         <a href="/data-statistik" class="{{ request()->is('data-statistik') ? 'active' : '' }}">Data Statistik</a>
         <a href="/konsultasi" class="{{ request()->is('konsultasi') ? 'active' : '' }}">Konsultasi Statistik</a>
+        
         @auth
-    <a href="{{ route('user.profile') }}" class="btn-nav" style="display:flex;align-items:center;gap:8px;padding:6px 16px 6px 6px!important;">
-        <div style="width:32px;height:32px;border-radius:50%;background:#e8f0fe;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;">
-            @if(auth()->user()->foto)
-                <img src="{{ asset(auth()->user()->foto) }}" style="width:100%;height:100%;object-fit:cover;">
-            @else
-                <i class="ti ti-user" style="color:#1a56db;font-size:16px;"></i>
-            @endif
-        </div>
-        {{ auth()->user()->name }}
-    </a>
-@else
-    <a href="{{ route('login') }}" class="btn-nav">Daftar/Masuk</a>
-@endauth
+            {{-- DROPDOWN USER --}}
+            <div class="nav-user-wrap" id="navUserWrap">
+                <button class="btn-nav nav-user-btn" id="navUserBtn" type="button"
+                        style="display:flex;align-items:center;gap:8px;padding:6px 14px 6px 6px!important;cursor:pointer;border:none;background:#1a56db;border-radius:12px;">
+                    <div style="width:32px;height:32px;border-radius:50%;background:#e8f0fe;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;border: 1px solid rgba(255,255,255,0.2);">
+                        @if(auth()->user()->foto_profil)
+                            <img src="{{ asset(auth()->user()->foto_profil) }}" style="width:100%;height:100%;object-fit:cover;">
+                        @else
+                            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;color:#1a56db;background:#fff;">
+                                {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                            </div>
+                        @endif
+                    </div>
+                    <div style="display:flex;flex-direction:column;align-items:flex-start;line-height:1.2;">
+                        {{-- Menggunakan Nama User --}}
+                        <span style="font-size:13px;font-weight:700;color:#fff;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                            {{ auth()->user()->name }}
+                        </span>
+                        <span style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.8);text-transform:uppercase;letter-spacing:0.5px;">
+                            {{ auth()->user()->role_label }}
+                        </span>
+                    </div>
+                    <i class="ti ti-chevron-down" id="navChevron" style="color:#fff;font-size:13px;transition:transform .2s;margin-left:4px;"></i>
+                </button>
+
+                {{-- Dropdown panel --}}
+                <div class="nav-dropdown" id="navDropdown">
+                    <div style="padding:14px 16px 10px;border-bottom:1px solid #f1f5f9;">
+                        <p style="font-size:13px;font-weight:700;color:#1e293b;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                            {{ auth()->user()->name }}
+                        </p>
+                        <p style="font-size:11px;color:#94a3b8;margin:2px 0 0;">
+                            {{ auth()->user()->email }}
+                        </p>
+                    </div>
+
+                    <div style="padding:6px;">
+                        {{-- Route profil disesuaikan dengan sidebar.blade.php --}}
+                        @php
+                            $profileRoute = auth()->user()->isAdmin() ? route('admin.profile') : route('user.profile');
+                        @endphp
+                        <a href="{{ $profileRoute }}"
+                           style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;text-decoration:none;color:#374151;font-size:13px;font-weight:600;transition:background .15s;">
+                            <i class="ti ti-user-circle" style="font-size:16px;color:#1a56db;"></i>
+                            Profil Saya
+                        </a>
+
+                        <div style="height:1px;background:#f1f5f9;margin:4px 0;"></div>
+
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                    style="display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;border-radius:8px;border:none;background:none;color:#ef4444;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s;font-family:inherit;">
+                                <i class="ti ti-logout" style="font-size:16px;"></i>
+                                Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @else
+            <a href="{{ route('login') }}" class="btn-nav">Daftar/Masuk</a>
+        @endauth
     </div>
 </nav>
 
@@ -152,9 +203,38 @@
     .nav-links { gap: 24px; }
 }
 
-@media (max-width: 768px) {
-    .nav-links a:not(.btn-nav) { display: none; }
+.nav-user-wrap {
+    position: relative;
 }
+
+.nav-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 220px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+    z-index: 10000;
+    animation: dropFade .15s ease;
+}
+
+.nav-dropdown.open {
+    display: block;
+}
+
+.nav-dropdown a:hover,
+.nav-dropdown button:hover {
+    background: #f1f5f9 !important;
+}
+
+@keyframes dropFade {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
 </style>
 
 <script>
@@ -171,6 +251,29 @@
     }
 
     window.addEventListener('scroll', updateNav, { passive: true });
-    updateNav(); // run on load
+    updateNav();
+})(); // Penutup fungsi updateNav
+
+// Dropdown user
+(function() {
+    const btn      = document.getElementById('navUserBtn');
+    const dropdown = document.getElementById('navDropdown');
+    const chevron  = document.getElementById('navChevron');
+    if (!btn || !dropdown) return;
+
+    btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isOpen = dropdown.classList.toggle('open');
+        if (chevron) chevron.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    });
+
+    document.addEventListener('click', function() {
+        dropdown.classList.remove('open');
+        if (chevron) chevron.style.transform = 'rotate(0deg)';
+    });
+
+    dropdown.addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
 })();
 </script>

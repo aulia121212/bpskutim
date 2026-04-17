@@ -108,31 +108,44 @@
 </section>
 
 {{-- ══ PUBLIKASI ════════════════════════════════════════════════ --}}
-<section class="publikasi">
-    <div class="publikasi-container">
-        {{-- Card di atas gambar --}}
-        <div class="publikasi-card-wrapper">
-            <div class="publikasi-card">
-                <div class="publikasi-content">
-                    <h2 class="publikasi-title">
-                        <em>Publikasi</em>
-                        BPS Kutai Timur
-                    </h2>
-                    <p class="publikasi-desc">
-                        Temukan berbagai publikasi statistik resmi yang menyajikan data, analisis,
-                        dan informasi terkini sebagai referensi terpercaya untuk memahami perkembangan daerah.
-                    </p>
-                    <a href="/publikasi" class="btn-outline">
-                        <i class="ti ti-link"></i> Akses Publikasi
+<section class="publikasi-new">
+    <div class="publikasi-new-inner">
+
+        {{-- Badge --}}
+        <div class="pub-badge">Publikasi</div>
+
+        {{-- Konten utama: judul kiri + deskripsi & tombol kanan --}}
+        <div class="pub-top">
+            <div class="pub-left">
+                <h2 class="pub-title">
+                    <span class="title-main">Publikasi</span><br>
+                    <span class="title-main">Badan Pusat Statistik</span><br>
+                    <span class="title-accent">Kabupaten</span>
+                    <span class="title-accent">Kutai Timur</span>
+
+                </h2>
+            </div>
+            <div class="pub-right">
+                <p class="pub-desc">
+                    Temukan berbagai publikasi statistik resmi yang menyajikan data, analisis,
+                    dan informasi terkini sebagai referensi terpercaya untuk memahami
+                    perkembangan daerah.
+                </p>
+                @if($publikasi && $publikasi->link)
+                    <a href="{{ $publikasi->link }}" target="_blank" class="btn-outline">
+                @else
+                    <a href="#" onclick="notifPublikasi()" class="btn-outline">
+                @endif
+                    <i class="ti ti-link"></i> Akses Publikasi
                     </a>
-                </div>
             </div>
         </div>
 
-        {{-- Gambar background full width --}}
-        <div class="publikasi-img">
-            <img src="{{ asset('images/bg_publikasi.png') }}" alt="Publikasi BPS">
+        {{-- Gambar penuh lebar --}}
+        <div class="pub-image">
+            <img src="{{ asset('images/publikasiii.jpeg') }}" alt="Publikasi BPS Kutai Timur">
         </div>
+
     </div>
 </section>
 
@@ -174,26 +187,62 @@
     </div>
 </section>
 
-{{-- ══ BANNER ════════════════════════════════════════════ --}}
-@php $activeBanner = isset($popups) ? $popups->first() : null; @endphp
-<div class="popup-banner">
-    <div class="popup-banner-content">
-        <h2>Tidak menemukan<br><span>data yang dicari?</span></h2>
-        <a href="/konsultasi" class="btn-konsultasi">
-            <i class="ti ti-message-circle"></i> Hubungi Layanan Konsultasi
-        </a>
+<section class="konsultasi-section">
+    <div class="konsultasi-container">
+
+        <div class="konsultasi-content">
+            <h2 class="banner-title">
+                <span class="title-main">Tidak Menemukan</span><br>
+                <span class="title-accent">Data yang Dicari?</span>
+            </h2>
+
+            <div class="divider"></div>
+
+            <a href="/konsultasi" class="btn-konsultasi">
+                <i class="ti ti-message-circle"></i>
+                Hubungi Layanan Konsultasi
+            </a>
+        </div>
+
+        <div class="konsultasi-image-grid">
+            <div class="grid-bento">
+                <div class="item item-top-left">
+            <img src="{{ asset('images/pelayanan_1.jpeg') }}" alt="Foto 1">
+        </div>
+
+        <div class="item item-right">
+            <img src="{{ asset('images/pelayanan.jpeg') }}" alt="Foto 2">
+        </div>
+
+        <div class="item item-bottom-left">
+            <img src="{{ asset('images/pelayanan_2.jpeg') }}" alt="Foto 3">
+        </div>
+        <div class="item item-bottom-right">
+            <img src="{{ asset('images/pelayanan_3.jpeg') }}" alt="Foto 4">
+        </div>
     </div>
-    <div class="popup-banner-img">
-        @if($activeBanner)
-            <img src="{{ asset($activeBanner->foto) }}" alt="Konsultasi">
-        @else
-            <div style="width:300px;height:220px;background:linear-gradient(135deg,#bfdbfe,#93c5fd);border-radius:20px;display:flex;align-items:center;justify-content:center">
-                <i class="ti ti-users" style="font-size:80px;color:#1a56db;opacity:.5"></i>
-            </div>
-        @endif
-    </div>
+
+    <!-- <div class="grid-bento">
+                <div class="item item-top-left">
+            <img src="{{ asset('images/2.jpeg') }}" alt="Foto 1">
+        </div>
+
+        <div class="item item-right">
+            <img src="{{ asset('images/1.jpeg') }}" alt="Foto 2">
+        </div>
+
+        <div class="item item-bottom-left">
+            <img src="{{ asset('images/3.jpeg') }}" alt="Foto 3">
+        </div>
+        <div class="item item-bottom-right">
+            <img src="{{ asset('images/4.jpeg') }}" alt="Foto 4">
+        </div>
+    </div> -->
+
 </div>
 
+    </div>
+</section>
 
 @if(isset($activePopup) && $activePopup)
 <div id="popup-overlay"
@@ -250,6 +299,35 @@ window.onclick = function(event) {
     }
 }
 </script>
+
+<!-- <script>
+function notifPublikasi() {
+    alert('Publikasi belum tersedia');
+}
+</script> -->
+
+<script>
+function notifPublikasi() {
+    const toast = document.createElement('div');
+    toast.innerText = 'Publikasi belum tersedia';
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.right = '20px';
+    toast.style.background = '#f59e0b';
+    toast.style.color = '#fff';
+    toast.style.padding = '10px 16px';
+    toast.style.borderRadius = '8px';
+    toast.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
+    toast.style.zIndex = '9999';
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 2500);
+}
+</script>
+
 <script src="{{ asset('js/home.js') }}"></script>
 
 </body>
