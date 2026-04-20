@@ -11,22 +11,21 @@
 </head>
 <body>
 
+<div class="hero-wrapper">
 @include('partials.navbar')
 
-{{-- ══ HERO SLIDER (2 slides) ══════════════════════════════════ --}}
+{{-- ══ HERO SLIDER ══════════════════════════════════ --}}
 <section class="hero">
     <div class="slider-wrap">
         <div class="slider-track" id="heroTrack">
 
             {{-- ── Slide 1 — Data Statistik ── --}}
             <div class="slide">
-                {{-- Background image blurred --}}
-                
-<div class="slide-img">
-        <img src="{{ asset('images/bg_dataa.svg') }}" alt="Data Statistik">
-    </div>
-
-                {{-- Glass card --}}
+                <div class="slide-img">
+                    <img src="{{ asset('images/bpss.jpeg') }}" alt="Data Statistik">
+                </div>
+                <div class="slide-texture"></div>
+                <div class="slide-deco"></div>
                 <div class="slide-card">
                     <span class="slide-tag">
                         <i class="ti ti-chart-dots"></i> Portal Data Resmi
@@ -44,29 +43,15 @@
                         Jelajahi Data
                     </a>
                 </div>
-
-                {{-- Image visible on right --}}
-                {{-- <div class="slide-img">
-                    <img src="{{ asset('images/bg_dataa.svg') }}" alt="Data Statistik">
-                </div> --}}
             </div>
 
             {{-- ── Slide 2 — Konsultasi Statistik ── --}}
             <div class="slide">
-                {{-- Background image blurred --}}
-                {{-- <div class="slide-bg">
-                    <img src="{{ asset('images/bg_dataa.svg') }}" alt="">
-                </div> --}}
-
-                {{-- <div class="slide-img">
-                    <img src="{{ asset('images/bg_pelayanan.svg') }}" alt="Layanan Konsultasi">
-                </div> --}}
-
-                 <div class="slide-img">
-        <img src="{{ asset('images/bg_pelayanan.svg') }}" alt="Layanan Konsultasi">
-    </div>
-
-                {{-- Glass card --}}
+                <div class="slide-img">
+                    <img src="{{ asset('images/pst.jpeg') }}" alt="Layanan Konsultasi">
+                </div>
+                <div class="slide-texture"></div>
+                <div class="slide-deco"></div>
                 <div class="slide-card">
                     <span class="slide-tag">
                         <i class="ti ti-headset"></i> Layanan BPS Kutai Timur
@@ -84,28 +69,18 @@
                         Mulai Konsultasi
                     </a>
                 </div>
-
-                {{-- Image visible on right --}}
-                {{-- <div class="slide-img">
-                    <img src="{{ asset('images/bg_pelayanan.svg') }}" alt="Layanan Konsultasi">
-                </div> --}}
             </div>
-
         </div>
 
-        {{-- Nav arrows --}}
-        <button class="slider-btn prev" id="heroPrev"><i class="ti ti-chevron-left"></i></button>
-        <button class="slider-btn next" id="heroNext"><i class="ti ti-chevron-right"></i></button>
-    </div>
-
-    {{-- Dots bar --}}
-    <div class="slider-dots">
-        <button class="slider-prev-dot" id="dotPrev"><i class="ti ti-chevron-left"></i></button>
-        <button class="dot active" data-idx="0"></button>
-        <button class="dot"        data-idx="1"></button>
-        <button class="slider-next-dot" id="dotNext"><i class="ti ti-chevron-right"></i></button>
+        <div class="slider-dots">
+            <button class="slider-prev-dot" id="dotPrev"><i class="ti ti-chevron-left"></i></button>
+            <button class="dot active" data-idx="0"></button>
+            <button class="dot"        data-idx="1"></button>
+            <button class="slider-next-dot" id="dotNext"><i class="ti ti-chevron-right"></i></button>
+        </div>
     </div>
 </section>
+</div>
 
 {{-- ══ PUBLIKASI ════════════════════════════════════════════════ --}}
 <section class="publikasi-new">

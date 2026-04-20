@@ -148,7 +148,7 @@
 
 .nav-links a {
     text-decoration: none;
-    color: #64748b;
+    color: #1e3a6e;   /* biru tua — kontras di atas bg biru muda */
     font-size: 14px;
     font-weight: 600;
     transition: color 0.2s;
@@ -162,7 +162,7 @@
 }
 
 #main-nav.scrolled .nav-links a {
-    color: #64748b;
+    color: #1e3a6e;
 }
 
 #main-nav.scrolled .nav-links a:hover,
