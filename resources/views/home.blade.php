@@ -127,7 +127,7 @@
 {{-- ══ DATA TERBARU ═════════════════════════════════════════════ --}}
 <section class="data-section">
     <div class="section-header">
-        <h2 class="section-title">Data<br><em>Terbaru</em></h2>
+        <h2 class="title-main">Data<br><em class="title-accent">Terbaru</em></h2>
         <a href="/data-statistik" class="btn-search">
             <i class="ti ti-search"></i> Jelajahi Data Sekarang
         </a>

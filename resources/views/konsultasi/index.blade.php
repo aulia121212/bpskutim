@@ -10,99 +10,122 @@
 </head>
 <body>
 
+
 @include('partials.navbar')
 
 <!-- HERO -->
 <section class="hero">
+
+    {{-- Sisi kiri: ilustrasi lingkaran + floating cards --}}
     <div class="hero-left">
-        <div style="position:relative">
-            <div class="hero-tag-left">
-                <i class="ti ti-clock"></i> Pilih Waktu Konsultasi
+
+        {{-- Dekorasi bintang --}}
+        <span class="hero-star s1"><i class="ti ti-sparkles"></i></span>
+        <span class="hero-star s2"><i class="ti ti-sparkles"></i></span>
+
+        {{-- Floating card: kiri atas --}}
+        <div class="float-card top-left">
+            <i class="ti ti-clock"></i>
+            Pilih Waktu<br>Konsultasi
+        </div>
+
+        {{-- Floating card: kanan atas --}}
+        <div class="float-card top-right">
+            <i class="ti ti-shield-check"></i>
+            Ahli BPS
+            <!-- <span class="float-badge"><i class="ti ti-circle-check"></i> Verified</span> -->
+        </div>
+
+        {{-- Lingkaran besar dengan ikon headset --}}
+        <div class="hero-circle">
+            <span class="hero-circle-icon">🎧</span>
+        </div>
+
+        {{-- Floating card: kiri bawah --}}
+        <div class="float-card bot-left">
+            <i class="ti ti-cash-off"></i>
+            Gratis
+        </div>
+
+        {{-- Floating card: kanan bawah --}}
+        <div class="float-card bot-right">
+            <i class="ti ti-device-laptop"></i>
+            Konsultasi<br>Online Tersedia
+        </div>
+    </div>
+
+    {{-- Sisi kanan: card konten teks --}}
+    <div class="hero-right">
+        <div class="hero-content-card">
+            <h1 class="hero-title">
+                <!-- Layanan <em>Konsultasi</em> Statistik -->
+                Layanan Konsultasi Statistik
+
+            </h1>
+            <p class="hero-desc">
+                Dapatkan wawasan mendalam langsung dari <strong>Statistisi Ahli BPS</strong>.
+                Kami membantu Anda memecahkan kompleksitas data lebih tepat.
+            </p>
+            <div class="hero-mini-features">
+                <div class="hero-mini-feature">
+                    <i class="ti ti-users"></i>
+                    <span>Konsultasi langsung dengan statistikawan berpengalaman</span>
+                </div>
+                <div class="hero-mini-feature">
+                    <i class="ti ti-calendar-time"></i>
+                    <span>Jadwal fleksibel sesuai kebutuhan Anda</span>
+                </div>
             </div>
-            <div class="hero-card" style="margin-top:20px">
-                <div class="hero-card-badge">
-                    <i class="ti ti-circle-check"></i> Online
-                </div>
-                <div class="hero-card-avatar">🧑‍💼</div>
-                <p style="font-weight:700;margin-bottom:4px">Ahli BPS</p>
-                <p style="color:#64748b;font-size:13px">Statistikawan Berpengalaman</p>
-                <div class="hero-card-label">
-                    <i class="ti ti-circle-dot"></i> Konsultasi Online Tersedia
-                </div>
+            <div class="hero-btns">
+                <a href="#reservasi" class="btn-primary">
+                    <i class="ti ti-sparkles"></i> Mulai Konsultasi
+                </a>
+                <a href="#cara" class="btn-secondary">
+                    Pelajari Lebih Lanjut <i class="ti ti-arrow-right"></i>
+                </a>
             </div>
         </div>
     </div>
 
-    <div class="hero-right">
-        <h1 class="hero-title">Layanan Konsultasi<br>Statistik</h1>
-        <p class="hero-desc">
-            BPS Kabupaten Kutai Timur menyediakan <strong>layanan konsultasi bersama Statistisi Ahli</strong>
-            untuk membantu masyarakat, instansi, akademisi, dan pelaku usaha dalam memahami data statistik secara benar.
-        </p>
-        <div class="hero-features">
-            <div class="hero-feature">
-                <div class="hero-feature-icon"><i class="ti ti-messages"></i></div>
-                <div>
-                    <h4>Bicara dengan Ahli</h4>
-                    <p>Konsultasi langsung dengan statistikawan berpengalaman di bidangnya.</p>
-                </div>
-            </div>
-            <div class="hero-feature">
-                <div class="hero-feature-icon"><i class="ti ti-calendar-time"></i></div>
-                <div>
-                    <h4>Jadwal Fleksibel</h4>
-                    <p>Pilih waktu konsultasi yang paling sesuai dengan waktu Anda.</p>
-                </div>
-            </div>
-        </div>
-        <div class="hero-btns">
-            <a href="#reservasi" class="btn-primary">
-                <i class="ti ti-calendar-plus"></i> Mulai Konsultasi
-            </a>
-            <a href="#cara" class="btn-secondary">Pelajari Lebih Lanjut</a>
-        </div>
-    </div>
 </section>
 
 <!-- CARA RESERVASI -->
 <section class="cara-section" id="cara">
-    <h2 class="section-title">Cara Melakukan Reservasi Konsultasi</h2>
+    <h2 class="section-title">Alur Reservasi Mudah</h2>
     <p class="section-sub">
-        Pengguna <strong>wajib</strong> memiliki akun untuk dapat mengisi formulir.
-        Silakan <a href="{{ route('login') }}">login/masuk</a> atau
-        <a href="{{ route('register') }}">daftar</a> terlebih dahulu.
+        Empat langkah sederhana untuk mendapatkan bantuan konsultasi data profesional secara gratis.
     </p>
-    <div style="text-align:center;margin-bottom:48px">
-        <a href="#reservasi" class="btn-konsultasi-sm">
-            <i class="ti ti-arrow-right"></i> Mulai Konsultasi
-        </a>
-    </div>
 
     <div class="steps-grid">
         <div class="step-card">
-            <div class="step-number">1</div>
-            <span class="step-icon">🧑‍💼</span>
-            <p>Pilih petugas konsultasi yang sesuai dengan kebutuhan Anda.</p>
+            <div class="step-number-big">1.</div>
+            <div class="step-icon-wrap"><i class="ti ti-user-check"></i></div>
+            <h4>Pilih Petugas</h4>
+            <p>Pilih petugas konsultasi yang sesuai dengan kebutuhan dan bidang data Anda.</p>
         </div>
         <div class="step-card">
-            <div class="step-number">2</div>
-            <span class="step-icon">📋</span>
-            <p>Isi formulir reservasi dan tentukan jenis konsultasi (Online atau Offline).</p>
+            <div class="step-number-big">2.</div>
+            <div class="step-icon-wrap"><i class="ti ti-clipboard-list"></i></div>
+            <h4>Isi Formulir</h4>
+            <p>Isi formulir reservasi lengkap dan tentukan jenis konsultasi Online atau Offline.</p>
         </div>
         <div class="step-card">
-            <div class="step-number">3</div>
-            <span class="step-icon">📱</span>
-            <p>Petugas akan meninjau pengajuan Anda dan mengirimkan konfirmasi jadwal melalui nomor WhatsApp yang terdaftar.</p>
+            <div class="step-number-big">3.</div>
+            <div class="step-icon-wrap"><i class="ti ti-mail-check"></i></div>
+            <h4>Tinjau Pengajuan</h4>
+            <p>Petugas akan meninjau dan mengirim konfirmasi jadwal melalui WhatsApp Anda.</p>
         </div>
         <div class="step-card">
-            <div class="step-number">4</div>
-            <span class="step-icon">💻</span>
-            <p>Jika memilih <strong>Online</strong>, Anda akan menerima link meeting melalui WhatsApp.</p>
-            <p class="step-note">Jika memilih <strong>Offline</strong>, silahkan datang ke lokasi yang telah ditentukan sesuai jadwal.</p>
+            <div class="step-number-big">4.</div>
+            <div class="step-icon-wrap"><i class="ti ti-video"></i></div>
+            <h4>Mulai Sesi</h4>
+            <p>Untuk Online, Anda akan menerima link meeting. Offline, datang ke lokasi yang ditentukan.</p>
+            <p class="step-note">Pastikan terdaftar dan login terlebih dahulu.</p>
         </div>
     </div>
 </section>
 
+<!-- RESERVASI PETUGAS -->
 <!-- RESERVASI PETUGAS -->
 <section class="reservasi-section" id="reservasi">
     <div class="reservasi-header">

@@ -189,13 +189,15 @@
 }
 
 #main-nav.scrolled .btn-nav {
-    background: #1a56db !important;
+    background: #1f6e8c !important;
     color: #ffffff !important;
     border-color: #1a56db !important;
 }
 
 #main-nav.scrolled .btn-nav:hover {
-    background: #1341b0 !important;
+    background: #ffffff !important;
+    border-color: #1f6e8c !important;
+
 }
 
 @media (max-width: 1024px) {
