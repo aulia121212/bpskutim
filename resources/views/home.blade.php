@@ -124,37 +124,70 @@
     </div>
 </section>
 
-{{-- ══ DATA TERBARU ═════════════════════════════════════════════ --}}
+{{-- ══ DATA TERBARU ═════════════════════════════════════════════
+     ══════════════════════════════════════════════════════════ --}}
 <section class="data-section">
     <div class="section-header">
-        <h2 class="title-main">Data<br><em class="title-accent">Terbaru</em></h2>
+        <h2>
+            <span class="title-main">Data</span><br>
+            <em class="title-accent">Terbaru</em>
+        </h2>
         <a href="/data-statistik" class="btn-search">
             <i class="ti ti-search"></i> Jelajahi Data Sekarang
         </a>
     </div>
+ 
+    <div class="charts-viewport">
+        <div class="charts-slider">
+            <div class="charts-track" id="chartsTrack">
+ 
+                @forelse($statistics as $stat)
+                <div class="chart-card" data-id="{{ $stat['id'] }}">
+ 
+                    {{-- Judul indikator --}}
+                    <div class="chart-card-title" title="{{ $stat['judul'] }}">
+                        {{ $stat['judul'] }}
+                    </div>
 
-    <div class="charts-slider">
-        <div class="charts-track" id="chartsTrack">
-            @php $chartData = $statistics ?? collect(); @endphp
-
-            @forelse($chartData as $stat)
-            <div class="chart-card">
-                <div class="chart-card-title">{{ $stat->judul_data }}</div>
-                <div class="chart-card-sub">{{ $stat->wilayah_data }} · Update: {{ $stat->updated_at?->format('M Y') }}</div>
-                <div style="height:180px"><canvas id="chart-{{ $stat->id }}"></canvas></div>
-            </div>
-            @empty
-            @for($i = 0; $i < 3; $i++)
-            <div class="chart-card">
-                <div class="chart-card-title">Persentase Penduduk Miskin di Kab. Kutai Timur 2018–2024</div>
-                <div class="chart-card-sub">Kutai Timur · Update: Des 2024</div>
-                <div style="height:180px"><canvas id="demo-chart-{{ $i }}"></canvas></div>
-            </div>
-            @endfor
-            @endforelse
-        </div>
+                     @if(!empty($stat['periode']))
+    <div class="chart-card-period-title">
+        {{ $stat['periode'] }}
     </div>
-
+    @endif
+ 
+                    {{-- Meta row: update + periode badge --}}
+                    <div class="chart-card-meta">
+                        <span class="chart-card-sub">
+                            <i class="ti ti-clock"></i>
+                            Update: {{ \Carbon\Carbon::parse($stat['updated'])->isoFormat('MMM Y') }}
+                        </span>
+                        @if(!empty($stat['periode']))
+                        <span class="chart-card-badge">
+                            <i class="ti ti-calendar-stats"></i>
+    {{ $stat['komponen']  }}
+                        </span>
+                        @endif
+                    </div>
+ 
+                    {{-- Legend warna per wilayah (diisi JS) --}}
+                    <div class="chart-legend" id="legend-{{ $stat['id'] }}"></div>
+ 
+                    {{-- Canvas chart --}}
+                    <div class="chart-canvas-wrap">
+                        <canvas id="chart-{{ $stat['id'] }}"></canvas>
+                    </div>
+ 
+                </div>
+                @empty
+                <p style="padding:60px;color:#9ca3af;text-align:center">
+                    Belum ada data statistik yang dipublikasikan.
+                </p>
+                @endforelse
+ 
+            </div>{{-- /charts-track --}}
+        </div>{{-- /charts-slider --}}
+    </div>{{-- /charts-viewport --}}
+ 
     <div class="chart-nav">
         <button class="nav-btn" id="chartPrev"><i class="ti ti-chevron-left"></i></button>
         <div class="dots" id="chartDots"></div>
@@ -242,11 +275,30 @@
 
 <script>
 window.homeCharts = [
-    @foreach($chartData ?? [] as $stat)
+    @foreach ($statistics as $stat)
     {
-        id:     'chart-{{ $stat->id }}',
-        labels: {!! json_encode($stat->values->sortBy('year')->pluck('year')) !!},
-        values: {!! json_encode($stat->values->sortBy('year')->pluck('value')) !!},
+        id           : "{{ $stat['id'] }}",
+        judul        : @json($stat['judul']),
+        wilayah      : @json($stat['wilayah']),
+        periode      : @json($stat['periode'] ?? ''),
+        sub_indikator: @json($stat['sub_indikator'] ?? $stat['judul']),
+ 
+        {{--
+            y_labels = array kolom `y_label` dari tabel statistic_values
+            Ini yang dipakai sebagai SUMBU X chart (berisi tahun: 2021, 2022, …)
+            Backend harus isi $stat['y_labels'] = ["2021","2022","2023","2024","2025"]
+        --}}
+        y_labels : @json($stat['y_labels'] ?? []),
+ 
+        @if(isset($stat['datasets']))
+        {{-- Format multi-wilayah: datasets[i].label = x_label (nama sub-indikator) --}}
+        labels   : @json($stat['labels']),
+        datasets : @json($stat['datasets']),
+        @else
+        {{-- Format single-wilayah lama --}}
+        labels   : @json($stat['labels']),
+        values   : @json($stat['values']),
+        @endif
     },
     @endforeach
 ];
@@ -275,11 +327,7 @@ window.onclick = function(event) {
 }
 </script>
 
-<!-- <script>
-function notifPublikasi() {
-    alert('Publikasi belum tersedia');
-}
-</script> -->
+
 
 <script>
 function notifPublikasi() {
