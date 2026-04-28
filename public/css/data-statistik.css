@@ -1,6 +1,4 @@
-/* ============================================================
-   public/css/data-statistik.css
-   ============================================================ */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Playfair+Display:ital,wght@0,400;1,400&display=swap");
 
 :root {
     --blue: #1a56db;
@@ -11,6 +9,9 @@
     --muted: #64748b;
     --border: #e2e8f0;
     --bg: #f8fafc;
+
+    --biru: #035f9c;
+    --biru-dark: #00375b;
 }
 
 * {
@@ -44,8 +45,8 @@ h6,
 /* ── HERO ──────────────────────────────────────────────────── */
 .hero {
     margin-top: 0;
-    padding: 140px 80px 80px;
-    background-image: url("/images/hero-gradient.png");
+    padding: 100px 80px 80px;
+    /* background-image: url("/images/hero-gradient.png"); */
     background-size: cover;
     background-position: center top;
     background-repeat: no-repeat;
@@ -56,6 +57,10 @@ h6,
     min-height: 620px;
     position: relative;
     overflow: hidden;
+
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: nowrap;
 }
 
 .hero::before {
@@ -127,6 +132,7 @@ h6,
 }
 
 .hero-content {
+    flex: 0 0 45%;
     flex: 1;
     z-index: 2;
 }
@@ -141,27 +147,30 @@ h6,
     padding: 8px 20px;
     font-size: 13px;
     font-weight: 600;
-    color: #1a56db;
+    color: var(--biru);
     margin-bottom: 28px;
     font-family: "Plus Jakarta Sans", sans-serif;
 }
 
 /* Font "Data Statistik" → hitam */
 .hero-title {
-    font-size: 64px;
+    font-family: "Montserrat", sans-serif;
+
+    font-size: 54px;
     font-weight: 800;
     line-height: 1.1;
     margin-bottom: 20px;
     letter-spacing: 2px;
-    color: #000000;
+    color: var(--biru);
 }
 
 /* Font "Kabupaten Kutai Timur" → biru tua */
 .hero-title span {
-    color: #003366;
-    display: block;
-    font-size: 56px;
-    font-weight: 700;
+    font-family: "Literature", serif;
+
+    color: var(--biru);
+    font-size: 46px;
+    font-weight: 400;
     font-style: italic;
     letter-spacing: 2px;
 }
@@ -173,6 +182,9 @@ h6,
     max-width: 440px;
     margin-bottom: 36px;
     font-family: "Plus Jakarta Sans", sans-serif;
+
+    text-align: justify;
+    text-justify: inter-word;
 }
 
 .hero-btns {
@@ -182,7 +194,9 @@ h6,
 }
 
 .hero-chart {
-    width: 780px;
+    flex: 0 0 55%;
+
+    width: 280px;
     flex-shrink: 0;
     background: #fff;
     border-radius: 28px;
@@ -212,7 +226,7 @@ h6,
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: #1a56db;
+    background: var(--biru);
     color: #fff;
     text-decoration: none;
     padding: 14px 32px;
@@ -227,7 +241,7 @@ h6,
 }
 
 .btn-primary:hover {
-    background: #1341b0;
+    background: var(--biru);
     transform: translateY(-2px);
     box-shadow: 0 12px 28px rgba(26, 86, 219, 0.4);
     color: #fff;
@@ -251,8 +265,8 @@ h6,
 
 .btn-secondary:hover {
     background: #fff;
-    border-color: #1a56db;
-    color: #1a56db;
+    border-color: var(--biru);
+    color: var(--biru);
     transform: translateY(-2px);
 }
 
@@ -342,7 +356,7 @@ h6,
 
 .cat-card:hover,
 .cat-card.active {
-    border-color: var(--blue);
+    border-color: var(--biru);
     background: var(--blue-soft);
     transform: translateY(-4px);
     box-shadow: 0 12px 24px rgba(26, 86, 219, 0.15);
@@ -369,15 +383,37 @@ h6,
 
 .cat-name {
     font-size: 15px;
-    font-weight: 600;
-    color: var(--text);
-    font-family: "Playfair Display", serif;
+    font-weight: 400;
+    color: var(--biru);
+    font-family: "Plus Jakarta Sans", sans-serif;
 }
 
 /* ── DATA SECTION ──────────────────────────────────────────── */
 .data-section {
     padding: 60px 80px;
     background: var(--bg);
+}
+
+.title-main {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+    font-size: 42px;
+    /* color: #1e3a8a; */
+    /* color: #1f6d8cb1; */
+    color: #035f9c;
+
+    letter-spacing: 1px;
+}
+
+.title-accent {
+    font-family: "Literature", serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 36px;
+    /* color: #1f6d8cb1; */
+    color: #035f9c;
+
+    /* color: #1e3a8a; */
 }
 
 .charts-wrapper {
@@ -388,6 +424,36 @@ h6,
     display: flex;
     gap: 24px;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Khusus chart di HERO dibuat lebih kecil */
+.hero-chart .chart-card {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 18px; /* lebih kecil dari 24px */
+    padding: 16px; /* lebih kecil dari 24px */
+    min-width: 260px; /* lebih kecil dari 340px */
+    flex-shrink: 0;
+    cursor: default;
+    transition: all 0.2s;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+}
+
+/* Judul card hero */
+.hero-chart .chart-card-title {
+    font-size: 13px;
+    margin-bottom: 2px;
+}
+
+/* Subjudul */
+.hero-chart .chart-card-sub {
+    font-size: 11px;
+    margin-bottom: 10px;
+}
+
+/* Area chart */
+.hero-chart .chart-canvas-wrap {
+    height: 180px;
 }
 
 .chart-card {
@@ -593,5 +659,336 @@ h6,
     .info-card.highlight {
         grid-column: span 1;
         flex-direction: column;
+    }
+}
+
+/* ── SECTION WRAPPER ──────────────────────────── */
+.data-section {
+    padding: 80px 0 40px;
+    text-align: center;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.btn-search {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    background: var(--blue-soft);
+    color: var(--biru);
+    border: none;
+    padding: 8px 24px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-family: "Plus Jakarta Sans", sans-serif;
+}
+.btn-search:hover {
+    background: var(--biru-dark);
+    color: #fff;
+}
+
+/* ── SECTION HEADER ───────────────────────────── */
+.section-header {
+    max-width: 1200px;
+    margin: 0 auto 48px;
+    padding: 0 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    text-align: center;
+}
+
+.section-header h2 {
+    text-align: center;
+}
+
+.section-header .btn-search {
+    margin-top: 0;
+}
+
+/* ── CAROUSEL VIEWPORT ────────────────────────── */
+.charts-slider {
+    position: relative;
+    width: 100%;
+    overflow: visible; /* kiri kanan overflow kelihatan */
+}
+
+.charts-viewport {
+    overflow: hidden;
+    width: 100%;
+}
+
+/* Track: kartu-kartu berada di sini */
+.charts-track {
+    display: flex;
+    gap: 24px;
+    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 20px 0 22px;
+    will-change: transform;
+}
+
+/* ── CHART CARD ───────────────────────────────── */
+.chart-card {
+    flex: 0 0 640px; /* lebar tetap besar */
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 28px 28px 24px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition:
+        transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.45s ease;
+
+    /* State default: non-active (sedikit mengecil & blur) */
+    transform: scale(0.88);
+    opacity: 0.55;
+    filter: blur(0.5px);
+    cursor: pointer;
+}
+
+/* Kartu aktif (tengah) */
+.chart-card.is-active {
+    transform: scale(1);
+    opacity: 1;
+    filter: none;
+    box-shadow:
+        0 6px 20px rgba(26, 86, 219, 0.08),
+        0 1px 6px rgba(0, 0, 0, 0.05);
+    cursor: default;
+}
+
+/* ── CARD HEADER ─────────────────────────────── */
+.chart-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.chart-card-title {
+    /* font-family: "Montserrat", sans-serif; */
+
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+}
+
+/* .chart-card-period-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e40af;
+    background: linear-gradient(90deg, #eff6ff, #ffffff);
+    padding: 6px 12px;
+    border-radius: 10px;
+    width: fit-content;
+} */
+
+.chart-card-period-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--biru-dark);
+}
+
+/* Badge indikator (sub-label) */
+.chart-card-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #eff6ff;
+    color: var(--biru-dark);
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 99px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.chart-card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* ── CARD META ───────────────────────────────── */
+.chart-card-sub {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    font-size: 11.5px;
+    color: #94a3b8;
+}
+.chart-card-sub span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.chart-card-sub i {
+    font-size: 13px;
+    color: #cbd5e1;
+}
+
+/* ── LEGEND ──────────────────────────────────── */
+.chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    padding: 10px 14px;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #f1f5f9;
+}
+
+.chart-legend:empty {
+    display: none;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    color: #475569;
+    font-weight: 500;
+}
+
+.legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* ── CHART CANVAS AREA ───────────────────────── */
+.chart-canvas-wrap {
+    position: relative;
+    height: 220px;
+    margin-top: 4px;
+}
+
+/* ── NAV BAR ─────────────────────────────────── */
+.chart-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 8px;
+}
+
+.nav-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid #e2e8f0;
+    background: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.nav-btn:hover {
+    background: var(--biru);
+    border-color: var(--biru);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(26, 86, 219, 0.28);
+}
+
+/* Dots */
+.dots {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.chart-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    padding: 0;
+}
+
+.chart-dot.active {
+    background: var(--biru);
+    width: 24px;
+    border-radius: 4px;
+}
+
+/* ── NO DATA ─────────────────────────────────── */
+.chart-empty-msg {
+    text-align: center;
+    color: #9ca3af;
+    font-size: 12px;
+    padding: 60px 0;
+}
+
+/* ── RESPONSIVE ──────────────────────────────── */
+@media (max-width: 1024px) {
+    .chart-card {
+        flex: 0 0 520px;
+    }
+    .section-header {
+        padding: 0 32px;
+    }
+}
+
+@media (max-width: 768px) {
+    .data-section {
+        padding: 60px 0 80px;
+    }
+    .section-header {
+        padding: 0 20px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .chart-card {
+        flex: 0 0 calc(100vw - 48px);
+    }
+    .chart-card.is-active {
+        transform: scale(1);
+    }
+    .chart-card {
+        transform: scale(0.92);
+    }
+    .chart-canvas-wrap {
+        height: 180px;
+    }
+}
+
+@media (max-width: 480px) {
+    .chart-card {
+        flex: 0 0 calc(100vw - 40px);
+        padding: 20px;
+    }
+    .chart-canvas-wrap {
+        height: 160px;
     }
 }

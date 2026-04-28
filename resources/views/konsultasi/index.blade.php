@@ -25,12 +25,16 @@
 
         {{-- Floating card: kiri atas --}}
         <div class="float-card top-left">
+            <!-- <span class="icon">🕙</span> -->
+
             <i class="ti ti-clock"></i>
             Pilih Waktu<br>Konsultasi
         </div>
 
         {{-- Floating card: kanan atas --}}
         <div class="float-card top-right">
+                        <!-- <span class="icon">🧑🏼‍💼</span> -->
+
             <i class="ti ti-shield-check"></i>
             Ahli BPS
             <!-- <span class="float-badge"><i class="ti ti-circle-check"></i> Verified</span> -->
@@ -38,17 +42,21 @@
 
         {{-- Lingkaran besar dengan ikon headset --}}
         <div class="hero-circle">
-            <span class="hero-circle-icon">🎧</span>
+            <span class="hero-circle-icon">📈</span>
         </div>
 
         {{-- Floating card: kiri bawah --}}
         <div class="float-card bot-left">
+            <!-- <span class="icon">🆓</span> -->
+
             <i class="ti ti-cash-off"></i>
             Gratis
         </div>
 
         {{-- Floating card: kanan bawah --}}
         <div class="float-card bot-right">
+                        <!-- <span class="icon">💻</span> -->
+
             <i class="ti ti-device-laptop"></i>
             Konsultasi<br>Online Tersedia
         </div>

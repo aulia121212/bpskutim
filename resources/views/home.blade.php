@@ -127,9 +127,14 @@
 {{-- ══ DATA TERBARU ═════════════════════════════════════════════
      ══════════════════════════════════════════════════════════ --}}
 <section class="data-section">
+
+        <!-- <div class="pub-badge">Data</div> -->
+
     <div class="section-header">
+
+    
         <h2>
-            <span class="title-main">Data</span><br>
+            <span class="title-main">Data Statistik</span><br>
             <em class="title-accent">Terbaru</em>
         </h2>
         <a href="/data-statistik" class="btn-search">
@@ -163,7 +168,7 @@
                         </span>
                         @if(!empty($stat['periode']))
                         <span class="chart-card-badge">
-                            <i class="ti ti-calendar-stats"></i>
+                            <i class="ti ti-database"></i>
     {{ $stat['komponen']  }}
                         </span>
                         @endif

@@ -15,27 +15,71 @@
 @include('partials.navbar')
 
 <section class="hero">
-    <div class="hero-content">
-        <div class="hero-tag"><i class="ti ti-chart-dots"></i> Portal Data Statistik Resmi</div>
-        <h1 class="hero-title">Data Statistik<br><span>Kabupaten Kutai</span><span>Timur</span></h1>
-        <p class="hero-desc">Akses berbagai data statistik resmi Kabupaten Kutai Timur yang akurat, terbaru, dan mudah dipahami untuk kebutuhan informasi, penelitian, dan perencanaan.</p>
-        <div class="hero-btns">
-            <a href="#data" class="btn-primary"><i class="ti ti-search"></i> Jelajahi Data</a>
-            <a href="#info" class="btn-secondary">Pelajari Lebih Lanjut</a>
+
+    <!-- <div class="flex gap-10 items-center"> -->
+
+        <!-- LEFT: HERO TEXT -->
+        <div class="hero-content">
+            <div class="hero-tag">
+                <i class="ti ti-chart-dots"></i> Portal Data Statistik Resmi
+            </div>
+
+            <h1 class="hero-title">
+                Data Statistik<br>
+                <span>Kabupaten Kutai Timur</span>
+            </h1>
+
+            <p class="hero-desc">
+                Akses berbagai data statistik resmi Kabupaten Kutai Timur yang akurat, terbaru, dan mudah dipahami untuk kebutuhan informasi, penelitian, dan perencanaan.
+            </p>
+
+            <div class="hero-btns">
+                <a href="#data" class="btn-primary">
+                    <i class="ti ti-search"></i> Jelajahi Data
+                </a>
+                <a href="#info" class="btn-secondary">
+                    Pelajari Lebih Lanjut
+                </a>
+            </div>
         </div>
-    </div>
+
+        <!-- RIGHT SIDE -->
     <div class="hero-chart">
-        @php
-            $featured     = $statistics->first();
-            $featuredData = $featured ? $featured->values->sortBy('year') : collect();
-        @endphp
-        <div class="hero-chart-title">
-            {{ $featured->judul_data ?? 'Persentase Penduduk Miskin di Kab. Kutai Timur' }}
-            {{ $featuredData->min('year') ?? '2018' }}–{{ $featuredData->max('year') ?? '2024' }}
+
+            
+
+            <!-- CARD -->
+            @if($kutim)
+            <!-- <div class="chart-card !min-w-full !scale-100 !opacity-100"> -->
+
+                <div class="chart-card-header">
+                    <div>
+                        <div class="chart-card-title">
+                            {{ $kutim['judul'] }}
+                        </div>
+
+                        <div class="chart-card-period-title">
+                            {{ $kutim['periode'] ?? '' }}
+                        </div>
+                    </div>
+
+                    <span class="chart-card-badge">
+                        <i class="ti ti-chart-dots-3"></i>
+                        {{ $kutim['komponen'] ?? '' }}
+                    </span>
+                </div>
+
+                <div class="chart-canvas-wrap">
+                    <canvas id="chart-kutim"></canvas>
+                </div>
+
+            <!-- </div> -->
+            @endif
+
         </div>
-        <div class="hero-chart-sub">Update Terakhir: {{ $featured?->updated_at?->format('F Y') ?? 'Desember 2024' }}</div>
-        <div style="height:300px"><canvas id="heroChart"></canvas></div>
+
     </div>
+
 </section>
 
 <section class="search-section" id="data">
@@ -74,63 +118,73 @@
     </div>
 </section>
  
-{{-- ── SECTION DATA (chart cards carousel) ── --}}
 <section class="data-section">
-    <h2 class="section-title">Data Terbaru</h2>
-    <div class="charts-wrapper">
-        <div class="charts-track" id="chartsTrack">
-            @forelse($statistics as $statTitle)
-            @php
-            
-                $firstStat = $statTitle->statistics->first();
-                $previewVals = $firstStat
-                    ? $firstStat->values->sortBy('year')
-                    : collect();
-                $chartLabels = $previewVals->pluck('year')->toArray();
-                $chartVals   = $previewVals->pluck('value')->toArray();
-                $minYear = $previewVals->min('year');
-                $maxYear = $previewVals->max('year');
-            @endphp
-            <a href="{{ route('data-statistik.show', $statTitle->id) }}"
-               class="chart-card"
-               style="text-decoration:none;color:inherit;display:block"
-               data-judul="{{ strtolower($statTitle->judul_data) }}"
-               data-indikator="{{ $statTitle->indikator_data }}">
-                <div class="chart-card-title">{{ $statTitle->judul_data }} {{ $minYear }}–{{ $maxYear }}</div>
-                <div class="chart-card-sub">
-                    {{ $statTitle->statistics->count() }} wilayah
-                    · Update: {{ $statTitle->updated_at?->format('M Y') }}
-                </div>
-                <div style="height:180px"><canvas id="chart-{{ $statTitle->id }}"></canvas></div>
-                <div style="display:flex;justify-content:space-between;margin-top:16px;font-size:11px;color:var(--muted)">
-                    <span>Min: {{ $previewVals->min('value') }}</span>
-                    <span>Max: {{ $previewVals->max('value') }}</span>
-                </div>
-            </a>
-            @empty
-            {{-- Demo data jika belum ada data --}}
-            @php
-                $demoData = [
-                    ['judul'=>'Persentase Penduduk Miskin','wilayah'=>'Kutai Timur','tahun'=>'2018-2024','values'=>[9.28,9.51,9.65,9.91,9.38,8.78,8.61],'labels'=>[2018,2019,2020,2021,2022,2023,2024]],
-                    ['judul'=>'Tingkat Partisipasi Angkatan Kerja','wilayah'=>'Kutai Timur','tahun'=>'2019-2024','values'=>[67.2,68.1,68.5,69.2,70.1,70.8],'labels'=>[2019,2020,2021,2022,2023,2024]],
-                    ['judul'=>'Indeks Pembangunan Manusia','wilayah'=>'Kutai Timur','tahun'=>'2019-2024','values'=>[71.2,71.8,72.3,72.9,73.4,74.1],'labels'=>[2019,2020,2021,2022,2023,2024]],
-                    ['judul'=>'Rata-rata Lama Sekolah','wilayah'=>'Kutai Timur','tahun'=>'2019-2024','values'=>[8.2,8.4,8.5,8.7,8.9,9.1],'labels'=>[2019,2020,2021,2022,2023,2024]],
-                ];
-            @endphp
-            @foreach($demoData as $i => $demo)
-            <div class="chart-card" data-judul="{{ strtolower($demo['judul']) }}">
-                <div class="chart-card-title">{{ $demo['judul'] }} {{ $demo['tahun'] }}</div>
-                <div class="chart-card-sub">{{ $demo['wilayah'] }} · Update: {{ ['Des 2024','Nov 2024','Okt 2024','Sep 2024'][$i] }}</div>
-                <div style="height:180px"><canvas id="demo-chart-{{ $i }}"></canvas></div>
-                <div style="display:flex;justify-content:space-between;margin-top:16px;font-size:11px;color:var(--muted)">
-                    <span>Min: {{ min($demo['values']) }}</span>
-                    <span>Max: {{ max($demo['values']) }}</span>
-                </div>
-            </div>
-            @endforeach
-            @endforelse
-        </div>
+
+        <!-- <div class="pub-badge">Data</div> -->
+
+    <div class="section-header">
+
+    
+        <h2>
+            <span class="title-main">Data Statistik</span><br>
+            <em class="title-accent">Terbaru</em>
+        </h2>
+        <a href="/data-statistik" class="btn-search">
+            <i class="ti ti-search"></i> Jelajahi Data Sekarang
+        </a>
     </div>
+ 
+    <div class="charts-viewport">
+        <div class="charts-slider">
+            <div class="charts-track" id="chartsTrack">
+ 
+                @forelse($statistics as $stat)
+                <div class="chart-card" data-id="{{ $stat['id'] }}">
+ 
+                    {{-- Judul indikator --}}
+                    <div class="chart-card-title" title="{{ $stat['judul'] }}">
+                        {{ $stat['judul'] }}
+                    </div>
+
+                     @if(!empty($stat['periode']))
+    <div class="chart-card-period-title">
+        {{ $stat['periode'] }}
+    </div>
+    @endif
+ 
+                    {{-- Meta row: update + periode badge --}}
+                    <div class="chart-card-meta">
+                        <span class="chart-card-sub">
+                            <i class="ti ti-clock"></i>
+                            Update: {{ \Carbon\Carbon::parse($stat['updated'])->isoFormat('MMM Y') }}
+                        </span>
+                        @if(!empty($stat['periode']))
+                        <span class="chart-card-badge">
+                            <i class="ti ti-calendar-stats"></i>
+    {{ $stat['komponen']  }}
+                        </span>
+                        @endif
+                    </div>
+ 
+                    {{-- Legend warna per wilayah (diisi JS) --}}
+                    <div class="chart-legend" id="legend-{{ $stat['id'] }}"></div>
+ 
+                    {{-- Canvas chart --}}
+                    <div class="chart-canvas-wrap">
+                        <canvas id="chart-{{ $stat['id'] }}"></canvas>
+                    </div>
+ 
+                </div>
+                @empty
+                <p style="padding:60px;color:#9ca3af;text-align:center">
+                    Belum ada data statistik yang dipublikasikan.
+                </p>
+                @endforelse
+ 
+            </div>{{-- /charts-track --}}
+        </div>{{-- /charts-slider --}}
+    </div>{{-- /charts-viewport --}}
+ 
     <div class="chart-nav">
         <button class="nav-btn" id="chartPrev"><i class="ti ti-chevron-left"></i></button>
         <div class="dots" id="chartDots"></div>
@@ -140,34 +194,104 @@
 
 @include('partials.footer')
  
-{{-- ── SCRIPT init chart cards ── --}}
-{{-- Ganti juga bagian <script> initStatChart di bawah halaman --}}
+
+
 <script>
-@foreach($statistics as $statTitle)
-@php
-    $fs = $statTitle->statistics->first();
-    $pv = $fs ? $fs->values->sortBy('year') : collect();
-@endphp
-initStatChart('chart-{{ $statTitle->id }}',
-    @json($pv->pluck('year')->toArray()),
-    @json($pv->pluck('value')->toArray())
-);
-@endforeach
- 
-@if($statistics->isEmpty())
-@php
-    $demoCharts = [
-        ['labels'=>[2018,2019,2020,2021,2022,2023,2024],'values'=>[9.28,9.51,9.65,9.91,9.38,8.78,8.61]],
-        ['labels'=>[2019,2020,2021,2022,2023,2024],'values'=>[67.2,68.1,68.5,69.2,70.1,70.8]],
-        ['labels'=>[2019,2020,2021,2022,2023,2024],'values'=>[71.2,71.8,72.3,72.9,73.4,74.1]],
-        ['labels'=>[2019,2020,2021,2022,2023,2024],'values'=>[8.2,8.4,8.5,8.7,8.9,9.1]],
-    ];
-@endphp
-@foreach($demoCharts as $i => $d)
-initStatChart('demo-chart-{{ $i }}', @json($d['labels']), @json($d['values']));
-@endforeach
-@endif
+window.homeCharts = [
+    @foreach ($statistics as $stat)
+    {
+        id       : "{{ $stat['id'] }}",
+        judul    : @json($stat['judul']),
+        wilayah  : @json($stat['wilayah']),
+        periode  : @json($stat['periode']  ?? ''),
+        komponen : @json($stat['komponen'] ?? ''),
+        y_labels : @json($stat['labels']   ?? []),   {{-- labels = array tahun --}}
+        labels   : @json($stat['labels']   ?? []),
+        values   : @json($stat['values']   ?? []),
+    },
+    @endforeach
+];
 </script>
+ 
+{{-- 3. Init hero chart kutim ────────────────────────────────── --}}
+@if($kutim)
+<script>
+(function () {
+    const labels = @json($kutim['labels'] ?? []);
+    const values = @json($kutim['values'] ?? []);
+ 
+    if (!labels.length || !values.length) return;
+ 
+    // Tunggu DOM siap (data-statistik.js mungkin belum eksekusi DOMContentLoaded)
+    function drawKutim() {
+        const el = document.getElementById('chart-kutim');
+        if (!el) return;
+ 
+        // Destroy jika sudah ada instance sebelumnya
+        const existing = Chart.getChart(el);
+        if (existing) existing.destroy();
+ 
+        new Chart(el.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [{
+                    data             : values,
+                    borderColor      : '#1a56db',
+                    backgroundColor  : 'rgba(26,86,219,0.07)',
+                    borderWidth      : 2.5,
+                    pointBackgroundColor: '#1a56db',
+                    pointBorderColor : '#fff',
+                    pointBorderWidth : 2,
+                    pointRadius      : 5,
+                    pointHoverRadius : 7,
+                    fill             : true,
+                    tension          : 0.35,
+                }],
+            },
+            options: {
+                responsive          : true,
+                maintainAspectRatio : false,
+                plugins: {
+                    legend : { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: (c) => ' ' + Number(c.parsed.y).toLocaleString('id-ID'),
+                        },
+                    },
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Tahun', color: '#94a3b8', font: { size: 11 } },
+                        ticks: { font: { size: 11 }, color: '#94a3b8', maxRotation: 0 },
+                        grid : { display: false },
+                    },
+                    y: {
+                        title: { display: true, text: 'Nilai', color: '#94a3b8', font: { size: 11 } },
+                        ticks: {
+                            font         : { size: 10 },
+                            color        : '#94a3b8',
+                            maxTicksLimit: 5,
+                            callback     : (v) => Number(v).toLocaleString('id-ID'),
+                        },
+                        grid: { color: 'rgba(0,0,0,.04)' },
+                    },
+                },
+            },
+        });
+    }
+ 
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', drawKutim);
+    } else {
+        drawKutim();
+    }
+})();
+</script>
+@endif
+<script src="{{ asset('js/data-statistik.js') }}"></script>
+<script src="{{ asset('js/home.js') }}"></script>
+
 
 </body>
 </html>

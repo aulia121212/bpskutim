@@ -1,4 +1,3 @@
-// ── Chart config helper ───────────────────────────────────────
 function makeChartConfig(labels, values) {
     return {
         type: "line",

@@ -1,6 +1,25 @@
-/* IMPORT FONT (tambahkan Montserrat) */
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Playfair+Display:ital,wght@0,400;1,400&display=swap");
 /* SECTION */
+:root {
+    --putih: #ffffff;
+    --hitam: #000000;
+    --blue: #1a56db;
+    --blue-dark: #1341b0;
+    --blue-light: #d5eeff94;
+    --blue-soft: #f0f7ff;
+    /* --biru: #385d8d; */
+    /* --biru: #669dc1; */
+    --biru: #035f9c;
+    --biru-dark: #006bb2;
+    /* --biru: #5692ba; */
+    --green: #1f6d8c;
+    --green-soft: #f0f7ff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --bg: #f0f6ff;
+}
+
 .konsultasi-section {
     padding: 100px 20px;
     background: linear-gradient(90deg, #eaf3ff 0%, #ffffff 100%);
@@ -26,7 +45,8 @@
     font-weight: 700;
     font-size: 42px;
     /* color: #1e3a8a; */
-    color: #1f6d8cb1;
+    /* color: #1f6d8cb1; */
+    color: #035f9c;
 
     letter-spacing: 1px;
 }
@@ -36,7 +56,8 @@
     font-style: italic;
     font-weight: 400;
     font-size: 36px;
-    color: #1f6d8cb1;
+    /* color: #1f6d8cb1; */
+    color: #035f9c;
 
     /* color: #1e3a8a; */
 }
@@ -55,7 +76,7 @@
     align-items: center;
     gap: 10px;
     background: #ffff;
-    color: var(--green);
+    color: var(--biru);
     padding: 14px 24px;
     border-radius: 12px;
     text-decoration: none;
@@ -64,7 +85,7 @@
 }
 
 .btn-konsultasi:hover {
-    background: var(--green);
+    background: var(--biru);
     color: #ffff;
     transform: translateY(-2px);
 }
@@ -253,18 +274,6 @@
     }
 }
 
-:root {
-    --blue: #1a56db;
-    --blue-dark: #1341b0;
-    --blue-light: #e8f0fe;
-    --blue-soft: #f0f6ff;
-    --green: #1f6e8c;
-    --text: #1e293b;
-    --muted: #64748b;
-    --border: #e2e8f0;
-    --bg: #f0f6ff;
-}
-
 * {
     margin: 0;
     padding: 0;
@@ -299,7 +308,7 @@ body #main-nav.scrolled .nav-links > a {
 
 body #main-nav .nav-links > a:hover,
 body #main-nav .nav-links > a.active {
-    color: #1f6e8c !important;
+    color: var(--biru) !important;
 }
 /* Logo teks putih */
 body #main-nav .nav-logo-title {
@@ -307,7 +316,7 @@ body #main-nav .nav-logo-title {
 }
 
 body #main-nav.scrolled .nav-logo-title {
-    color: #1f6e8c !important;
+    color: var(--biru) !important;
 }
 /* Btn outline putih */
 body #main-nav .btn-nav {
@@ -738,7 +747,7 @@ nav {
 .pub-badge {
     display: inline-block;
     background: #ffff;
-    color: #1f6d8c;
+    color: var(--biru);
     font-size: 13px;
     font-weight: 600;
     padding: 6px 18px;
@@ -766,7 +775,8 @@ nav {
     line-height: 1.1;
     font-weight: 700;
     margin: 0;
-    color: #1f6e8c;
+    /* color: #1f6e8c; */
+    color: var(--biru);
 }
 
 .pub-title-regular {
@@ -842,7 +852,7 @@ nav {
     align-items: center;
     padding: 12px 24px;
     background-color: #f0f7ff;
-    color: #1f6d8c;
+    color: #035f9c;
     text-decoration: none;
     border-radius: 50px;
     font-weight: 600;
@@ -856,7 +866,7 @@ nav {
 }
 
 .btn-outline:hover {
-    background-color: #1f6d8cb1;
+    background-color: var(--biru);
     color: #fff;
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(26, 86, 219, 0.25);
@@ -886,8 +896,8 @@ nav {
     align-items: center;
     gap: 8px;
     margin-top: 16px;
-    background: var(--blue-light);
-    color: var(--blue);
+    background: var(--blue-soft);
+    color: var(--biru);
     border: none;
     padding: 8px 24px;
     border-radius: 999px;
@@ -899,7 +909,7 @@ nav {
     font-family: "Plus Jakarta Sans", sans-serif;
 }
 .btn-search:hover {
-    background: var(--blue);
+    background: var(--biru-dark);
     color: #fff;
 }
 
@@ -953,9 +963,9 @@ nav {
 
 /* ── SECTION WRAPPER ──────────────────────────── */
 .data-section {
-    padding: 80px 0 100px;
+    padding: 80px 0 40px;
     text-align: center;
-    background: #f8fafc;
+    background: #ffffff;
     overflow: hidden;
 }
 
@@ -963,16 +973,21 @@ nav {
 .section-header {
     max-width: 1200px;
     margin: 0 auto 48px;
-    padding: 0 40px;
+    padding: 0 80px;
     display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    text-align: center;
 }
 
 .section-header h2 {
-    text-align: left;
+    text-align: center;
+}
+
+.section-header .btn-search {
+    margin-top: 0;
 }
 
 /* ── CAROUSEL VIEWPORT ────────────────────────── */
@@ -1024,8 +1039,8 @@ nav {
     opacity: 1;
     filter: none;
     box-shadow:
-        0 20px 60px rgba(26, 86, 219, 0.12),
-        0 4px 20px rgba(0, 0, 0, 0.08);
+        0 6px 20px rgba(26, 86, 219, 0.08),
+        0 1px 6px rgba(0, 0, 0, 0.05);
     cursor: default;
 }
 
@@ -1038,6 +1053,8 @@ nav {
 }
 
 .chart-card-title {
+    /* font-family: "Montserrat", sans-serif; */
+
     font-size: 14px;
     font-weight: 700;
     color: #1e293b;
@@ -1062,7 +1079,7 @@ nav {
 .chart-card-period-title {
     font-size: 14px;
     font-weight: 600;
-    color: #1e40af;
+    color: var(--hitam);
 }
 
 /* Badge indikator (sub-label) */
@@ -1071,7 +1088,7 @@ nav {
     align-items: center;
     gap: 5px;
     background: #eff6ff;
-    color: #1d4ed8;
+    color: var(--biru);
     font-size: 10.5px;
     font-weight: 600;
     padding: 4px 10px;
@@ -1171,8 +1188,8 @@ nav {
 }
 
 .nav-btn:hover {
-    background: #1a56db;
-    border-color: #1a56db;
+    background: var(--biru);
+    border-color: var(--biru);
     color: #fff;
     box-shadow: 0 4px 16px rgba(26, 86, 219, 0.28);
 }
@@ -1196,7 +1213,7 @@ nav {
 }
 
 .chart-dot.active {
-    background: #1a56db;
+    background: var(--biru);
     width: 24px;
     border-radius: 4px;
 }

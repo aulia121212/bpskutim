@@ -1,8 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // ════════════════════════════════════════════════════
-    // HERO SLIDER
-    // ════════════════════════════════════════════════════
-    const track = document.getElementById("heroTrack");
+  const track = document.getElementById("heroTrack");
     const dots = document.querySelectorAll(".slider-dots .dot");
     const slides = document.querySelectorAll(".slide");
     const total = slides.length;
@@ -47,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // HELPERS
     // ════════════════════════════════════════════════════
     const REGION_COLORS = [
-        "#1a56db",
+        "#035f9c",
         "#e11d48",
         "#16a34a",
         "#d97706",
