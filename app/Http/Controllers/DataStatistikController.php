@@ -10,7 +10,7 @@ class DataStatistikController extends Controller
 {
     private array $indikatorMap = [
         'indikator_ekonomi'             => 'Indikator Ekonomi',
-        'indikator_ketenagakerjaan'     => 'Indikator Ketenagakerjaan',
+        'indikator_ketenagakerjaan'     => 'Indikator Kependudukan dan Ketenagakerjaan',
         'indikator_sosial'              => 'Indikator Sosial',
         'indikator_pembangunan_manusia' => 'Indikator Pembangunan Manusia',
         'gender'                        => 'Gender',
@@ -96,25 +96,27 @@ class DataStatistikController extends Controller
    
     // FILTER BERDASARKAN INDIKATOR
     
-    public function indikator(Request $request, string $slug)
-    {
-        abort_unless(array_key_exists($slug, $this->indikatorMap), 404);
+   public function indikator(Request $request, string $slug)
+{
+    abort_unless(array_key_exists($slug, $this->indikatorMap), 404);
 
-        $rawStatistics = Statistic::with('values')
-            ->where('status', 'published')
-            ->where('indikator_data', $slug)
-            ->get()
-            ->groupBy(fn($s) => $s->judul_data . '|||' . $s->wilayah_data);
+    $query = StatisticTitle::with(['statistics' => function ($q) {
+        $q->with('values')->where('status', 'published');
+    }])->where('indikator_data', $slug);
 
-        $statistics = $this->formatStatistics($rawStatistics);
-
-        return view('data-statistik.indikator', [
-            'statistics'    => $statistics,
-            'slug'          => $slug,
-            'namaIndikator' => $this->indikatorMap[$slug],
-            'indikatorMap'  => $this->indikatorMap,
-        ]);
+    if ($search = $request->input('search')) {
+        $query->where('judul_data', 'like', "%{$search}%");
     }
+
+    $statistics = $query->latest()->paginate(10)->withQueryString();
+
+    return view('data-statistik.indikator', [
+        'statistics'    => $statistics,
+        'slug'          => $slug,
+        'namaIndikator' => $this->indikatorMap[$slug],
+        'indikatorMap'  => $this->indikatorMap,
+    ]);
+}
 
     // =========================================================
     // DETAIL (SHOW) → tetap pakai logic lama (multi wilayah)

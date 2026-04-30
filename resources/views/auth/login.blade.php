@@ -10,6 +10,26 @@
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+        :root {
+    --putih: #ffffff;
+    --hitam: #000000;
+    --blue: #1a56db;
+    --blue-dark: #1341b0;
+    --blue-light: #d5eeff94;
+    --blue-soft: #f0f7ff;
+    /* --biru: #385d8d; */
+    /* --biru: #669dc1; */
+    --biru: #035f9c;
+    --biru-dark: #006bb2;
+    /* --biru: #5692ba; */
+    --green: #1f6d8c;
+    --green-soft: #f0f7ff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --bg: #f0f6ff;
+}
+
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             min-height: 100vh;
@@ -92,7 +112,7 @@
             font-size: 13px;
             font-weight: 800;
             font-style: italic;
-            color: #00A2E9;
+            color: var(--biru);
             line-height: 1.2;
             transition: color 0.3s;
         }
@@ -100,7 +120,7 @@
         .login-title {
             font-size: 28px;
             font-weight: 800;
-            color: #00A2E9;
+            color: var(--biru);
             letter-spacing: -0.02em;
             margin-bottom: 4px;
         }
@@ -139,7 +159,7 @@
         }
         .form-input::placeholder { color: #b8c6d4; }
         .form-input:focus {
-            border-color: #00A2E9;
+            border-color: var(--biru);
             background: rgba(255,255,255,0.96);
             box-shadow: 0 0 0 3px rgba(0,162,233,0.12);
         }
@@ -232,11 +252,11 @@
         }
         .brand-name-block .nav-logo-title {
             font-size: 17px;
-            color: #0057B7;
+            color: var(--biru);
         }
         .brand-name-block .nav-logo-title:first-child {
             font-size: 19px;
-            color: #00A2E9;
+            color: var(--biru);
         }
 
         .brand-tagline {

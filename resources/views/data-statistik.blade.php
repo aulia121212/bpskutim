@@ -63,10 +63,26 @@
                         </div>
                     </div>
 
+                    <div class="badge-stack">
+
+
                     <span class="chart-card-badge">
                         <i class="ti ti-chart-dots-3"></i>
                         {{ $kutim['komponen'] ?? '' }}
                     </span>
+
+                    <span class="chart-card-badge">
+    <i class="ti ti-map-pin"></i>
+    Kab. Kutai Timur
+</span>
+
+<!-- <span class="chart-card-badge">
+    <i class="ti ti-map-pin"></i>
+    {{ $kutim['periode'] ?? '' }}
+</span> -->
+
+                </div>
+
                 </div>
 
                 <div class="chart-canvas-wrap">
@@ -100,7 +116,7 @@
         </a>
         <a href="{{ route('data-statistik.indikator', 'indikator_ketenagakerjaan') }}" class="cat-card">
             <div class="cat-icon" style="background:#fce7f3">👷</div>
-            <div class="cat-name">Indikator Ketenagakerjaan</div>
+            <div class="cat-name">Indikator Kependudukan dan Ketenagakerjaan</div>
         </a>
         <a href="{{ route('data-statistik.indikator', 'indikator_sosial') }}" class="cat-card">
             <div class="cat-icon" style="background:#d1fae5">👥</div>

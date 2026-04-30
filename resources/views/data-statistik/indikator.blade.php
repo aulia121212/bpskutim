@@ -294,7 +294,7 @@
             @php
                 $labelShort = [
                     'indikator_ekonomi'             => 'Ekonomi',
-                    'indikator_ketenagakerjaan'     => 'Ketenagakerjaan',
+                    'indikator_ketenagakerjaan'     => 'Kependudukan & Ketenagakerjaan',
                     'indikator_sosial'              => 'Sosial',
                     'indikator_pembangunan_manusia' => 'Pemb. Manusia',
                 ];
@@ -337,7 +337,7 @@
 
         $labelShortMap = [
             'indikator_ekonomi'             => 'Indikator Ekonomi',
-            'indikator_ketenagakerjaan'     => 'Indikator Ketenagakerjaan',
+            'indikator_ketenagakerjaan'     => 'Indikator Kependudukan dan Ketenagakerjaan',
             'indikator_sosial'              => 'Indikator Sosial',
             'indikator_pembangunan_manusia' => 'Indikator Pembangunan Manusia',
             'gender'                         => 'Gender',

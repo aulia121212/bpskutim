@@ -38,7 +38,7 @@ h6,
 .info-title,
 .chart-card-title,
 .cat-name {
-    font-family: "Playfair Display", serif;
+    font-family: "Montserrat", sans-serif;
     font-weight: 700;
 }
 
@@ -211,7 +211,7 @@ h6,
     font-weight: 700;
     color: var(--text);
     margin-bottom: 4px;
-    font-family: "Playfair Display", serif;
+    font-family: "Montserrat", sans-serif;
 }
 
 .hero-chart-sub {
@@ -476,10 +476,10 @@ h6,
 
 .chart-card-title {
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 200;
     color: var(--text);
     margin-bottom: 4px;
-    font-family: "Playfair Display", serif;
+    font-family: "Plus Jakarta Sans", sans-serif;
 }
 
 .chart-card-sub {
@@ -700,6 +700,7 @@ h6,
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
     justify-content: center;
     gap: 24px;
     text-align: center;
@@ -730,7 +731,9 @@ h6,
     display: flex;
     gap: 24px;
     transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
-    padding: 20px 0 22px;
+    /* padding kiri/kanan agar kartu aktif pertama & terakhir
+       selalu tampil tepat di tengah viewport */
+    padding: 20px calc((100vw - 640px) / 2) 22px;
     will-change: transform;
 }
 
@@ -805,6 +808,11 @@ h6,
     color: var(--biru-dark);
 }
 
+.badge-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
 /* Badge indikator (sub-label) */
 .chart-card-badge {
     display: inline-flex;
@@ -966,7 +974,8 @@ h6,
     .section-header {
         padding: 0 20px;
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
+        text-align: center;
         gap: 12px;
     }
     .chart-card {
