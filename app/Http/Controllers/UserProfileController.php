@@ -39,12 +39,13 @@ class UserProfileController extends Controller
         $user = auth()->user();
 
         $request->validate([
-            'name'                  => 'required|string|max:255',
-            'email'                 => 'required|email|unique:users,email,' . $user->id,
-            'no_whatsapp'           => 'required|string|max:20',
-            'password'              => 'nullable|string|min:8|confirmed',
-            'instansi'              => 'nullable|string|max:255',
-            'alamat'                => 'nullable|string|max:500',
+            'name'             => 'required|string|max:255',
+            'email'            => 'required|email|unique:users,email,' . $user->id,
+            'no_whatsapp'      => 'required|string|max:20',
+            'current_password' => 'required_with:new_password|nullable|string',
+            'new_password'     => 'nullable|string|min:8',
+            'instansi'         => 'nullable|string|max:255',
+            'alamat'           => 'nullable|string|max:500',
         ]);
 
         $user->name        = $request->name;
@@ -53,8 +54,14 @@ class UserProfileController extends Controller
         $user->instansi    = $request->instansi;
         $user->alamat      = $request->alamat;
 
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
+        if ($request->filled('new_password')) {
+            // Verifikasi password lama
+            if (!Hash::check($request->current_password, $user->password)) {
+                return back()
+                    ->withInput()
+                    ->withErrors(['current_password' => 'Password saat ini tidak sesuai.']);
+            }
+            $user->password = Hash::make($request->new_password);
         }
 
         $user->save();

@@ -9,6 +9,26 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 
 <style>
+
+    :root {
+    --putih: #ffffff;
+    --hitam: #000000;
+    --blue: #1a56db;
+    --blue-dark: #1341b0;
+    --blue-light: #d5eeff94;
+    --blue-soft: #f0f7ff;
+    /* --biru: #385d8d; */
+    /* --biru: #669dc1; */
+    --biru: #035f9c;
+    --biru-dark: #006bb2;
+    /* --biru: #5692ba; */
+    --green: #1f6d8c;
+    --green-soft: #f0f7ff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --bg: #f0f6ff;
+}
 *{margin:0;padding:0;box-sizing:border-box}
 body{
     font-family:'Plus Jakarta Sans',sans-serif;
@@ -241,8 +261,8 @@ body{
 }
 
 .section-title-sm{
-    font-family:'Playfair Display',serif;
-    font-size:24px;
+font-family: "Plus Jakarta Sans", sans-serif;    
+font-size:24px;
     margin-bottom:18px;
 }
 
@@ -303,6 +323,14 @@ $initials = collect(explode(' ', $user->name))
 @endif
 </div>
 
+{{-- Form foto terpisah — POST ke updatePhoto, auto-submit --}}
+<form method="POST" action="{{ route('user.profile.photo') }}"
+      enctype="multipart/form-data" id="fotoForm">
+    @csrf
+    <input type="file" hidden id="fotoInput" name="foto" accept="image/*"
+           onchange="document.getElementById('fotoForm').submit()">
+</form>
+
 <button type="button" class="profile-edit-btn"
         onclick="document.getElementById('fotoInput').click()">
     <i class="ti ti-pencil"></i> Edit Foto Profil
@@ -344,9 +372,25 @@ $initials = collect(explode(' ', $user->name))
 </div>
 
 <div class="form-row">
+<div class="form-group" id="current-password-wrap" style="display:none">
+<label class="form-label">Password Saat Ini <span>*</span></label>
+<div style="position:relative">
+    <input type="password" name="current_password" id="current_password" class="form-input" placeholder="Masukkan password saat ini">
+    <button type="button" onclick="togglePw('current_password','eye-current')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#94a3b8">
+        <i class="ti ti-eye" id="eye-current"></i>
+    </button>
+</div>
+</div>
+
 <div class="form-group">
 <label class="form-label">Password Baru</label>
-<input type="password" name="new_password" class="form-input">
+<div style="position:relative">
+    <input type="password" name="new_password" id="new_password" class="form-input" placeholder="Kosongkan jika tidak ingin mengubah"
+           oninput="toggleCurrentPwField(this)">
+    <button type="button" onclick="togglePw('new_password','eye-new')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#94a3b8">
+        <i class="ti ti-eye" id="eye-new"></i>
+    </button>
+</div>
 </div>
 
 <div class="form-group">
@@ -368,15 +412,6 @@ $initials = collect(explode(' ', $user->name))
 </div>
 </div>
 </form>
-
-{{-- Form foto di LUAR form utama — nested form tidak diizinkan browser --}}
-<form method="POST" action="{{ route('user.profile.photo') }}"
-      enctype="multipart/form-data" id="fotoForm" style="display:none">
-    @csrf
-    <input type="file" id="fotoInput" name="foto" accept="image/*"
-           onchange="document.getElementById('fotoForm').submit()">
-</form>
-
 </div>
 
 {{-- RESERVASI --}}
@@ -466,6 +501,30 @@ document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
 
 document.getElementById('tab-'+name).classList.add('active');
 el.classList.add('active');
+}
+
+function toggleCurrentPwField(input) {
+    const wrap = document.getElementById('current-password-wrap');
+    if (input.value.length > 0) {
+        wrap.style.display = 'block';
+        wrap.querySelector('input').required = true;
+    } else {
+        wrap.style.display = 'none';
+        wrap.querySelector('input').required = false;
+        wrap.querySelector('input').value = '';
+    }
+}
+
+function togglePw(fieldId, eyeId) {
+    const field = document.getElementById(fieldId);
+    const eye   = document.getElementById(eyeId);
+    if (field.type === 'password') {
+        field.type = 'text';
+        eye.className = 'ti ti-eye-off';
+    } else {
+        field.type = 'password';
+        eye.className = 'ti ti-eye';
+    }
 }
 
 const hash = window.location.hash.replace('#','');
