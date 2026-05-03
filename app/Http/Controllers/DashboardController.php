@@ -8,6 +8,8 @@ use App\Models\ReservasiKonsultasi;
 use App\Models\Petugas;
 use App\Models\Statistic;
 use App\Models\StatisticTitle;
+use Carbon\Carbon;
+use App\Models\RiwayatKonsultasi;
 
 class DashboardController extends Controller
 {
@@ -26,17 +28,75 @@ class DashboardController extends Controller
     // ──────────────────────────────────────────────────────────────────
     // SUPER ADMIN
     // ──────────────────────────────────────────────────────────────────
-    private function superAdminDashboard()
+   private function superAdminDashboard()
     {
-        $stats = [
-            'total_admin_pelayanan' => User::where('role', User::ROLE_ADMIN_PELAYANAN)->count(),
-            'total_admin_statistik' => User::where('role', User::ROLE_ADMIN_STATISTIK)->count(),
-            'total_user'            => User::where('role', User::ROLE_USER)->count(),
-            'total_reservasi'       => ReservasiKonsultasi::count(),
-            'total_statistik'       => Statistic::count(),
+        $now = Carbon::now();
+ 
+        $totalAdmin     = User::whereIn('role', [
+            User::ROLE_SUPER_ADMIN,
+            User::ROLE_ADMIN_PELAYANAN,
+            User::ROLE_ADMIN_STATISTIK,
+        ])->count();
+        $totalPetugas   = Petugas::count();
+        $totalUser      = User::where('role', User::ROLE_USER)->count();
+ 
+        // Statistik — pakai kolom 'status' sesuai DB
+        $totalStatistik = Statistic::count();
+        $dipublikasikan = Statistic::where('status', 'published')->count();
+        $draftStatistik = Statistic::whereIn('status', ['draft', 'review'])->count();
+ 
+        // Reservasi
+        $totalReservasi = ReservasiKonsultasi::count();
+        $menunggu       = ReservasiKonsultasi::whereHas('riwayatTerbaru', fn($q) =>
+            $q->where('status_pengajuan', 'diajukan')
+        )->count();
+        $selesaiBulanIni = RiwayatKonsultasi::where('status_pengajuan', 'selesai')
+            ->whereMonth('updated_at', $now->month)
+            ->whereYear('updated_at', $now->year)
+            ->count();
+ 
+        // Grafik reservasi per bulan (12 bulan terakhir)
+        $grafikReservasi = collect(range(11, 0))->map(function ($i) use ($now) {
+            $bulan = $now->copy()->subMonths($i);
+            return [
+                'label' => $bulan->translatedFormat('M Y'),
+                'count' => ReservasiKonsultasi::whereYear('created_at', $bulan->year)
+                    ->whereMonth('created_at', $bulan->month)->count(),
+            ];
+        });
+ 
+        // Grafik data statistik per bulan
+        $grafikStatistik = collect(range(11, 0))->map(function ($i) use ($now) {
+            $bulan = $now->copy()->subMonths($i);
+            return [
+                'label' => $bulan->translatedFormat('M Y'),
+                'count' => Statistic::whereYear('updated_at', $bulan->year)
+                    ->whereMonth('updated_at', $bulan->month)->count(),
+            ];
+        });
+ 
+        // Reservasi terbaru (5)
+        $reservasiTerbaru = ReservasiKonsultasi::with(['user', 'petugas', 'riwayatTerbaru'])
+            ->latest('created_at')->limit(5)->get();
+ 
+        // Data statistik terbaru (5)
+        $dataTerbaru = Statistic::with('statisticTitle')->latest()->limit(5)->get();
+ 
+        // Distribusi status reservasi
+        $distribusiStatus = [
+            'diajukan'    => ReservasiKonsultasi::whereHas('riwayatTerbaru', fn($q) => $q->where('status_pengajuan', 'diajukan'))->count(),
+            'dijadwalkan' => ReservasiKonsultasi::whereHas('riwayatTerbaru', fn($q) => $q->where('status_pengajuan', 'dijadwalkan'))->count(),
+            'selesai'     => ReservasiKonsultasi::whereHas('riwayatTerbaru', fn($q) => $q->where('status_pengajuan', 'selesai'))->count(),
+            'dibatalkan'  => ReservasiKonsultasi::whereHas('riwayatTerbaru', fn($q) => $q->where('status_pengajuan', 'dibatalkan'))->count(),
         ];
-
-        return view('dashboard.index', compact('stats'));
+ 
+        return view('dashboard.index', compact(
+            'totalAdmin', 'totalPetugas', 'totalUser',
+            'totalStatistik', 'dipublikasikan', 'draftStatistik',
+            'totalReservasi', 'menunggu', 'selesaiBulanIni',
+            'grafikReservasi', 'grafikStatistik',
+            'reservasiTerbaru', 'dataTerbaru', 'distribusiStatus'
+        ));
     }
 
     // ──────────────────────────────────────────────────────────────────

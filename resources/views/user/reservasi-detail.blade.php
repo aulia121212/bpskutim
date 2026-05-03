@@ -395,14 +395,32 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f8fafc;color:#1e293b
             </div>
             @endif
 
-            @if($reservasi->topik ?? $reservasi->jenis_konsultasi ?? null)
-            <div class="info-item">
-                <div class="info-item-label">Topik Konsultasi</div>
-                <div class="info-item-value">
-                    {{ $reservasi->topik ?? $reservasi->jenis_konsultasi }}
-                </div>
-            </div>
-            @endif
+            @if($reservasi->lokasi_konsultasi)
+<div class="info-item">
+    <div class="info-item-label">Lokasi Konsultasi</div>
+    <div class="info-item-value">
+        {{ $reservasi->lokasi_konsultasi }}
+    </div>
+</div>
+@endif
+
+           @if(
+    $reservasi->topik_diskusi 
+    ?? $reservasi->topik_konsultasi 
+    ?? $reservasi->topik 
+    ?? null
+)
+<div class="info-item">
+    <div class="info-item-label">Topik Konsultasi</div>
+    <div class="info-item-value">
+        {{ 
+            $reservasi->topik_diskusi 
+            ?? $reservasi->topik_konsultasi 
+            ?? $reservasi->topik 
+        }}
+    </div>
+</div>
+@endif
 
             <div class="info-item">
                 <div class="info-item-label">Tanggal Pengajuan</div>
