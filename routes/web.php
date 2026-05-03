@@ -55,11 +55,11 @@ Route::middleware('auth')->group(function () {
         });
 
     // ── PROFILE USER BIASA ───────────────────────────────────────────
-   Route::get('/profile',          [UserProfileController::class, 'index'])->name('user.profile');
-Route::patch('/profile/update', [UserProfileController::class, 'update'])->name('user.profile.update');
-Route::post('/profile/foto',    [UserProfileController::class, 'updatePhoto'])->name('user.profile.photo');
-Route::get('/reservasi/{id}',   [UserProfileController::class, 'detailReservasi'])->name('user.reservasi.detail');
-    
+Route::get('/profile',                      [UserProfileController::class, 'index'])->name('user.profile');
+Route::patch('/profile/update',             [UserProfileController::class, 'update'])->name('user.profile.update');
+Route::post('/profile/foto',                [UserProfileController::class, 'updatePhoto'])->name('user.profile.photo');
+Route::get('/reservasi/{id}',               [UserProfileController::class, 'detailReservasi'])->name('user.reservasi.detail');
+Route::patch('/reservasi/{id}/batalkan',    [UserProfileController::class, 'batalkanReservasi'])->name('user.reservasi.batalkan');
     
     // ── SUPER ADMIN ──────────────────────────────────────────────
     Route::middleware('role:super_admin')

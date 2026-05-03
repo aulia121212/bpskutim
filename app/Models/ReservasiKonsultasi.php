@@ -28,42 +28,35 @@ class ReservasiKonsultasi extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = null;
 
-    // ── Relasi ────────────────────────────────────────────────────
-
     public function user()
     {
         return $this->belongsTo(User::class, 'id_user');
     }
 
-   public function petugas()
-{
-    return $this->belongsTo(\App\Models\Petugas::class, 'id_petugas', 'id');
-}
+    public function petugas()
+    {
+        return $this->belongsTo(\App\Models\Petugas::class, 'id_petugas', 'id');
+    }
+
     public function riwayat()
     {
-        return $this->hasMany(RiwayatKonsultasi::class, 'id_reservasi', 'id_reservasi');
+        return $this->hasMany(RiwayatKonsultasi::class, 'id_reservasi', 'id_reservasi')
+                    ->orderBy('id_riwayat_konsultasi', 'asc'); // pakai PK yang benar
     }
 
     public function riwayatTerbaru()
     {
         return $this->hasOne(RiwayatKonsultasi::class, 'id_reservasi', 'id_reservasi')
-                    ->latest('updated_at');
+                    ->orderByDesc('id_riwayat_konsultasi'); // paling baru = PK terbesar
     }
 
-    // ── Accessor ─────────────────────────────────────────────────
-
-    /**
-     * Ambil status terbaru dari tabel riwayat.
-     * Bisa diakses dengan $reservasi->status
-     */
+    /** Status terbaru dari riwayat */
     public function getStatusAttribute(): string
     {
         return $this->riwayatTerbaru?->status_pengajuan ?? 'diajukan';
     }
 
-    /**
-     * Alias tanggal agar view bisa pakai $r->tanggal
-     */
+    /** Alias agar blade bisa pakai $r->tanggal */
     public function getTanggalAttribute()
     {
         return $this->tanggal_konsultasi;

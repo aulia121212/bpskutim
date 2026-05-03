@@ -14,6 +14,8 @@ class RiwayatKonsultasi extends Model
         'id_reservasi',
         'status_pengajuan',
         'catatan_petugas',
+        'catatan_konsultasi',  // catatan dari admin untuk user
+        'alasan_pembatalan',   // alasan batalkan dari admin atau user
     ];
 
     protected $casts = [
@@ -22,8 +24,6 @@ class RiwayatKonsultasi extends Model
 
     const CREATED_AT = null;
     const UPDATED_AT = 'updated_at';
-
-    // ── Relasi ────────────────────────────────────────────────────
 
     public function reservasi()
     {

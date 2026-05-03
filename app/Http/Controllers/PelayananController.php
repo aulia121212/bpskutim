@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\ReservasiKonsultasi;
 use App\Models\RiwayatKonsultasi;
+use Carbon\Carbon;
 
 
 
@@ -90,13 +91,13 @@ public function jadwalStore(Request $request)
     return view('pelayanan.reservasi.index', compact('reservasi'));
 }
 
-public function reservasiShow($id)
-{
-    $reservasi = ReservasiKonsultasi::with(['user', 'petugas', 'riwayatTerbaru'])
-        ->findOrFail($id);
+// public function reservasiShow($id)
+// {
+//     $reservasi = ReservasiKonsultasi::with(['user', 'petugas', 'riwayatTerbaru'])
+//         ->findOrFail($id);
 
-    return view('pelayanan.reservasi.show', compact('reservasi'));
-}
+//     return view('pelayanan.reservasi.show', compact('reservasi'));
+// }
 
     public function popup()
 {
@@ -104,32 +105,32 @@ public function reservasiShow($id)
     return view('pelayanan.popup', compact('popups'));
 }
 
-public function reservasiUpdate(Request $request, $id)
-{
-    $reservasi = ReservasiKonsultasi::findOrFail($id);
+// public function reservasiUpdate(Request $request, $id)
+// {
+//     $reservasi = ReservasiKonsultasi::findOrFail($id);
 
-    $request->validate([
-        'status' => 'required|in:diajukan,dijadwalkan,dibatalkan',
-        'lokasi_konsultasi' => 'nullable|string',
-        'catatan_konsultasi' => 'nullable|string',
-        'alasan_pembatalan' => 'nullable|string',
-    ]);
+//     $request->validate([
+//         'status' => 'required|in:diajukan,dijadwalkan,dibatalkan',
+//         'lokasi_konsultasi' => 'nullable|string',
+//         'catatan_konsultasi' => 'nullable|string',
+//         'alasan_pembatalan' => 'nullable|string',
+//     ]);
 
-    // update field utama
-    $reservasi->update([
-        'lokasi_konsultasi' => $request->lokasi_konsultasi,
-    ]);
+//     // update field utama
+//     $reservasi->update([
+//         'lokasi_konsultasi' => $request->lokasi_konsultasi,
+//     ]);
 
-    // simpan ke riwayat (status + catatan)
-    RiwayatKonsultasi::create([
-        'id_reservasi' => $reservasi->id_reservasi,
-        'status_pengajuan' => $request->status,
-        'catatan_konsultasi' => $request->catatan_konsultasi,
-        'alasan_pembatalan' => $request->alasan_pembatalan,
-    ]);
+//     // simpan ke riwayat (status + catatan)
+//     RiwayatKonsultasi::create([
+//         'id_reservasi' => $reservasi->id_reservasi,
+//         'status_pengajuan' => $request->status,
+//         'catatan_konsultasi' => $request->catatan_konsultasi,
+//         'alasan_pembatalan' => $request->alasan_pembatalan,
+//     ]);
 
-    return back()->with('success', 'Reservasi berhasil diperbarui');
-}
+//     return back()->with('success', 'Reservasi berhasil diperbarui');
+// }
 
 public function popupStore(Request $request)
 {
@@ -212,5 +213,83 @@ public function userDestroy($id)
     $user->delete();
 
     return back()->with('success', 'User berhasil dihapus');
+}
+
+public function reservasiShow($id)
+{
+    $reservasi = ReservasiKonsultasi::with([
+        'user', 'petugas', 'riwayatTerbaru'
+    ])->findOrFail($id);
+ 
+    // Auto-tandai selesai di DB jika dijadwalkan dan tanggal sudah lewat
+    $riwayatTerbaru = $reservasi->riwayatTerbaru;
+    if (
+        $riwayatTerbaru?->status_pengajuan === 'dijadwalkan' &&
+        $reservasi->tanggal_konsultasi &&
+        now()->startOfDay()->gt(Carbon::parse($reservasi->tanggal_konsultasi)->startOfDay())
+    ) {
+        // Cek apakah entry selesai sudah ada agar tidak duplikat
+        $sudahAdaSelesai = $reservasi->riwayat()
+            ->where('status_pengajuan', 'selesai')
+            ->exists();
+ 
+        if (!$sudahAdaSelesai) {
+            RiwayatKonsultasi::create([
+                'id_reservasi'      => $reservasi->id_reservasi,
+                'status_pengajuan'  => 'selesai',
+                'catatan_konsultasi'=> 'Konsultasi selesai secara otomatis.',
+            ]);
+        }
+ 
+        // Reload setelah update
+        $reservasi->load('riwayatTerbaru');
+    }
+ 
+    return view('pelayanan.reservasi.show', compact('reservasi'));
+}
+ 
+
+public function reservasiUpdate(Request $request, $id)
+{
+    $request->validate([
+        'status'             => 'required|in:diajukan,dijadwalkan,selesai,dibatalkan',
+        'lokasi_konsultasi'  => 'nullable|string|max:255',
+        'catatan_konsultasi' => 'nullable|string|max:2000',
+        'alasan_pembatalan'  => 'nullable|string|max:2000',
+    ]);
+ 
+    $reservasi = ReservasiKonsultasi::findOrFail($id);
+ 
+    // Update lokasi di tabel reservasi
+    $reservasi->lokasi_konsultasi = $request->lokasi_konsultasi;
+    $reservasi->save();
+ 
+    // Validasi: jika dibatalkan wajib ada alasan
+    if ($request->status === 'dibatalkan' && empty(trim($request->alasan_pembatalan ?? ''))) {
+        return back()->withInput()
+            ->withErrors(['alasan_pembatalan' => 'Alasan pembatalan wajib diisi.']);
+    }
+ 
+    // Cek status saat ini
+    $riwayatTerbaru = $reservasi->riwayatTerbaru;
+    $statusSekarang = $riwayatTerbaru?->status_pengajuan ?? 'diajukan';
+ 
+    // Jika status berubah atau ada update catatan/alasan — buat entry riwayat baru
+    $statusBerubah   = $statusSekarang !== $request->status;
+    $adaUpdateData   = $request->filled('catatan_konsultasi') || $request->filled('alasan_pembatalan');
+ 
+    if ($statusBerubah || $adaUpdateData) {
+        RiwayatKonsultasi::create([
+            'id_reservasi'      => $reservasi->id_reservasi,
+            'status_pengajuan'  => $request->status,
+            'catatan_konsultasi'=> $request->catatan_konsultasi,
+            'alasan_pembatalan' => $request->status === 'dibatalkan'
+                                    ? $request->alasan_pembatalan
+                                    : null,
+        ]);
+    }
+ 
+    return redirect()->route('pelayanan.reservasi.show', $id)
+        ->with('success', 'Reservasi berhasil diperbarui.');
 }
 }
