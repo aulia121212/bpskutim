@@ -8,25 +8,20 @@ class RiwayatKonsultasi extends Model
 {
     protected $table      = 'riwayat_konsultasi';
     protected $primaryKey = 'id_riwayat_konsultasi';
-    public    $timestamps = false;
+
+    // Tidak pakai timestamps otomatis — set updated_at manual saat create
+    public $timestamps = false;
+
+    // updated_at diisi manual sebagai penanda waktu entry riwayat
+    protected $casts = [
+        'updated_at' => 'datetime',
+    ];
 
     protected $fillable = [
         'id_reservasi',
         'status_pengajuan',
         'catatan_petugas',
-        'catatan_konsultasi',  // catatan dari admin untuk user
-        'alasan_pembatalan',   // alasan batalkan dari admin atau user
+        'catatan_konsultasi',
+        'alasan_pembatalan',
     ];
-
-    protected $casts = [
-        'updated_at' => 'datetime',
-    ];
-
-    const CREATED_AT = null;
-    const UPDATED_AT = 'updated_at';
-
-    public function reservasi()
-    {
-        return $this->belongsTo(ReservasiKonsultasi::class, 'id_reservasi', 'id_reservasi');
-    }
 }

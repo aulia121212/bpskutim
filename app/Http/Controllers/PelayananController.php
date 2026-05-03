@@ -127,7 +127,7 @@ public function jadwalStore(Request $request)
 //         'status_pengajuan' => $request->status,
 //         'catatan_konsultasi' => $request->catatan_konsultasi,
 //         'alasan_pembatalan' => $request->alasan_pembatalan,
-//     ]);
+//
 
 //     return back()->with('success', 'Reservasi berhasil diperbarui');
 // }
@@ -238,7 +238,8 @@ public function reservasiShow($id)
                 'id_reservasi'      => $reservasi->id_reservasi,
                 'status_pengajuan'  => 'selesai',
                 'catatan_konsultasi'=> 'Konsultasi selesai secara otomatis.',
-            ]);
+                'updated_at'        => now(),
+]);
         }
  
         // Reload setelah update
@@ -286,7 +287,8 @@ public function reservasiUpdate(Request $request, $id)
             'alasan_pembatalan' => $request->status === 'dibatalkan'
                                     ? $request->alasan_pembatalan
                                     : null,
-        ]);
+                                    'updated_at'        => now(),
+]);
     }
  
     return redirect()->route('pelayanan.reservasi.show', $id)

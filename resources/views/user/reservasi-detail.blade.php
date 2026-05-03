@@ -496,7 +496,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f8fafc;color:#1e293b
                     </div>
                     <div class="timeline-date">
                         <i class="ti ti-clock"></i>
-                        {{ $r->created_at ? \Carbon\Carbon::parse($r->created_at)->translatedFormat('d F Y, H:i') : '-' }}
+                        {{ $r->updated_at ? \Carbon\Carbon::parse($r->updated_at)->translatedFormat('d F Y, H:i') : '-' }}
                     </div>
                     @if($r->catatan_konsultasi ?? null)
                     <div class="timeline-catatan">

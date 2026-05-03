@@ -119,7 +119,8 @@ class UserProfileController extends Controller
                     'id_reservasi'       => $reservasi->id_reservasi,
                     'status_pengajuan'   => 'selesai',
                     'catatan_konsultasi' => 'Konsultasi selesai secara otomatis.',
-                ]);
+                    'updated_at'        => now(),
+]);
             }
 
             // Reload & recalculate setelah insert
@@ -172,7 +173,8 @@ class UserProfileController extends Controller
             'id_reservasi'      => $reservasi->id_reservasi,
             'status_pengajuan'  => 'dibatalkan',
             'alasan_pembatalan' => $request->alasan_pembatalan,
-        ]);
+            'updated_at'        => now(),
+]);
 
         return redirect()->route('user.profile')
             ->with('success', 'Reservasi berhasil dibatalkan.');

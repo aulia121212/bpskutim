@@ -9,9 +9,7 @@ use App\Models\Petugas;
 use App\Models\JadwalTidakTersedia;
 class KonsultasiController extends Controller
 {
-    /**
-     * Halaman utama konsultasi — daftar petugas.
-     */
+    
     public function index()
     {
 $petugas = Petugas::paginate(6);
@@ -102,7 +100,8 @@ $petugas = Petugas::findOrFail($id);
             'id_reservasi'     => $reservasi->id_reservasi,
             'status_pengajuan' => 'diajukan',
             'catatan_petugas'  => null,
-        ]);
+            'updated_at'        => now(),
+]);
 
         return redirect()->route('user.profile')
                          ->with('success', 'Reservasi berhasil diajukan! Petugas akan menghubungi Anda melalui WhatsApp.');
