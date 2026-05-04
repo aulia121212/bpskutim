@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
@@ -12,45 +11,63 @@ use Laravel\Socialite\Facades\Socialite;
 class GoogleController extends Controller
 {
     /**
-     * Redirect ke Google OAuth
+     * Redirect ke Google
      */
     public function redirectToGoogle()
     {
-        return Socialite::driver('google')->redirect();
+        return Socialite::driver('google')
+            ->stateless()
+            ->redirect();
     }
 
     /**
-     * Handle callback dari Google
+     * Callback Google Login/Register
      */
     public function handleGoogleCallback()
     {
         try {
-            $googleUser = Socialite::driver('google')->user();
-            
-            // Cek apakah user sudah ada berdasarkan email
-            $user = User::where('email', $googleUser->getEmail())->first();
-            
+            $googleUser = Socialite::driver('google')
+                ->stateless()
+                ->user();
+
+            $email = $googleUser->getEmail();
+
+            if (!$email) {
+                return redirect()->route('login')
+                    ->with('error', 'Email Google tidak ditemukan.');
+            }
+
+            // Cari user berdasarkan email
+            $user = User::where('email', $email)->first();
+
+            // Jika belum ada = register otomatis
             if (!$user) {
-                // Buat user baru jika belum ada
                 $user = User::create([
-                    'name' => $googleUser->getName(),
-                    'email' => $googleUser->getEmail(),
-                    'no_whatsapp' => '085123456789', // Default atau minta input tambahan
-                    'password' => Hash::make(uniqid()), // Password random
-                    'role' => User::ROLE_USER,
-                    'is_active' => true,
+                    'name'         => $googleUser->getName() ?: 'User Google',
+                    'email'        => $email,
+                    'no_whatsapp'  => null,
+                    'password'     => Hash::make(uniqid()),
+                    'role'         => User::ROLE_USER,
+                    'is_active'    => true,
+                    'email_verified_at' => now(),
                 ]);
             }
-            
-            // Login user
-            Auth::login($user);
-            
+
+            // Jika akun nonaktif
+            if (!$user->is_active) {
+                return redirect()->route('login')
+                    ->with('error', 'Akun Anda dinonaktifkan.');
+            }
+
+            Auth::login($user, true);
+            request()->session()->regenerate();
+
             return redirect()->intended($user->dashboardRoute())
-                ->with('success', 'Selamat datang, ' . $user->name . '!');
-                
+                ->with('success', 'Selamat datang, '.$user->name.'!');
+
         } catch (\Exception $e) {
             return redirect()->route('login')
-                ->with('error', 'Gagal login dengan Google. Silakan coba lagi.');
+                ->with('error', 'Login Google gagal. Periksa konfigurasi Google.');
         }
     }
 }
