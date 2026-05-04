@@ -13,7 +13,7 @@
             @csrf
             <div class="space-y-5">
                 <div>
-                    <label class="block text-sm font-semibold text-blue-500 mb-1.5">
+                    <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">
                         Link Publikasi <span class="text-red-500">*</span>
                     </label>
                     <div class="relative">
@@ -35,7 +35,7 @@
                     Batal
                 </a>
                 <button type="submit"
-                    class="px-8 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition shadow-sm">
+                    class="px-8 py-2.5 rounded-xl bg-[#035f9c] hover:bg-blue-700 text-white text-sm font-semibold transition shadow-sm">
                     Simpan
                 </button>
             </div>

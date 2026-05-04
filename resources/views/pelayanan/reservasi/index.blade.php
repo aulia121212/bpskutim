@@ -8,12 +8,12 @@
         <table class="w-full text-sm">
             <thead>
                 <tr class="border-b border-gray-100">
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Tanggal Konsultasi</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Nama</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Nomor WhatsApp</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Petugas</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Status</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Aksi</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Tanggal Konsultasi</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Nama</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Nomor WhatsApp</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Petugas</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Status</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -48,7 +48,7 @@
                             <button class="p-1.5 text-gray-400 hover:text-blue-600 transition"><i class="ti ti-pencil"></i></button>
                             <button class="p-1.5 text-gray-400 hover:text-red-500 transition"><i class="ti ti-trash"></i></button>
                             <a href="{{ route('pelayanan.reservasi.show', $r->id_reservasi) }}" 
-   class="inline-flex items-center gap-1 border border-blue-300 text-blue-600 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 transition">
+   class="inline-flex items-center gap-1 border border-blue-300 text-[#035f9c] text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 transition">
     Detail <i class="ti ti-chevrons-right text-sm"></i>
 </a>
                         </div>

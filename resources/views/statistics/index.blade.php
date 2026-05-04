@@ -15,12 +15,12 @@
         <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Data Statistik</h1>
         <div class="flex items-center gap-2">
             <a href="{{ route('statistics.grafik') }}"
-               class="inline-flex items-center gap-2 border border-blue-600 text-blue-600 hover:bg-blue-50 text-sm font-semibold px-4 py-2 rounded-xl transition">
+               class="inline-flex items-center gap-2 border border-[#035f9c] text-[#035f9c] hover:bg-[#035f9c] hover:text-white text-sm font-semibold px-4 py-2 rounded-xl transition">
                 <i class="ti ti-chart-line text-base"></i>
                 Preview Grafik &amp; Tabel
             </a>
             <a href="{{ route('statistics.create') }}"
-               class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition">
+               class="inline-flex items-center gap-2 bg-[#035f9c] text-white hover:bg-white hover:text-[#035f9c] text-sm font-semibold px-4 py-2 rounded-xl transition">
                 <i class="ti ti-plus text-base"></i>
                 TAMBAH DATA STATISTIK
             </a>
@@ -41,11 +41,11 @@
         <table class="w-full text-sm">
             <thead>
                 <tr class="border-b border-gray-100 dark:border-gray-800">
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Indikator</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Judul</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Wilayah</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Status</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Aksi</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Indikator</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Judul</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Wilayah</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Status</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Aksi</th>
                 </tr>
             </thead>
             <tbody id="tableBody">
@@ -65,11 +65,13 @@
                     </td>
                     <td class="px-6 py-4">
                         <div class="flex items-center gap-2">
-                            <a href="#" class="p-1.5 text-gray-400 hover:text-blue-600 transition">
+                            {{-- Tombol Edit --}}
+                            <a href="{{ route('statistics.edit', $stat->id) }}"
+                               class="p-1.5 text-gray-400 hover:text-blue-600 transition" title="Edit">
                                 <i class="ti ti-pencil text-base"></i>
                             </a>
 
-                            {{-- Tombol Delete dengan konfirmasi --}}
+                            {{-- Tombol Delete --}}
                             <form method="POST" action="{{ route('statistics.destroy', $stat->id) }}"
                                   onsubmit="return confirm('Yakin ingin menghapus data \'{{ addslashes($stat->judul_data) }}\'? Tindakan ini tidak dapat dibatalkan.')">
                                 @csrf
@@ -81,7 +83,7 @@
                             </form>
 
                             <a href="{{ route('statistics.preview', $stat->id) }}"
-                               class="inline-flex items-center gap-1 bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-semibold px-3 py-1.5 rounded-lg transition">
+                               class="inline-flex items-center gap-1 bg-blue-50 hover:bg-blue-100 text-[#035f9c] text-xs font-semibold px-3 py-1.5 rounded-lg transition">
                                 Detail <i class="ti ti-chevron-right text-sm"></i>
                             </a>
                         </div>

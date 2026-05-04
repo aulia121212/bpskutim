@@ -10,7 +10,7 @@
 
     <div class="flex justify-end mb-4">
         <a href="{{ route('pelayanan.petugas.create') }}"
-            class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition">
+            class="inline-flex items-center gap-2 bg-[#035f9c] text-white hover:bg-white hover:text-[#035f9c] text-sm font-semibold px-4 py-2 rounded-xl transition">
             <i class="ti ti-plus"></i> TAMBAH PETUGAS KONSULTASI
         </a>
     </div>

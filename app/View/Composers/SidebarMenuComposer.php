@@ -7,11 +7,7 @@ use App\Models\User;
 
 class SidebarMenuComposer
 {
-    /**
-     * Tiap role punya definisi menu sendiri — tidak di-share/filter,
-     * tapi langsung return array yang sudah tepat.
-     * Ini lebih bersih dan menghindari bug route yang salah per role.
-     */
+    
     private function menuForRole(string $role): array
     {
         return match ($role) {
@@ -22,10 +18,7 @@ class SidebarMenuComposer
         };
     }
 
-    // ──────────────────────────────────────────────────────────────────
-    // SUPER ADMIN
-    // Tampil: Dashboard (superadmin) + Manajemen Admin + Pelayanan + Data Statistik
-    // ──────────────────────────────────────────────────────────────────
+
     private function menuSuperAdmin(): array
     {
         return [
@@ -55,12 +48,12 @@ class SidebarMenuComposer
                         'route'         => 'superadmin.admin-data-statistik.index',
                         'activePattern' => 'superadmin.admin-data-statistik.*',
                     ],
-                    [
-                        'name'          => 'Semua Admin',
-                        'icon'          => 'shield-check',
-                        'route'         => 'superadmin.admins.index',
-                        'activePattern' => 'superadmin.admins.*',
-                    ],
+                    // [
+                    //     'name'          => 'Semua Admin',
+                    //     'icon'          => 'shield-check',
+                    //     'route'         => 'superadmin.admins.index',
+                    //     'activePattern' => 'superadmin.admins.*',
+                    // ],
                 ],
             ],
             [
@@ -129,11 +122,7 @@ class SidebarMenuComposer
         ];
     }
 
-    // ──────────────────────────────────────────────────────────────────
-    // ADMIN PELAYANAN
-    // Tampil: Dashboard + Manajemen Pelayanan
-    // TIDAK tampil: Data Statistik, Manajemen Admin
-    // ──────────────────────────────────────────────────────────────────
+  
     private function menuAdminPelayanan(): array
     {
         return [
@@ -186,11 +175,7 @@ class SidebarMenuComposer
         ];
     }
 
-    // ──────────────────────────────────────────────────────────────────
-    // ADMIN DATA STATISTIK
-    // Tampil: Dashboard + Manajemen Data Statistik
-    // TIDAK tampil: Pelayanan, Manajemen Admin
-    // ──────────────────────────────────────────────────────────────────
+   
     private function menuAdminStatistik(): array
     {
         return [
@@ -225,9 +210,7 @@ class SidebarMenuComposer
         ];
     }
 
-    // ──────────────────────────────────────────────────────────────────
-    // COMPOSE — inject $menuGroups ke view
-    // ──────────────────────────────────────────────────────────────────
+
     public function compose(View $view): void
     {
         $user = auth()->user();

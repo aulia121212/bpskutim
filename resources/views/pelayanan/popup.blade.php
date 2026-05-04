@@ -5,7 +5,7 @@
     <div class="flex items-center justify-between mb-6">
         <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Pop Up Overlay</h1>
         <button onclick="document.getElementById('modal-popup').classList.remove('hidden')"
-            class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition">
+            class="inline-flex items-center gap-2 bg-[#035f9c] text-white hover:bg-white hover:text-[#035f9c] text-sm font-semibold px-4 py-2 rounded-xl transition">
             <i class="ti ti-plus"></i> TAMBAH POP UP OVERLAY
         </button>
     </div>
@@ -41,11 +41,11 @@
         <table class="w-full text-sm">
             <thead>
                 <tr class="border-b border-gray-100">
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Foto Pop Up</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Tanggal Mulai Display</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Tanggal Akhir Display</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Status</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Aksi</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Foto Pop Up</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Tanggal Mulai Display</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Tanggal Akhir Display</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Status</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -92,7 +92,7 @@
                                 </button>
                             </form>
                             <button onclick="previewPopup('{{ asset($p->foto) }}')"
-                                class="inline-flex items-center gap-1 border border-blue-300 text-blue-600 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 transition">
+                                class="inline-flex items-center gap-1 border border-blue-300 text-[#035f9c] text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 transition">
                                 Preview <i class="ti ti-chevrons-right text-sm"></i>
                             </button>
                         </div>
@@ -183,10 +183,10 @@
                 class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center bg-white/90 hover:bg-white rounded-full shadow-md text-gray-600 hover:text-gray-900 transition">
                 <i class="ti ti-x text-sm"></i>
             </button>
-            <div class="px-5 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+            <!-- <div class="px-5 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
                 <span class="text-xs text-gray-400">BPS Kabupaten Kutai Timur</span>
                 <button onclick="closePreviewBtn()" class="text-xs font-semibold text-blue-600 hover:text-blue-700">Tutup</button>
-            </div>
+            </div> -->
         </div>
         <p class="text-white/50 text-xs">Klik di luar untuk menutup</p>
     </div>

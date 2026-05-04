@@ -84,9 +84,8 @@ document.addEventListener("DOMContentLoaded", () => {
         title: alert.title ?? (alert.type === "success" ? "Berhasil" : "Info"),
         text: alert.message ?? "",
         icon: alert.type ?? "info",
-        confirmButtonColor: "#4f46e5", // Indigo-600 agar matching dengan UI
+        confirmButtonColor: "#035f9c", // Indigo-600 agar matching dengan UI
         background: isDark ? "#030712" : "#ffffff", // Gray-950 : White
         color: isDark ? "#f3f4f6" : "#111827",
     });
 });
-

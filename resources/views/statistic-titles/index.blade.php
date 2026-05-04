@@ -9,7 +9,7 @@
             <p class="text-sm text-gray-400 mt-1">Kelola master judul data, label kolom, komponen, dan interpretasi</p>
         </div>
         <button @click="$dispatch('open-modal-add')"
-            class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition shadow-lg shadow-blue-600/20">
+            class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#035f9c] text-white hover:bg-white hover:text-[#035f9c] text-sm font-semibold rounded-xl transition shadow-lg shadow-blue-600/20">
             <i class="ti ti-plus"></i> Tambah Judul
         </button>
     </div>
@@ -43,7 +43,7 @@
     {{ $loop->iteration }}
 </td>
 
-<td class="px-6 py-4 text-xs font-semibold text-blue-500">
+<td class="px-6 py-4 text-xs font-semibold text-[#035f9c]">
     {{ Str::replace('_', ' ', $title->indikator_data) }}
 </td>
                     <td class="px-6 py-4 font-semibold text-gray-800 dark:text-white max-w-[200px]">
@@ -105,7 +105,7 @@
                                             Batal
                                         </button>
                                         <button type="submit"
-                                            class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition">
+                                            class="px-5 py-2.5 rounded-xl bg-[#035f9c] hover:bg-blue-700 text-white text-sm font-semibold transition">
                                             Simpan
                                         </button>
                                     </div>
@@ -158,7 +158,7 @@
                         Batal
                     </button>
                     <button type="submit"
-                        class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition">
+                        class="px-5 py-2.5 rounded-xl bg-[#035f9c] hover:bg-blue-700 text-white text-sm font-semibold transition">
                         Simpan
                     </button>
                 </div>

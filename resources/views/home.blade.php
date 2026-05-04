@@ -134,8 +134,8 @@
 
     
         <h2>
-            <span class="title-main">Data Statistik</span><br>
-            <em class="title-accent">Terbaru</em>
+            <span class="title-main-data">Data Statistik</span><br>
+            <em class="title-accent-data">Terbaru</em>
         </h2>
         <a href="/data-statistik" class="btn-search">
             <i class="ti ti-search"></i> Jelajahi Data Sekarang

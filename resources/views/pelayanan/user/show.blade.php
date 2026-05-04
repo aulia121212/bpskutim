@@ -8,7 +8,7 @@
         <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Detail User</h1>
 
         <a href="{{ route('pelayanan.user.index') }}" 
-           class="text-sm text-blue-600 hover:underline">
+           class="text-sm text-[#035f9c] hover:underline">
             ← Kembali
         </a>
     </div>

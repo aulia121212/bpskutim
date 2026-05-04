@@ -3,54 +3,42 @@
 @section('content')
 <div class="p-6">
 
-    <h1 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Detail Data Statistik</h1>
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Detail Data Statistik</h1>
+        <a href="{{ route('statistics.edit', $statistic->id) }}"
+           class="inline-flex items-center gap-2 bg-[#035f9c] text-white hover:bg-blue-700 text-sm font-semibold px-4 py-2 rounded-xl transition">
+            <i class="ti ti-pencil text-base"></i> Edit Data
+        </a>
+    </div>
 
     <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6">
 
         {{-- Row 1: Indikator + Judul Data --}}
         <div class="grid grid-cols-2 gap-6 mb-6">
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1">Indikator</label>
-                <div class="relative">
-                    <div class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 bg-gray-50">
-                        {{ ucwords(str_replace('_', ' ', $statistic->indikator_data)) }}
-                    </div>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1">Indikator</label>
+                <div class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 bg-gray-50">
+                    {{ ucwords(str_replace('_', ' ', $statistic->indikator_data)) }}
                 </div>
             </div>
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1">Judul Data</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1">Judul Data</label>
                 <div class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 bg-gray-50">
                     {{ $statistic->judul_data }}
                 </div>
             </div>
         </div>
 
-        {{-- Row 2: Tahun Data + File Data --}}
+        {{-- Row 2: Tahun Data + Wilayah Data --}}
         <div class="grid grid-cols-2 gap-6 mb-6">
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1">Tahun Data</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1">Tahun Data</label>
                 <div class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 bg-gray-50">
-                   {{ $values->pluck('y_label')->filter()->unique()->sort()->implode(', ') ?: '-' }}
+                    {{ $values->pluck('y_label')->filter()->unique()->sort()->implode(', ') ?: '-' }}
                 </div>
             </div>
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1">File Data</label>
-                <div class="flex items-center gap-2">
-                    <div class="flex-1 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 bg-gray-50 truncate">
-                        {{ basename($statistic->file_data) }}
-                    </div>
-                    <a href="{{ Storage::url($statistic->file_data) }}" target="_blank"
-                        class="inline-flex items-center gap-1 bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-semibold px-3 py-2 rounded-lg transition whitespace-nowrap">
-                        Preview <i class="ti ti-chevron-right"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        {{-- Row 3: Wilayah Data --}}
-        <div class="grid grid-cols-2 gap-6 mb-6">
-            <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1">Wilayah Data</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1">Wilayah Data</label>
                 <div class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 bg-gray-50">
                     {{ $statistic->wilayah_data }}
                 </div>
@@ -59,152 +47,103 @@
 
         {{-- Interpretasi Data --}}
         <div class="mb-6">
-    <p class="text-center text-sm font-semibold text-blue-500 mb-4">Interpretasi Data</p>
-    <div class="grid grid-cols-3 gap-6">
-        <div>
-            <label class="block text-sm font-semibold text-green-500 mb-1">
-                <i class="ti ti-trending-down text-xs"></i> Lebih Kecil (Turun)
-            </label>
-            <div class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 bg-gray-50 min-h-[7rem]">
-                {{ $statistic->interpretasi_lebih_kecil ?: '-' }}
+            <p class="text-center text-sm font-semibold text-[#035f9c] mb-4">Interpretasi Data</p>
+            <div class="grid grid-cols-3 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-green-500 mb-1">
+                        <i class="ti ti-trending-down text-xs"></i> Lebih Kecil (Turun)
+                    </label>
+                    <div class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 bg-gray-50 min-h-[7rem]">
+                        {{ $statistic->interpretasi_lebih_kecil ?: '-' }}
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-red-400 mb-1">
+                        <i class="ti ti-trending-up text-xs"></i> Lebih Besar (Naik)
+                    </label>
+                    <div class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 bg-gray-50 min-h-[7rem]">
+                        {{ $statistic->interpretasi_lebih_besar ?: '-' }}
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-500 mb-1">
+                        <i class="ti ti-minus text-xs"></i> Tetap
+                    </label>
+                    <div class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 bg-gray-50 min-h-[7rem]">
+                        {{ $statistic->interpretasi_tetap ?? '-' }}
+                    </div>
+                </div>
             </div>
         </div>
-        <div>
-            <label class="block text-sm font-semibold text-red-400 mb-1">
-                <i class="ti ti-trending-up text-xs"></i> Lebih Besar (Naik)
-            </label>
-            <div class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 bg-gray-50 min-h-[7rem]">
-                {{ $statistic->interpretasi_lebih_besar ?: '-' }}
-            </div>
-        </div>
-        <div>
-            <label class="block text-sm font-semibold text-gray-500 mb-1">
-                <i class="ti ti-minus text-xs"></i> Tetap
-            </label>
-            <div class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 bg-gray-50 min-h-[7rem]">
-                {{ $statistic->interpretasi_tetap ?? '-' }}
-            </div>
-        </div>
-    </div>
-</div>
+
         {{-- ============================================================ --}}
-        {{-- PREVIEW INTERPRETASI BERDASARKAN PERBANDINGAN DATA           --}}
+        {{-- TABEL NILAI ANGKA                                            --}}
         {{-- ============================================================ --}}
-        <!-- @php
-            $sortedValues = $values->sortBy('year')->values();
-            $totalData    = $sortedValues->count();
-            $tren         = null; // 'naik' | 'turun' | 'tetap'
-            $selisih      = null;
-            $nilaiAwal    = null;
-            $nilaiAkhir   = null;
-            $tahunAwal    = null;
-            $tahunAkhir   = null;
-
-            if ($totalData >= 2) {
-                $first      = $sortedValues->first();
-                $last       = $sortedValues->last();
-                $nilaiAwal  = $first->value;
-                $nilaiAkhir = $last->value;
-                $tahunAwal  = $first->year;
-                $tahunAkhir = $last->year;
-                $selisih    = $nilaiAkhir - $nilaiAwal;
-
-                if ($selisih > 0)      $tren = 'naik';
-                elseif ($selisih < 0)  $tren = 'turun';
-                else                   $tren = 'tetap';
-            }
-        @endphp
-
-        @if ($totalData >= 2)
+        @if($values->isNotEmpty())
         <div class="mb-6">
-            <p class="text-center text-sm font-semibold text-blue-500 mb-4">
-                Preview Interpretasi — Perbandingan Data
-            </p>
+            <p class="text-sm font-semibold text-[#035f9c] mb-3">Nilai Data</p>
 
-            {{-- Ringkasan Tren --}}
-            <div class="flex items-center justify-between gap-4 mb-5 p-4 rounded-2xl
-                @if($tren === 'naik')   bg-red-50  dark:bg-red-900/20  border border-red-100  dark:border-red-800
-                @elseif($tren === 'turun') bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-800
-                @else                  bg-gray-50  dark:bg-gray-800    border border-gray-200 dark:border-gray-700
-                @endif">
+            @php
+                $years      = $values->pluck('y_label')->filter()->unique()->sort()->values();
+                $xLabels    = $values->pluck('x_label')->unique()->values();
+                $is2D       = $years->isNotEmpty();
 
-                {{-- Nilai Awal --}}
-                <div class="text-center">
-                    <p class="text-xs text-gray-400 mb-0.5">Tahun {{ $tahunAwal }}</p>
-                    <p class="text-2xl font-black text-gray-800 dark:text-white">{{ number_format($nilaiAwal, 2) }}</p>
-                </div>
+                // Buat pivot: x_label => [ y_label => value ]
+                $pivot = [];
+                foreach ($values as $v) {
+                    $key   = $v->x_label;
+                    $col   = $is2D ? ($v->y_label ?? '-') : 'Nilai';
+                    $pivot[$key][$col] = $v->value;
+                }
 
-                {{-- Panah Tren --}}
-                <div class="flex flex-col items-center gap-1">
-                    @if($tren === 'naik')
-                        <i class="ti ti-trending-up text-3xl text-red-500"></i>
-                        <span class="text-xs font-bold text-red-500 uppercase tracking-widest">Naik</span>
-                        <span class="text-xs font-semibold text-red-400">+{{ number_format(abs($selisih), 2) }}</span>
-                    @elseif($tren === 'turun')
-                        <i class="ti ti-trending-down text-3xl text-green-500"></i>
-                        <span class="text-xs font-bold text-green-500 uppercase tracking-widest">Turun</span>
-                        <span class="text-xs font-semibold text-green-400">-{{ number_format(abs($selisih), 2) }}</span>
-                    @else
-                        <i class="ti ti-minus text-3xl text-gray-400"></i>
-                        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Tetap</span>
-                        <span class="text-xs font-semibold text-gray-400">0</span>
-                    @endif
-                </div>
+                $cols = $is2D ? $years->toArray() : ['Nilai'];
+            @endphp
 
-                {{-- Nilai Akhir --}}
-                <div class="text-center">
-                    <p class="text-xs text-gray-400 mb-0.5">Tahun {{ $tahunAkhir }}</p>
-                    <p class="text-2xl font-black text-gray-800 dark:text-white">{{ number_format($nilaiAkhir, 2) }}</p>
-                </div>
-            </div>
-
-            {{-- Teks Interpretasi --}}
-            <div class="rounded-2xl border p-5
-                @if($tren === 'naik')   border-red-100   dark:border-red-800   bg-red-50/50   dark:bg-red-900/10
-                @elseif($tren === 'turun') border-green-100 dark:border-green-800 bg-green-50/50 dark:bg-green-900/10
-                @else                  border-gray-200  dark:border-gray-700   bg-gray-50     dark:bg-gray-800
-                @endif">
-
-                <div class="flex items-start gap-3">
-                    <div class="mt-0.5 shrink-0 w-8 h-8 rounded-xl flex items-center justify-center
-                        @if($tren === 'naik')   bg-red-100   dark:bg-red-900/30
-                        @elseif($tren === 'turun') bg-green-100 dark:bg-green-900/30
-                        @else                  bg-gray-100  dark:bg-gray-700
-                        @endif">
-                        @if($tren === 'naik')
-                            <i class="ti ti-arrow-up text-red-500 text-lg"></i>
-                        @elseif($tren === 'turun')
-                            <i class="ti ti-arrow-down text-green-500 text-lg"></i>
-                        @else
-                            <i class="ti ti-equal text-gray-400 text-lg"></i>
-                        @endif
-                    </div>
-                    <div class="flex-1">
-                        <p class="text-xs font-bold uppercase tracking-widest mb-2
-                            @if($tren === 'naik')   text-red-400
-                            @elseif($tren === 'turun') text-green-500
-                            @else                  text-gray-400
-                            @endif">
-                            Interpretasi — Data
-                            @if($tren === 'naik') Lebih Besar (Naik)
-                            @elseif($tren === 'turun') Lebih Kecil (Turun)
-                            @else Tidak Berubah
-                            @endif
-                        </p>
-                        <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                            @if($tren === 'naik')
-                                {{ $statistic->interpretasi_lebih_besar ?: 'Tidak ada interpretasi yang tersedia.' }}
-                            @elseif($tren === 'turun')
-                                {{ $statistic->interpretasi_lebih_kecil ?: 'Tidak ada interpretasi yang tersedia.' }}
-                            @else
-                                Data tidak mengalami perubahan antara tahun {{ $tahunAwal }} dan {{ $tahunAkhir }}.
-                            @endif
-                        </p>
-                    </div>
-                </div>
+            <div class="overflow-x-auto rounded-xl border border-gray-100 dark:border-gray-700">
+                <table class="w-full text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 dark:bg-gray-800">
+                            <th class="text-left px-4 py-3 text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-r border-gray-100 dark:border-gray-700 min-w-[220px]">
+                                Kategori
+                            </th>
+                            @foreach($cols as $col)
+                            <th class="px-4 py-3 text-center text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-r border-gray-100 dark:border-gray-700 min-w-[100px]">
+                                {{ $col }}
+                            </th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($pivot as $xLabel => $colValues)
+                        @php $isSub = str_starts_with($xLabel, '· '); @endphp
+                        <tr class="border-b border-gray-50 dark:border-gray-800
+                            {{ $isSub ? 'bg-indigo-50/40 dark:bg-indigo-900/10' : 'bg-white dark:bg-gray-900' }}">
+                            <td class="px-4 py-2.5 border-r border-gray-100 dark:border-gray-700
+                                {{ $isSub ? 'pl-8 text-gray-500 text-xs italic' : 'font-semibold text-gray-700 dark:text-white text-sm' }}">
+                                {{ $isSub ? ltrim($xLabel, '· ') : $xLabel }}
+                            </td>
+                            @foreach($cols as $col)
+                            <td class="px-4 py-2.5 text-center border-r border-gray-100 dark:border-gray-700 text-gray-700 dark:text-gray-300">
+                                @php $val = $colValues[$col] ?? null; @endphp
+                                @if(!is_null($val))
+                                    {{ is_numeric($val) ? number_format((float)$val, 2, ',', '.') : $val }}
+                                @else
+                                    <span class="text-gray-300">—</span>
+                                @endif
+                            </td>
+                            @endforeach
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
-        @endif -->
+        @else
+        <div class="mb-6 rounded-xl border border-dashed border-gray-200 dark:border-gray-700 py-8 text-center">
+            <i class="ti ti-table-off text-2xl text-gray-300 block mb-2"></i>
+            <p class="text-sm text-gray-400">Belum ada nilai data</p>
+        </div>
+        @endif
         {{-- ============================================================ --}}
 
         {{-- Timestamps --}}
@@ -227,7 +166,7 @@
         <div class="flex justify-end gap-3 mt-4">
             <a href="{{ route('statistics.index') }}"
                 class="px-6 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition">
-                Batal
+                Kembali
             </a>
 
             @if($statistic->status === 'draft')

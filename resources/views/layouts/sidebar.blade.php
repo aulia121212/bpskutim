@@ -105,7 +105,7 @@
                                     class="w-full flex items-center py-2.5 rounded-xl transition-all duration-300"
                                     :class="[
                                         {{ $isActive ? 'true' : 'false' }}
-                                            ? 'bg-blue-600 text-white'
+                                            ? 'bg-[#035f9c] text-white'
                                             : 'text-gray-500 hover:bg-gray-50',
                                         expanded ? 'px-4 justify-between' : 'justify-center'
                                     ]">
@@ -137,7 +137,7 @@
                                         <li>
                                             <a href="{{ route($child['route']) }}"
                                                class="block px-3 py-2 rounded-lg text-sm transition
-                                               {{ $childActive ? 'bg-blue-100 text-blue-600' : 'text-gray-500 hover:bg-gray-50' }}">
+                                               {{ $childActive ? 'bg-[#035f9c] text-blue-600' : 'text-gray-500 hover:bg-gray-50' }}">
                                                 {{ $child['name'] }}
                                             </a>
                                         </li>
@@ -151,7 +151,7 @@
                                    class="flex items-center py-2.5 rounded-xl transition-all duration-300"
                                    :class="[
                                         {{ $isActive ? 'true' : 'false' }}
-                                            ? 'bg-blue-600 text-white'
+                                            ? 'bg-[#035f9c] text-white'
                                             : 'text-gray-500 hover:bg-gray-50',
                                         expanded ? 'px-4' : 'justify-center'
                                    ]">
@@ -265,6 +265,26 @@
     </div>
 
     <style>
+
+        :root {
+    --putih: #ffffff;
+    --hitam: #000000;
+    --blue: #1a56db;
+    --blue-dark: #1341b0;
+    --blue-light: #d5eeff94;
+    --blue-soft: #f0f7ff;
+    /* --biru: #385d8d; */
+    /* --biru: #669dc1; */
+    --biru: #035f9c;
+    --biru-dark: #006bb2;
+    /* --biru: #5692ba; */
+    --green: #1f6d8c;
+    --green-soft: #f0f7ff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --bg: #f0f6ff;
+}
     .nav-logo-img {
         height: 40px;
         width: auto;
@@ -276,7 +296,7 @@
         font-size: 14px;
         font-weight: 800;
         font-style: italic;
-        color: #00A2E9;
+        color: #035f9c;
         line-height: 1.2;
         transition: color 0.3s;
     }
@@ -284,7 +304,7 @@
     .nav-logo-subtitle {
         font-family: 'Nunito Sans', sans-serif;
         font-size: 11px;
-        color: #00A2E9;
+        color: #035f9c;
         transition: color 0.3s;
     }
     </style>

@@ -223,7 +223,7 @@
                 Kembali
             </a>
             <button type="submit"
-                class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold transition">
+                class="border border-transparent px-6 py-2 bg-[#035f9c] text-white hover:bg-white hover:text-[#035f9c] hover:border-[#035f9c] rounded-xl text-sm font-semibold transition">
                 Simpan Perubahan
             </button>
         </div>

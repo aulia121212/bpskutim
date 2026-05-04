@@ -4,7 +4,7 @@
 <div class="p-6 max-w-2xl mx-auto">
 
     <div class="mb-8">
-        <p class="text-xs text-gray-400 uppercase tracking-widest mb-1">Manajemen / Publikasi</p>
+        <p class="text-xs text-gray-400 uppercase tracking-widest mb-1">Manajemen Publikasi</p>
         <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Edit Publikasi</h1>
     </div>
 
@@ -14,7 +14,7 @@
 
             <div class="space-y-5">
                 <div>
-                    <label class="block text-sm font-semibold text-blue-500 mb-1.5">
+                    <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">
                         Link Publikasi <span class="text-red-500">*</span>
                     </label>
                     <div class="relative">
@@ -37,7 +37,7 @@
                     Batal
                 </a>
                 <button type="submit"
-                    class="px-8 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition shadow-sm">
+                    class="px-8 py-2.5 rounded-xl bg-[#035f9c] hover:bg-blue-700 text-white text-sm font-semibold transition shadow-sm">
                     Update
                 </button>
             </div>

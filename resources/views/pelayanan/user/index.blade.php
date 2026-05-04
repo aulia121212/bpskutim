@@ -21,12 +21,12 @@
         <table class="w-full text-sm">
             <thead>
                 <tr class="border-b border-gray-100">
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">No</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Nama Lengkap</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">No. WhatsApp</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Email</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Password</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Aksi</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">No</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Nama Lengkap</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">No. WhatsApp</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Email</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Password</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -48,7 +48,7 @@
                             </form>
 
                             <a href="{{ route('pelayanan.user.show', $u->id) }}" 
-   class="inline-flex items-center gap-1 border border-blue-300 text-blue-600 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 transition">
+   class="inline-flex items-center gap-1 border border-blue-300 text-[#035f9c] text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 transition">
     Detail <i class="ti ti-chevrons-right text-sm"></i>
 </a>
                         </div>

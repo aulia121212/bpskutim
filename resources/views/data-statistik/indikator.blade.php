@@ -25,6 +25,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
+            padding-top: 80px;
             font-family: 'Plus Jakarta Sans', sans-serif;
             background: var(--bg);
             color: var(--text);

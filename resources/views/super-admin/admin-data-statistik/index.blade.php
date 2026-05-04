@@ -10,7 +10,7 @@
             <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Admin Data Statistik</h1>
         </div>
         <a href="{{ route('superadmin.admin-data-statistik.create') }}"
-            class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition shadow-sm">
+            class="inline-flex items-center gap-2 bg-[#035f9c] text-white hover:bg-white hover:text-[#035f9c] text-sm font-semibold px-5 py-2.5 rounded-xl transition shadow-sm">
             <i class="ti ti-plus"></i> TAMBAH ADMIN BARU
         </a>
     </div>
@@ -27,12 +27,12 @@
         <table class="w-full text-sm">
             <thead>
                 <tr class="border-b border-gray-100 dark:border-gray-800">
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Nama Lengkap</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Email</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Password</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">No WhatsApp</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Asal Instansi</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Aksi</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c] ">Nama Lengkap</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Email</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Password</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">No WhatsApp</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Asal Instansi</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -57,7 +57,7 @@
                                 </button>
                             </form>
                             <a href="{{ route('superadmin.admin-data-statistik.show', $admin->id) }}"
-                                class="inline-flex items-center gap-1 border border-blue-300 text-blue-600 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 transition">
+                                class="inline-flex items-center gap-1 border border-blue-300 text-[#035f9c]  text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 transition">
                                 Detail <i class="ti ti-chevrons-right text-sm"></i>
                             </a>
                         </div>

@@ -10,7 +10,7 @@
             <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Admin Pelayanan        </h1>
         </div>
         <a href="{{ route('superadmin.admin-data-statistik.create') }}"
-            class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition shadow-sm">
+            class="inline-flex items-center gap-2 bg-[#035f9c] text-white hover:bg-white hover:text-[#035f9c] text-sm font-semibold px-5 py-2.5 rounded-xl transition shadow-sm">
             <i class="ti ti-plus"></i> TAMBAH ADMIN BARU
         </a>
     </div>

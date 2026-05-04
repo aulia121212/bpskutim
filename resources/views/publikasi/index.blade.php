@@ -12,7 +12,7 @@
         {{-- Tombol tambah hanya muncul kalau belum ada data --}}
         @if(!$publikasi)
             <a href="{{ route('superadmin.publikasi.create') }}"
-                class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition shadow-sm">
+                class="inline-flex items-center gap-2 bg-[#035f9c] text-white hover:bg-white hover:text-[#035f9c] text-sm font-semibold px-5 py-2.5 rounded-xl transition shadow-sm">
                 <i class="ti ti-plus"></i> TAMBAH PUBLIKASI
             </a>
         @endif
@@ -34,9 +34,9 @@
         <table class="w-full text-sm">
             <thead>
                 <tr class="border-b border-gray-100">
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">No</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Link</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Aksi</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">No</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Link</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,7 +45,7 @@
                         <td class="px-6 py-4 text-gray-500">1.</td>
                         <td class="px-6 py-4">
                             <a href="{{ $publikasi->link }}" target="_blank"
-                                class="inline-flex items-center gap-1 text-blue-600 hover:underline text-sm">
+                                class="inline-flex items-center gap-1 text-[#035f9c] hover:underline text-sm">
                                 <i class="ti ti-external-link"></i>
                                 {{ Str::limit($publikasi->link, 60) }}
                             </a>

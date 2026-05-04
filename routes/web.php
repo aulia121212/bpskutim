@@ -81,12 +81,21 @@ Route::patch('/reservasi/{id}/batalkan',    [UserProfileController::class, 'bata
         });
 
     // ── ADMIN STATISTIK ──────────────────────────────────────────
-    Route::middleware('role:admin_statistik,super_admin')->group(function () {
-        Route::resource('statistics',       App\Http\Controllers\StatisticController::class)->except(['index', 'show']);
-        Route::post('/statistics/{id}/publish', [App\Http\Controllers\StatisticController::class, 'publish'])->name('statistics.publish');
-        Route::resource('statistic-titles', App\Http\Controllers\StatisticTitleController::class)->except(['index', 'show']);
-        Route::get('/statistics/preview/{id}', [App\Http\Controllers\StatisticController::class, 'preview'])->name('statistics.preview');
-    });
+Route::middleware('role:admin_statistik,super_admin')->group(function () {
+    Route::resource('statistics', App\Http\Controllers\StatisticController::class)
+        ->except(['index', 'show']);
+    Route::post('/statistics/{statistics}/publish',
+        [App\Http\Controllers\StatisticController::class, 'publish'])
+        ->name('statistics.publish');
+    Route::resource('statistic-titles', App\Http\Controllers\StatisticTitleController::class)
+        ->except(['index', 'show']);
+
+    // Preview pakai /{id}/preview bukan /preview/{id}
+    Route::get('/statistics/{id}/preview',
+        [App\Http\Controllers\StatisticController::class, 'preview'])
+        ->name('statistics.preview');
+});
+
 });
 
 // ── DATA STATISTIK (PUBLIC) ───────────────────────────────────────────
@@ -130,7 +139,7 @@ Route::prefix('pelayanan')->name('pelayanan.')->group(function () {
 Route::prefix('statistics')->name('statistics.')->group(function () {
     Route::get('/',            [StatisticController::class, 'index'])->name('index');
     Route::get('/grafik',      [StatisticController::class, 'grafik'])->name('grafik');
-    Route::get('/preview/{id}',[StatisticController::class, 'preview'])->name('preview');
+    // Route::get('/preview/{id}',[StatisticController::class, 'preview'])->name('preview');
 });
 
 Route::prefix('statistic-titles')->name('statistic-titles.')->group(function () {

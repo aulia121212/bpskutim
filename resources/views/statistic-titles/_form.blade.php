@@ -2,14 +2,14 @@
 
 {{-- Indikator --}}
         <div>
-            <label class="block text-sm font-semibold text-blue-500 mb-1">
+            <label class="block text-sm font-semibold text-[#035f9c] mb-1">
                 Indikator
             </label>
             <select name="indikator_data"
                 class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500">
                 <option value="">Pilih Indikator</option>
                 <option value="indikator_ekonomi">Indikator Ekonomi</option>
-                <option value="indikator_ketenagakerjaan">Indikator Ketenagakerjaan</option>
+                <option value="indikator_ketenagakerjaan">Indikator Kependudukan dan Ketenagakerjaan</option>
                 <option value="indikator_sosial">Indikator Sosial</option>
                 <option value="indikator_pembangunan_manusia">Indikator Pembangunan Manusia</option>
                 <option value="gender">Gender</option>
@@ -18,7 +18,7 @@
 
     {{-- Judul Data --}}
     <div>
-        <label class="block text-xs font-semibold text-blue-500 mb-1">Judul Data <span class="text-red-400">*</span></label>
+        <label class="block text-xs font-semibold text-[#035f9c] mb-1">Judul Data <span class="text-red-400">*</span></label>
         <input type="text" name="judul_data"
             value="{{ old('judul_data', $title->judul_data ?? '') }}"
             placeholder="Contoh: Struktur PDRB Menurut Lapangan Usaha (persen)"
@@ -28,7 +28,7 @@
 
     {{-- Judul Kolom --}}
     <div>
-        <label class="block text-xs font-semibold text-blue-500 mb-1">
+        <label class="block text-xs font-semibold text-[#035f9c] mb-1">
             Judul Kolom Kategori
             <span class="font-normal text-gray-400 normal-case ml-1">(header kolom pertama tabel, misal: "Lapangan Usaha")</span>
         </label>
@@ -44,12 +44,12 @@
     <div class="border-t border-gray-100 dark:border-gray-800 pt-4">
         <div class="flex items-center justify-between mb-3">
             <div>
-                <p class="text-xs font-semibold text-blue-500">Komponen / Kategori</p>
+                <p class="text-xs font-semibold text-[#035f9c]">Komponen / Kategori</p>
                 <p class="text-[10px] text-gray-400 mt-0.5">Akan otomatis muncul sebagai baris di form input data</p>
             </div>
             <div class="flex gap-2">
                 <button type="button" @click="addComponent(false)"
-                    class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 text-xs font-bold hover:bg-blue-100 transition">
+                    class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#035f9c] text-white text-xs font-bold hover:bg-white hover:text-[#035f9c] transition">
                     <i class="ti ti-plus text-xs"></i> Kategori
                 </button>
                 <button type="button" @click="addComponent(true)"
@@ -91,7 +91,7 @@
                         {{-- Toggle expand interpretasi --}}
                         <button type="button" @click="comp.showInterp = !comp.showInterp"
                             :title="comp.showInterp ? 'Sembunyikan interpretasi' : 'Tambah interpretasi per kategori'"
-                            :class="comp.showInterp ? 'text-blue-500 bg-blue-50' : 'text-gray-300 hover:text-blue-400'"
+                            :class="comp.showInterp ? 'text-[#035f9c] bg-[#035f9c]/10' : 'text-gray-300 hover:text-[#035f9c]'"
                             class="w-6 h-6 flex items-center justify-center rounded transition shrink-0">
                             <i class="ti ti-message-2 text-xs"></i>
                         </button>
@@ -184,7 +184,7 @@
     {{-- INTERPRETASI DEFAULT (fallback jika kategori tidak punya)   --}}
     {{-- =========================================================== --}}
     <div class="border-t border-gray-100 dark:border-gray-800 pt-4">
-        <p class="text-xs font-semibold text-blue-500 mb-1">Interpretasi Default</p>
+        <p class="text-xs font-semibold text-[#035f9c] mb-1">Interpretasi Default</p>
         <p class="text-[10px] text-gray-400 mb-3">Digunakan sebagai fallback jika kategori tidak memiliki interpretasi sendiri</p>
         <div class="grid grid-cols-3 gap-4">
             <div>

@@ -416,6 +416,18 @@ h6,
     /* color: #1e3a8a; */
 }
 
+@media (max-width: 768px) {
+    .title-main {
+        font-size: 28px;
+        text-align: center;
+    }
+
+    .title-accent {
+        font-size: 24px;
+        text-align: center;
+    }
+}
+
 .charts-wrapper {
     overflow: hidden;
 }
