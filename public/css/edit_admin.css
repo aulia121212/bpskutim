@@ -1,0 +1,38 @@
+.change-password-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    background: #eff6ff;
+    color: #2563eb;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.change-password-btn:hover {
+    background: #dbeafe;
+}
+
+.password-section {
+    width: 100%;
+    display: none;
+    animation: fadeIn 0.25s ease;
+}
+
+.password-section.show {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

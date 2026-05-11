@@ -22,7 +22,7 @@
         <div class="flex items-center gap-4">
             {{-- Desktop Toggler --}}
             <button @click="$store.sidebar.toggleExpanded()"
-                class="hidden h-10 w-10 items-center justify-center rounded-xl border border-gray-100 bg-white text-gray-500 transition-all hover:bg-gray-50 hover:text-indigo-600 active:scale-95 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 xl:flex">
+                class="hidden h-10 w-10 items-center justify-center rounded-xl border border-gray-100 bg-white text-gray-500 transition-all hover:bg-gray-50 hover:text-[#035f9c] active:scale-95 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 xl:flex">
                 <i class="ti text-xl transition-transform duration-500"
                     :class="$store.sidebar.isExpanded ? 'ti-layout-sidebar-left-collapse' : 'ti-layout-sidebar-right-collapse rotate-180'">
                 </i>
@@ -58,7 +58,7 @@
                      class="w-full h-full object-cover">
             @else
                 {{-- Fallback jika tidak ada foto: Inisial Nama --}}
-                <div class="w-full h-full flex items-center justify-center text-sm font-bold text-blue-500 bg-blue-50 dark:bg-blue-900/30">
+                <div class="w-full h-full flex items-center justify-center text-sm font-bold text-[#035f9c] bg-blue-50 dark:bg-blue-900/30">
                     {{ strtoupper(substr($user->name, 0, 2)) }}
                 </div>
             @endif

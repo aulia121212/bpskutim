@@ -45,18 +45,18 @@
                     <td class="px-6 py-4 text-gray-600 dark:text-gray-400">{{ $admin->asal_instansi ?? 'BPS Kutai Timur' }}</td>
                     <td class="px-6 py-4">
                         <div class="flex items-center gap-2">
-                            <a href="{{ route('superadmin.admin-data-statistik.edit', $admin->id) }}"
+                            <a href="{{ route('superadmin.admin-pelayanan.edit', $admin->id) }}"
                                 class="p-1.5 text-gray-400 hover:text-blue-600 transition">
                                 <i class="ti ti-pencil"></i>
                             </a>
-                            <form action="{{ route('superadmin.admin-data-statistik.destroy', $admin->id) }}"
+                            <form action="{{ route('superadmin.admin-pelayanan.destroy', $admin->id) }}"
                                 method="POST" onsubmit="return confirm('Yakin hapus admin ini?')" class="inline">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="p-1.5 text-gray-400 hover:text-red-500 transition">
                                     <i class="ti ti-trash"></i>
                                 </button>
                             </form>
-                            <a href="{{ route('superadmin.admin-data-statistik.show', $admin->id) }}"
+                            <a href="{{ route('superadmin.admin-pelayanan.show', $admin->id) }}"
                                 class="inline-flex items-center gap-1 border border-blue-300 text-blue-600 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 transition">
                                 Detail <i class="ti ti-chevrons-right text-sm"></i>
                             </a>

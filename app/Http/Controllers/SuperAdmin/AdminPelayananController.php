@@ -5,6 +5,7 @@ namespace App\Http\Controllers\SuperAdmin;
 use App\Http\Controllers\Controller;
 use App\Models\AdminPelayanan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AdminPelayananController extends Controller
 {
@@ -68,10 +69,12 @@ class AdminPelayananController extends Controller
         $admin = AdminPelayanan::findOrFail($id);
 
         $request->validate([
-            'nama_lengkap' => 'required',
-            'email'        => 'required|email|unique:admin_pelayanans,email,' . $id,
-            'no_whatsapp'  => 'required',
-        ]);
+    'nama_lengkap'             => 'required',
+    'email'            => 'required|email|unique:users,email,' . $id,
+    'no_whatsapp'      => 'required',
+    'current_password' => 'required_with:new_password|nullable',
+    'new_password'     => 'nullable|min:8',
+]);
 
         $foto = $admin->foto;
         if ($request->hasFile('foto')) {
@@ -91,9 +94,21 @@ class AdminPelayananController extends Controller
             'foto'         => $foto,
         ];
 
-        if ($request->filled('password')) {
-            $data['password'] = bcrypt($request->password);
-        }
+       if ($request->filled('new_password')) {
+
+    // cek password lama
+    if (!Hash::check($request->current_password, $admin->password)) {
+
+        return back()
+            ->withInput()
+            ->withErrors([
+                'current_password' => 'Password saat ini tidak sesuai.'
+            ]);
+    }
+
+    // update password baru
+    $data['password'] = Hash::make($request->new_password);
+}
 
         $admin->update($data);
 

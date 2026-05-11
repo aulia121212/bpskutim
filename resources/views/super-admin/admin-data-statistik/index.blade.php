@@ -7,7 +7,7 @@
     <div class="flex items-center justify-between mb-6">
         <div>
             <p class="text-xs text-gray-400 uppercase tracking-widest mb-1">Super Admin</p>
-            <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Admin Data Statistik</h1>
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Admin Data Statistik       </h1>
         </div>
         <a href="{{ route('superadmin.admin-data-statistik.create') }}"
             class="inline-flex items-center gap-2 bg-[#035f9c] text-white hover:bg-white hover:text-[#035f9c] text-sm font-semibold px-5 py-2.5 rounded-xl transition shadow-sm">
@@ -27,7 +27,7 @@
         <table class="w-full text-sm">
             <thead>
                 <tr class="border-b border-gray-100 dark:border-gray-800">
-                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c] ">Nama Lengkap</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Nama Lengkap</th>
                     <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Email</th>
                     <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Password</th>
                     <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">No WhatsApp</th>
@@ -38,7 +38,7 @@
             <tbody>
                 @forelse($admins as $admin)
                 <tr class="border-b border-gray-50 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition">
-                    <td class="px-6 py-4 font-medium text-gray-800 dark:text-gray-200">{{ $admin->name }}</td>
+                    <td class="px-6 py-4 font-medium text-gray-800 dark:text-gray-200">{{ $admin->nama_lengkap }}</td>
                     <td class="px-6 py-4 text-gray-600 dark:text-gray-400">{{ $admin->email }}</td>
                     <td class="px-6 py-4 text-gray-600 dark:text-gray-400 tracking-widest">••••••••••</td>
                     <td class="px-6 py-4 text-gray-600 dark:text-gray-400">{{ $admin->no_whatsapp ?? '-' }}</td>
@@ -57,7 +57,7 @@
                                 </button>
                             </form>
                             <a href="{{ route('superadmin.admin-data-statistik.show', $admin->id) }}"
-                                class="inline-flex items-center gap-1 border border-blue-300 text-[#035f9c]  text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 transition">
+                                class="inline-flex items-center gap-1 border border-blue-300 text-blue-600 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 transition">
                                 Detail <i class="ti ti-chevrons-right text-sm"></i>
                             </a>
                         </div>
