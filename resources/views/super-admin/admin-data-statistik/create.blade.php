@@ -16,7 +16,7 @@
             <div class="relative">
                 <div id="fotoPreview"
                     class="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-content-center overflow-hidden border-4 border-white shadow-lg">
-                    <div class="w-full h-full flex items-center justify-center bg-blue-600 rounded-full">
+                    <div class="w-full h-full flex items-center justify-center bg-[#035f9c] rounded-full">
                         <i class="ti ti-user text-white text-4xl"></i>
                     </div>
                 </div>
@@ -37,7 +37,7 @@
 
             {{-- Nama Lengkap --}}
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1.5">
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">
                     Nama Lengkap <span class="text-red-500">*</span>
                 </label>
                 <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap') }}"
@@ -49,37 +49,37 @@
 
             {{-- Nomor WhatsApp --}}
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1.5">
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">
                     Nomor WhatsApp <span class="text-red-500">*</span>
                 </label>
                 <input type="text" name="no_whatsapp" value="{{ old('no_whatsapp') }}"
                     placeholder="0812-xxxx-xxxx"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c] dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                     required>
                 @error('no_whatsapp')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             {{-- Email --}}
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1.5">
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">
                     Email <span class="text-red-500">*</span>
                 </label>
                 <input type="email" name="email" value="{{ old('email') }}"
                     placeholder="auliaramadhanti@gmail.com"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c] dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                     required>
                 @error('email')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             {{-- Kata Sandi --}}
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1.5">
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">
                     Kata Sandi <span class="text-red-500">*</span>
                 </label>
                 <div class="relative">
                     <input type="password" name="password" id="passwordField"
                         placeholder="••••••••••"
-                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white pr-10"
+                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c] dark:bg-gray-800 dark:border-gray-700 dark:text-white pr-10"
                         required>
                     <button type="button" onclick="togglePassword()"
                         class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
@@ -91,34 +91,34 @@
 
             {{-- Asal Instansi --}}
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1.5">Asal Instansi</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">Asal Instansi</label>
                 <input type="text" name="asal_instansi" value="{{ old('asal_instansi', 'BPS Kutai Timur') }}"
                     placeholder="BPS Kutai Timur"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c] dark:bg-gray-800 dark:border-gray-700 dark:text-white">
             </div>
 
             {{-- Alamat --}}
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1.5">Alamat</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">Alamat</label>
                 <input type="text" name="alamat" value="{{ old('alamat') }}"
                     placeholder="Alamat Admin"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c] dark:bg-gray-800 dark:border-gray-700 dark:text-white">
             </div>
 
             {{-- Jabatan --}}
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1.5">Jabatan</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">Jabatan</label>
                 <input type="text" name="jabatan" value="{{ old('jabatan') }}"
                     placeholder="Jabatan Admin"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c] dark:bg-gray-800 dark:border-gray-700 dark:text-white">
             </div>
 
             {{-- Tim --}}
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1.5">Tim</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">Tim</label>
                 <input type="text" name="tim" value="{{ old('tim') }}"
                     placeholder="Tim Admin"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c] dark:bg-gray-800 dark:border-gray-700 dark:text-white">
             </div>
 
         </div>
@@ -130,7 +130,7 @@
                 Batal
             </a>
             <button type="submit"
-                class="px-8 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition shadow-sm">
+                class="px-8 py-2.5 rounded-xl bg-[#035f9c] hover:bg-[#024a7d] text-white text-sm font-semibold transition shadow-sm">
                 Simpan
             </button>
         </div>

@@ -192,6 +192,9 @@ class StatisticController extends Controller
                     'nama'   => $c->nama,
                     'is_sub' => (bool) $c->is_sub,
                     'urutan' => $c->urutan,
+                    'interpretasi_lebih_kecil' => $c->interpretasi_lebih_kecil ?? '',
+        'interpretasi_lebih_besar' => $c->interpretasi_lebih_besar ?? '',
+        'interpretasi_tetap'       => $c->interpretasi_tetap ?? '',
                 ])->values() ?? collect()
             );
 

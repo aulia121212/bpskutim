@@ -23,7 +23,6 @@ use App\Http\Controllers\ProfileController;
 
 // ── PUBLIC ────────────────────────────────────────────────────────────
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/data-statistik', [HomeController::class, 'dataStatistik'])->name('data-statistik');
 
 // ── AUTH ──────────────────────────────────────────────────────────────
 Route::middleware('guest')->group(function () {
@@ -43,8 +42,13 @@ Route::prefix('auth')->name('auth.')->group(function () {
 // ── AUTHENTICATED ─────────────────────────────────────────────────────
 Route::middleware('auth')->group(function () {
 
-    // ── PROFILE ADMIN (super_admin, admin_pelayanan, admin_statistik) ──
-    // Pakai layouts.app, tanpa tab reservasi
+    // ── DASHBOARD ─────────────────────────────────────────────────────
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::prefix('dashboard')->name('dashboard.')->group(function () {
+        Route::get('/analytics', [DashboardController::class, 'analytics'])->name('analytics');
+    });
+
+    // ── PROFILE ADMIN ──────────────────────────────────────────────────
     Route::middleware('role:super_admin,admin_pelayanan,admin_statistik')
         ->prefix('admin')
         ->name('admin.')
@@ -54,14 +58,14 @@ Route::middleware('auth')->group(function () {
             Route::patch('/profile/foto', [AdminProfileController::class, 'updatePhoto'])->name('profile.photo');
         });
 
-    // ── PROFILE USER BIASA ───────────────────────────────────────────
-Route::get('/profile',                      [UserProfileController::class, 'index'])->name('user.profile');
-Route::patch('/profile/update',             [UserProfileController::class, 'update'])->name('user.profile.update');
-Route::post('/profile/foto',                [UserProfileController::class, 'updatePhoto'])->name('user.profile.photo');
-Route::get('/reservasi/{id}',               [UserProfileController::class, 'detailReservasi'])->name('user.reservasi.detail');
-Route::patch('/reservasi/{id}/batalkan',    [UserProfileController::class, 'batalkanReservasi'])->name('user.reservasi.batalkan');
-    
-    // ── SUPER ADMIN ──────────────────────────────────────────────
+    // ── PROFILE USER BIASA ─────────────────────────────────────────────
+    Route::get('/profile',                   [UserProfileController::class, 'index'])->name('user.profile');
+    Route::patch('/profile/update',          [UserProfileController::class, 'update'])->name('user.profile.update');
+    Route::post('/profile/foto',             [UserProfileController::class, 'updatePhoto'])->name('user.profile.photo');
+    Route::get('/reservasi/{id}',            [UserProfileController::class, 'detailReservasi'])->name('user.reservasi.detail');
+    Route::patch('/reservasi/{id}/batalkan', [UserProfileController::class, 'batalkanReservasi'])->name('user.reservasi.batalkan');
+
+    // ── SUPER ADMIN ────────────────────────────────────────────────────
     Route::middleware('role:super_admin')
         ->prefix('super-admin')
         ->name('superadmin.')
@@ -70,43 +74,51 @@ Route::patch('/reservasi/{id}/batalkan',    [UserProfileController::class, 'bata
             Route::resource('admin-data-statistik', App\Http\Controllers\SuperAdmin\AdminDataStatistikController::class);
             Route::resource('admin-pelayanan',       App\Http\Controllers\SuperAdmin\AdminPelayananController::class);
             Route::resource('admins',                App\Http\Controllers\AdminController::class);
-            Route::resource('statistic-titles',      App\Http\Controllers\StatisticTitleController::class);
-            // Publikasi — hanya super admin, max 1 link
-            Route::get('/publikasi',                   [App\Http\Controllers\PublikasiController::class, 'index'])->name('publikasi.index');
-            Route::get('/publikasi/create',            [App\Http\Controllers\PublikasiController::class, 'create'])->name('publikasi.create');
-            Route::post('/publikasi',                  [App\Http\Controllers\PublikasiController::class, 'store'])->name('publikasi.store');
-            Route::get('/publikasi/{publikasi}/edit',  [App\Http\Controllers\PublikasiController::class, 'edit'])->name('publikasi.edit');
-            Route::put('/publikasi/{publikasi}',       [App\Http\Controllers\PublikasiController::class, 'update'])->name('publikasi.update');
-            Route::delete('/publikasi/{publikasi}',    [App\Http\Controllers\PublikasiController::class, 'destroy'])->name('publikasi.destroy');
+
+            // Publikasi
+            Route::get('/publikasi',                  [PublikasiController::class, 'index'])->name('publikasi.index');
+            Route::get('/publikasi/create',           [PublikasiController::class, 'create'])->name('publikasi.create');
+            Route::post('/publikasi',                 [PublikasiController::class, 'store'])->name('publikasi.store');
+            Route::get('/publikasi/{publikasi}/edit', [PublikasiController::class, 'edit'])->name('publikasi.edit');
+            Route::put('/publikasi/{publikasi}',      [PublikasiController::class, 'update'])->name('publikasi.update');
+            Route::delete('/publikasi/{publikasi}',   [PublikasiController::class, 'destroy'])->name('publikasi.destroy');
         });
 
-    // ── ADMIN STATISTIK ──────────────────────────────────────────
-Route::middleware('role:admin_statistik,super_admin')->group(function () {
-    Route::resource('statistics', App\Http\Controllers\StatisticController::class)
-        ->except(['index', 'show']);
-    Route::post('/statistics/{statistics}/publish',
-        [App\Http\Controllers\StatisticController::class, 'publish'])
-        ->name('statistics.publish');
-    Route::resource('statistic-titles', App\Http\Controllers\StatisticTitleController::class)
-        ->except(['index', 'show']);
+    // ── ADMIN STATISTIK + SUPER ADMIN ─────────────────────────────────
+    Route::middleware('role:admin_statistik,super_admin')->group(function () {
 
-    // Preview pakai /{id}/preview bukan /preview/{id}
-    Route::get('/statistics/{id}/preview',
-        [App\Http\Controllers\StatisticController::class, 'preview'])
-        ->name('statistics.preview');
-});
+        // Statistics CRUD (index & show di public group bawah)
+        Route::resource('statistics', StatisticController::class)->except(['index', 'show']);
+        Route::post('/statistics/{statistics}/publish', [StatisticController::class, 'publish'])
+            ->name('statistics.publish');
+        Route::get('/statistics/{id}/preview', [StatisticController::class, 'preview'])
+            ->name('statistics.preview');
 
+        // Statistic Titles CRUD lengkap
+        Route::resource('statistic-titles', StatisticTitleController::class);
+
+        // ✅ Route tambahan di luar resource (interpretasi JSON)
+        Route::get('/statistic-titles/{statisticTitle}/interpretasi',
+            [StatisticTitleController::class, 'getInterpretasi'])
+            ->name('statistic-titles.interpretasi');
+    });
 });
 
 // ── DATA STATISTIK (PUBLIC) ───────────────────────────────────────────
-Route::get('/data-statistik', [DataStatistikController::class, 'index'])->name('data-statistik.index');
-Route::get('/data-statistik/indikator/{slug}', [DataStatistikController::class, 'indikator'])->name('data-statistik.indikator');
-Route::get('/data-statistik/{id}', [DataStatistikController::class, 'show'])->name('data-statistik.show');
+Route::get('/data-statistik',                      [DataStatistikController::class, 'index'])->name('data-statistik.index');
+Route::get('/data-statistik/indikator/{slug}',     [DataStatistikController::class, 'indikator'])->name('data-statistik.indikator');
+Route::get('/data-statistik/{id}',                 [DataStatistikController::class, 'show'])->name('data-statistik.show');
+
+// ── STATISTICS (PUBLIC) ───────────────────────────────────────────────
+Route::prefix('statistics')->name('statistics.')->group(function () {
+    Route::get('/',       [StatisticController::class, 'index'])->name('index');
+    Route::get('/grafik', [StatisticController::class, 'grafik'])->name('grafik');
+});
 
 // ── KONSULTASI (PUBLIC) ───────────────────────────────────────────────
-Route::get('/konsultasi', [App\Http\Controllers\KonsultasiController::class, 'index'])->name('konsultasi');
-Route::get('/konsultasi/reservasi/{id}',  [App\Http\Controllers\KonsultasiController::class, 'reservasi'])->name('konsultasi.reservasi');
-Route::post('/konsultasi/reservasi/{id}', [App\Http\Controllers\KonsultasiController::class, 'storeReservasi'])->name('konsultasi.reservasi.store');
+Route::get('/konsultasi',                        [App\Http\Controllers\KonsultasiController::class, 'index'])->name('konsultasi');
+Route::get('/konsultasi/reservasi/{id}',         [App\Http\Controllers\KonsultasiController::class, 'reservasi'])->name('konsultasi.reservasi');
+Route::post('/konsultasi/reservasi/{id}',        [App\Http\Controllers\KonsultasiController::class, 'storeReservasi'])->name('konsultasi.reservasi.store');
 
 // ── PELAYANAN ─────────────────────────────────────────────────────────
 Route::prefix('pelayanan')->name('pelayanan.')->group(function () {
@@ -130,32 +142,9 @@ Route::prefix('pelayanan')->name('pelayanan.')->group(function () {
     Route::post('/popup',        [PelayananController::class, 'popupStore'])->name('popup.store');
     Route::delete('/popup/{id}', [PelayananController::class, 'popupDestroy'])->name('popup.destroy');
 
-    Route::get('/user',          [PelayananController::class, 'user'])->name('user.index');
-    Route::get('/user/{id}',     [PelayananController::class, 'userShow'])->name('user.show');
-    Route::delete('/user/{id}',  [PelayananController::class, 'userDestroy'])->name('user.destroy');
-});
-
-// ── STATISTICS (PUBLIC) ───────────────────────────────────────────────
-Route::prefix('statistics')->name('statistics.')->group(function () {
-    Route::get('/',            [StatisticController::class, 'index'])->name('index');
-    Route::get('/grafik',      [StatisticController::class, 'grafik'])->name('grafik');
-    // Route::get('/preview/{id}',[StatisticController::class, 'preview'])->name('preview');
-});
-
-Route::prefix('statistic-titles')->name('statistic-titles.')->group(function () {
-    Route::get('/', [StatisticTitleController::class, 'index'])->name('index');
-    Route::get('/{statisticTitle}/interpretasi', [StatisticTitleController::class, 'getInterpretasi'])->name('interpretasi');
-});
-
-// ── PUBLIKASI (route lama dihapus, sudah dipindah ke superadmin group di atas) ──
-
-// ── DASHBOARD ─────────────────────────────────────────────────────────
-// ↓ diganti: pakai DashboardController, bukan fn() => view(...)
-Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
-    Route::prefix('dashboard')->name('dashboard.')->group(function () {
-        Route::get('/analytics', [DashboardController::class, 'analytics'])->name('analytics');
-    });
+    Route::get('/user',         [PelayananController::class, 'user'])->name('user.index');
+    Route::get('/user/{id}',    [PelayananController::class, 'userShow'])->name('user.show');
+    Route::delete('/user/{id}', [PelayananController::class, 'userDestroy'])->name('user.destroy');
 });
 
 // ── UI COMPONENTS (demo) ──────────────────────────────────────────────

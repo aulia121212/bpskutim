@@ -9,7 +9,7 @@
             <p class="text-xs text-gray-400 uppercase tracking-widest mb-1">Super Admin</p>
             <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Admin Pelayanan        </h1>
         </div>
-        <a href="{{ route('superadmin.admin-data-statistik.create') }}"
+        <a href="{{ route('superadmin.admin-pelayanan.create') }}"
             class="inline-flex items-center gap-2 bg-[#035f9c] text-white hover:bg-white hover:text-[#035f9c] text-sm font-semibold px-5 py-2.5 rounded-xl transition shadow-sm">
             <i class="ti ti-plus"></i> TAMBAH ADMIN BARU
         </a>
@@ -27,12 +27,12 @@
         <table class="w-full text-sm">
             <thead>
                 <tr class="border-b border-gray-100 dark:border-gray-800">
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Nama Lengkap</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Email</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Password</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">No WhatsApp</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Asal Instansi</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Aksi</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Nama Lengkap</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Email</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Password</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">No WhatsApp</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Asal Instansi</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Aksi</th>
                 </tr>
             </thead>
             <tbody>

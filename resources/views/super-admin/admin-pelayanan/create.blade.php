@@ -5,8 +5,8 @@
 
     {{-- Header --}}
     <div class="mb-8">
-        <p class="text-xs text-gray-400 uppercase tracking-widest mb-1">Super Admin / Admin Data Statistik</p>
-        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Tambah Admin Data Statistik</h1>
+        <p class="text-xs text-gray-400 uppercase tracking-widest mb-1">Super Admin / Admin Pelayanan</p>
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Tambah Admin Pelayanan</h1>
     </div>
 
     <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-8">
@@ -15,8 +15,8 @@
         <div class="flex flex-col items-center mb-8">
             <div class="relative">
                 <div id="fotoPreview"
-                    class="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-content-center overflow-hidden border-4 border-white shadow-lg">
-                    <div class="w-full h-full flex items-center justify-center bg-blue-600 rounded-full">
+                    class="w-24 h-24 rounded-full bg-[#035f9c] flex items-center justify-content-center overflow-hidden border-4 border-white shadow-lg">
+                    <div class="w-full h-full flex items-center justify-center bg-[#035f9c] rounded-full">
                         <i class="ti ti-user text-white text-4xl"></i>
                     </div>
                 </div>
@@ -31,13 +31,13 @@
         </div>
 
         {{-- Form --}}
-        <form method="POST" action="{{ route('superadmin.admin-data-statistik.store') }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ route('superadmin.admin-pelayanan.store') }}" enctype="multipart/form-data">
         @csrf
         <div class="grid grid-cols-2 gap-x-8 gap-y-5">
 
             {{-- Nama Lengkap --}}
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1.5">
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">
                     Nama Lengkap <span class="text-red-500">*</span>
                 </label>
                 <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap') }}"
@@ -49,7 +49,7 @@
 
             {{-- Nomor WhatsApp --}}
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1.5">
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">
                     Nomor WhatsApp <span class="text-red-500">*</span>
                 </label>
                 <input type="text" name="no_whatsapp" value="{{ old('no_whatsapp') }}"
@@ -61,7 +61,7 @@
 
             {{-- Email --}}
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1.5">
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">
                     Email <span class="text-red-500">*</span>
                 </label>
                 <input type="email" name="email" value="{{ old('email') }}"
@@ -73,7 +73,7 @@
 
             {{-- Kata Sandi --}}
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1.5">
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">
                     Kata Sandi <span class="text-red-500">*</span>
                 </label>
                 <div class="relative">
@@ -91,7 +91,7 @@
 
             {{-- Asal Instansi --}}
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1.5">Asal Instansi</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">Asal Instansi</label>
                 <input type="text" name="asal_instansi" value="{{ old('asal_instansi', 'BPS Kutai Timur') }}"
                     placeholder="BPS Kutai Timur"
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
@@ -99,7 +99,7 @@
 
             {{-- Alamat --}}
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1.5">Alamat</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">Alamat</label>
                 <input type="text" name="alamat" value="{{ old('alamat') }}"
                     placeholder="Alamat Admin"
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
@@ -107,7 +107,7 @@
 
             {{-- Jabatan --}}
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1.5">Jabatan</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">Jabatan</label>
                 <input type="text" name="jabatan" value="{{ old('jabatan') }}"
                     placeholder="Jabatan Admin"
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
@@ -115,7 +115,7 @@
 
             {{-- Tim --}}
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1.5">Tim</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">Tim</label>
                 <input type="text" name="tim" value="{{ old('tim') }}"
                     placeholder="Tim Admin"
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
@@ -125,12 +125,12 @@
 
         {{-- Actions --}}
         <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-100">
-            <a href="{{ route('superadmin.admin-data-statistik.index') }}"
+            <a href="{{ route('superadmin.admin-pelayanan.index') }}"
                 class="px-6 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition">
                 Batal
             </a>
             <button type="submit"
-                class="px-8 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition shadow-sm">
+                class="px-8 py-2.5 rounded-xl bg-[#035f9c] hover:bg-[#004b89]     text-white text-sm font-semibold transition shadow-sm">
                 Simpan
             </button>
         </div>

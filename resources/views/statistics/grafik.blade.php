@@ -128,8 +128,18 @@
                                 data-interp-besar="{{ addslashes($first->interpretasi_lebih_besar ?? '') }}"
                                 data-interp-tetap="{{ addslashes($first->interpretasi_tetap ?? '') }}"
                                 data-wilayah-list="{{ htmlspecialchars(json_encode($allWilayah), ENT_QUOTES, 'UTF-8') }}"
-                                data-components="{{ htmlspecialchars(json_encode($first->statisticTitle->components ?? []), ENT_QUOTES, 'UTF-8') }}">
-                                {{ $first->judul_data }}
+data-components="{{ htmlspecialchars(json_encode(
+    $first->statisticTitle->components->map(fn($c) => [
+        'id'                       => $c->id,
+        'nama'                     => $c->nama,
+        'satuan'                   => $c->satuan,
+        'is_sub'                   => (bool)$c->is_sub,
+        'urutan'                   => $c->urutan,
+        'interpretasi_lebih_kecil' => $c->interpretasi_lebih_kecil ?? '',
+        'interpretasi_lebih_besar' => $c->interpretasi_lebih_besar ?? '',
+        'interpretasi_tetap'       => $c->interpretasi_tetap ?? '',
+    ])->values()
+), ENT_QUOTES, 'UTF-8') }}"                                {{ $first->judul_data }}
                             </option>
                         @endforeach
                     </select>
@@ -943,8 +953,8 @@ function buildPairCard(tA, tB, vA, vB, isTotal, allLabels, allVals, komponen, da
     const pct     = vA !== 0 ? ((selisih / Math.abs(vA)) * 100).toFixed(1) : '0.0';
     const tren    = selisih > 0 ? 'naik' : selisih < 0 ? 'turun' : 'tetap';
     const cfg     = {
-        naik:  { color: 'red',   icon: 'ti-trending-up',   label: 'Naik',  sign: '+' },
-        turun: { color: 'green', icon: 'ti-trending-down',  label: 'Turun', sign: ''  },
+        naik:  { color: 'green',   icon: 'ti-trending-up',   label: 'Naik',  sign: '+' },
+        turun: { color: 'red', icon: 'ti-trending-down',  label: 'Turun', sign: ''  },
         tetap: { color: 'gray',  icon: 'ti-minus',          label: 'Tetap', sign: ''  },
     }[tren];
 
@@ -989,36 +999,77 @@ function buildPairCard(tA, tB, vA, vB, isTotal, allLabels, allVals, komponen, da
 
 // ── Generate teks interpretasi ─────────────────────────────────────────────
 function generateInterpretasiTeks(tA, tB, vA, vB, selisih, pct, tren, isTotal, allLabels, komponen, dataset) {
-    const judulData  = currentData.judul   || 'data';
-    const wilayah    = dataset?.wilayah    || 'wilayah ini';
+    const selectedCat  = document.querySelector('.kat-radio:checked')?.value ?? null;
+    const namaKomponen = selectedCat
+        ? (selectedCat.startsWith('· ') ? selectedCat.slice(2) : selectedCat)
+        : (currentData.judul || 'data');
+
+    const satuan     = komponen?.satuan ? ` ${komponen.satuan}` : '';
+    const wilayah    = dataset?.wilayah || 'wilayah ini';
     const absSelisih = Math.abs(selisih).toFixed(2);
     const absPct     = Math.abs(parseFloat(pct)).toFixed(1);
-    const mag        = Math.abs(parseFloat(pct));
-    const skala      = mag < 2 ? 'kecil' : mag < 5 ? 'sedang' : 'besar';
 
+    // ── Satu deklarasi teksAdmin saja ────────────────────────────────────────
     let teksAdmin = '';
-    if (tren === 'tetap')       teksAdmin = komponen?.interpretasi_tetap       || dataset?.interp_tetap || currentData.interpTetap || '';
-    else if (tren === 'naik')   teksAdmin = komponen?.interpretasi_lebih_besar || dataset?.interp_besar || currentData.interpBesar || '';
-    else                        teksAdmin = komponen?.interpretasi_lebih_kecil || dataset?.interp_kecil || currentData.interpKecil || '';
-
     if (tren === 'tetap') {
-        let teks = `Nilai ${judulData} di ${wilayah} tidak berubah antara ${tA} dan ${tB}, tetap di ${vA.toFixed(2)}. `;
-        if (teksAdmin) teks += teksAdmin;
+        teksAdmin = komponen?.interpretasi_tetap
+                 || dataset?.interp_tetap
+                 || currentData.interpTetap
+                 || '';
+    } else if (tren === 'naik') {
+        teksAdmin = komponen?.interpretasi_lebih_besar
+                 || dataset?.interp_besar
+                 || currentData.interpBesar
+                 || '';
+    } else {
+        teksAdmin = komponen?.interpretasi_lebih_kecil
+                 || dataset?.interp_kecil
+                 || currentData.interpKecil
+                 || '';
+    }
+
+    // ── Tren tetap ────────────────────────────────────────────────────────────
+    if (tren === 'tetap') {
+        let teks = `${namaKomponen} ${wilayah} tidak berubah antara tahun ${tA} dan ${tB}, tetap di angka ${vA.toFixed(2)}${satuan}.`;
+        if (teksAdmin) teks += ` ${teksAdmin}`;
         return teks.trim();
     }
 
-    const arah     = tren === 'naik' ? 'meningkat' : 'menurun';
-    const arahkata = tren === 'naik' ? 'Peningkatan' : 'Penurunan';
-    let teks = `Pada periode ${tA}–${tB}, nilai ${judulData} di ${wilayah} ${arah} sebesar ${absSelisih} (${absPct}%), dari ${vA.toFixed(2)} menjadi ${vB.toFixed(2)}. `;
+    // ── Tren naik / turun ─────────────────────────────────────────────────────
+    const arah      = tren === 'naik' ? 'meningkat' : 'menurun';
+    const arahPasif = tren === 'naik' ? 'peningkatan' : 'penurunan';
 
-    if (skala === 'kecil')        teks += `Perubahan ini tergolong kecil dan kondisi relatif stabil. `;
-    else if (skala === 'sedang')  teks += `${arahkata} ini cukup signifikan dan perlu mendapat perhatian. `;
-    else                          teks += `${arahkata} yang cukup besar ini memerlukan perhatian khusus dari pemangku kebijakan. `;
+    let teks = `Pada periode tahun ${tA}–${tB}, ${namaKomponen} di ${wilayah} ${arah} dari ${vA.toFixed(2)}${satuan} menjadi ${vB.toFixed(2)}${satuan}.`;
 
-    if (teksAdmin) teks += teksAdmin + ' ';
+    const selectedKomponen = allComponents.find(
+    c => c.nama === (document.querySelector('.kat-radio:checked')?.value ?? null)
+) || komponen || null;
+
+const interpKomponen = tren === 'naik'
+    ? selectedKomponen?.interpretasi_lebih_besar || ''
+    : tren === 'turun'
+        ? selectedKomponen?.interpretasi_lebih_kecil || ''
+        : selectedKomponen?.interpretasi_tetap || '';
+
+if (interpKomponen) {
+    const hasPlaceholder = /\{(selisih|pct|nilai|tahunA|tahunB)\}/.test(interpKomponen);
+    if (hasPlaceholder) {
+        teks += ` ` + interpKomponen
+            .replace(/\{selisih\}/g, `${absSelisih}${satuan}`)
+            .replace(/\{pct\}/g,     `${absPct}%`)
+            .replace(/\{nilai\}/g,   `${vB.toFixed(2)}${satuan}`)
+            .replace(/\{tahunA\}/g,  tA)
+            .replace(/\{tahunB\}/g,  tB);
+    } else {
+        teks += ` Nilai ${namaKomponen} pada tahun ${tB} sebesar ${vB.toFixed(2)}${satuan} menunjukkan ${arahPasif} sebesar ${absSelisih}${satuan} (${absPct}%) dibandingkan tahun ${tA}.`;
+        teks += ` ${interpKomponen}`;  // ← langsung dari komponen
+    }
+} else {
+    teks += ` Nilai ${namaKomponen} sebesar ${vB.toFixed(2)}${satuan} menunjukkan ${arahPasif} sebesar ${absSelisih}${satuan} (${absPct}%) dibandingkan tahun ${tA}.`;
+}
 
     if (isTotal && allLabels && allLabels.length > 2) {
-        teks += `Secara keseluruhan selama ${allLabels.length} periode (${tA}–${tB}), tren menunjukkan ${tren === 'naik' ? 'kenaikan' : 'penurunan'} kumulatif.`;
+        teks += ` Secara keseluruhan selama ${allLabels.length} periode (${tA}–${tB}), tren ${namaKomponen} di ${wilayah} menunjukkan ${tren === 'naik' ? 'kenaikan' : 'penurunan'} kumulatif.`;
     }
 
     return teks.trim();

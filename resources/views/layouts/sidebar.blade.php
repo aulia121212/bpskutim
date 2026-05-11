@@ -205,8 +205,7 @@
 
         {{-- Logout --}}
         <button type="button"
-            @click="logoutConfirm = true"
-            class="w-full flex items-center py-2.5 rounded-xl transition-all duration-300 text-red-500 hover:bg-red-50"
+@click="$store.sidebar.logoutConfirm = true"            class="w-full flex items-center py-2.5 rounded-xl transition-all duration-300 text-red-500 hover:bg-red-50"
             @mouseenter="showTooltip($event, 'Logout')">
 
             <i class="ti ti-logout text-xl"></i>
@@ -218,10 +217,10 @@
     </div>
 
     {{-- LOGOUT MODAL --}}
-    <div x-show="logoutConfirm"
-         x-transition
-         class="fixed inset-0 z-[99999] flex items-center justify-center">
-
+    <!-- <div x-show="logoutConfirm"
+     x-cloak
+     x-transition
+     class="fixed inset-0 z-[99999] flex items-center justify-center">
         {{-- Overlay --}}
         <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"
              @click="logoutConfirm = false"></div>
@@ -262,7 +261,7 @@
             </div>
 
         </div>
-    </div>
+    </div> -->
 
     <style>
 
@@ -285,6 +284,8 @@
     --border: #e2e8f0;
     --bg: #f0f6ff;
 }
+
+[x-cloak] { display: none !important; }
     .nav-logo-img {
         height: 40px;
         width: auto;

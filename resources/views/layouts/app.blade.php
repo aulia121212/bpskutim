@@ -73,6 +73,7 @@
                 isExpanded: window.innerWidth >= 1280,
                 isMobileOpen: false,
                 isHovered: false,
+                logoutConfirm: false,
 
                 toggleExpanded() {
                     this.isExpanded = !this.isExpanded;
@@ -132,6 +133,43 @@
         </div>
     </div>
     <x-toast />
+
+    <div x-show="$store.sidebar.logoutConfirm"
+         x-cloak
+         x-transition
+         class="fixed inset-0 z-[99999] flex items-center justify-center">
+
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"
+             @click="$store.sidebar.logoutConfirm = false"></div>
+
+        <div
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 scale-90"
+            x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 scale-100"
+            x-transition:leave-end="opacity-0 scale-90"
+            class="relative bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-[90%] max-w-sm p-6 text-center">
+
+            <i class="ti ti-alert-circle text-red-500 text-4xl mb-4"></i>
+            <h2 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Konfirmasi Logout</h2>
+            <p class="text-sm text-gray-500 mb-6">Apakah kamu yakin ingin keluar dari akun?</p>
+
+            <div class="flex justify-center gap-3">
+                <button @click="$store.sidebar.logoutConfirm = false"
+                    class="px-4 py-2 text-sm rounded-xl border hover:bg-gray-100">
+                    Batal
+                </button>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit"
+                        class="px-4 py-2 text-sm rounded-xl bg-red-500 text-white hover:bg-red-600">
+                        Ya, Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 
     @stack('scripts')
 </body>

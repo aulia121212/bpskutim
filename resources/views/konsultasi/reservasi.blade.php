@@ -18,7 +18,7 @@
 
         {{-- Header --}}
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:28px;">
-            <h1 style="font-size:24px; font-weight:800; color:#1a56db;">Formulir Reservasi Konsultasi</h1>
+            <h1 style="font-size:24px; font-weight:600; color:#035f9c;">Formulir Reservasi Konsultasi</h1>
 <a href="{{ url('/konsultasi') }}">                 <i class="ti ti-x"></i>
             </a>
         </div>
@@ -29,7 +29,7 @@
             {{-- Data Petugas --}}
             <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:16px;">
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px;font-weight:700;color:#1e293b;">
-                    <i class="ti ti-user" style="color:#1a56db"></i> Data Petugas :
+                    <i class="ti ti-user" style="color:#035f9c"></i> Data Petugas :
                 </div>
                 <div style="font-size:14px;font-weight:700;color:#1e293b;margin-bottom:2px;">{{ $petugas->nama_lengkap }}</div>
                 <div style="font-size:12px;color:#64748b;margin-bottom:10px;">BPS Kutai Timur</div>
@@ -43,7 +43,7 @@
             {{-- Data Pengguna --}}
             <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:16px;">
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px;font-weight:700;color:#1e293b;">
-                    <i class="ti ti-user-circle" style="color:#1a56db"></i> Data Pengguna :
+                    <i class="ti ti-user-circle" style="color:#035f9c"></i> Data Pengguna :
                 </div>
                 <div style="font-size:14px;font-weight:700;color:#1e293b;margin-bottom:2px;">{{ auth()->user()->name }}</div>
                 <div style="font-size:12px;color:#64748b;margin-bottom:10px;">{{ auth()->user()->no_whatsapp ?? '-' }}</div>
@@ -117,13 +117,38 @@
                 <div style="position:relative;flex:1;">
                     <select name="jenis_konsultasi"
                         style="width:100%;border:1.5px solid #e2e8f0;border-radius:12px;padding:11px 40px 11px 14px;font-size:13px;color:#1e293b;font-family:'Plus Jakarta Sans',sans-serif;outline:none;background:#f8fafc;appearance:none;">
-                        <option value="" disabled selected>online/offline</option>
-                        <option value="online"  {{ old('jenis_konsultasi') == 'online'  ? 'selected' : '' }}>Online</option>
-                        <option value="offline" {{ old('jenis_konsultasi') == 'offline' ? 'selected' : '' }}>Offline</option>
+                        <option value="" disabled selected>Pilih lokasi konsultasi</option>
+                        <option value="online"  {{ old('jenis_konsultasi') == 'online'  ? 'selected' : '' }}>Online (Zoom/ Google Meet)</option>
+                        <option value="offline" {{ old('jenis_konsultasi') == 'offline' ? 'selected' : '' }}>Offline (Kantor BPS Kutai Timur)</option>
                     </select>
                     <i class="ti ti-chevron-down" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:16px;pointer-events:none;"></i>
                 </div>
             </div>
+<!-- 
+            <div class="form-group">
+    <label>Lokasi Konsultasi</label>
+
+    <select name="jenis_konsultasi" id="jenis_konsultasi" required>
+        <option value="">-- Pilih Metode --</option>
+        <option value="online">Online (Zoom / Google Meet)</option>
+        <option value="offline">Offline (Kantor BPS Kutai Timur)</option>
+    </select>
+</div>
+
+{{-- Info Online --}}
+<div id="info_online" class="info-box" style="display: none;">
+    <p>
+        Konsultasi akan dilakukan secara online melalui Zoom atau Google Meet.  
+        Link meeting akan diberikan setelah jadwal konsultasi Anda terkonfirmasi.
+    </p>
+</div>
+
+{{-- Info Offline --}}
+<div id="info_offline" class="info-box" style="display: none;">
+    <p>
+        Konsultasi akan dilakukan secara langsung di Kantor BPS Kutai Timur.
+    </p>
+</div> -->
 
             {{-- Topik Konsultasi --}}
             <div style="display:flex;align-items:flex-start;gap:16px;margin-bottom:28px;">
@@ -134,12 +159,11 @@
             </div>
 
             {{-- Submit --}}
-            <div style="text-align:center;">
-                <button type="submit"
-                    style="background:#1a56db;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;letter-spacing:.05em;padding:13px 48px;border-radius:12px;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(26,86,219,.3);display:inline-flex;align-items:center;gap:8px;transition:all .2s;">
-                    KIRIM <i class="ti ti-send"></i>
-                </button>
-            </div>
+            <div class="btn-wrapper">
+    <button type="submit" class="btn-submit">
+        KIRIM <i class="ti ti-send"></i>
+    </button>
+</div>
         </form>
 
     </div>
@@ -214,5 +238,7 @@ jamInput.addEventListener('input', function () {
     }
 });
 </script>
+
+
 </body>
 </html>

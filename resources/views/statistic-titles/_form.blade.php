@@ -6,23 +6,26 @@
                 Indikator
             </label>
             <select name="indikator_data"
-                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500">
-                <option value="">Pilih Indikator</option>
-                <option value="indikator_ekonomi">Indikator Ekonomi</option>
-                <option value="indikator_ketenagakerjaan">Indikator Kependudukan dan Ketenagakerjaan</option>
-                <option value="indikator_sosial">Indikator Sosial</option>
-                <option value="indikator_pembangunan_manusia">Indikator Pembangunan Manusia</option>
-                <option value="gender">Gender</option>
-            </select>
+    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500"
+    required>
+    
+    <option value="" disabled selected >Pilih indikator...</option>
+
+    <option value="indikator_ekonomi">Indikator Ekonomi</option>
+    <option value="indikator_ketenagakerjaan">Indikator Kependudukan dan Ketenagakerjaan</option>
+    <option value="indikator_sosial">Indikator Sosial</option>
+    <option value="indikator_pembangunan_manusia">Indikator Pembangunan Manusia</option>
+    <option value="gender">Gender</option>
+</select>
         </div>
 
     {{-- Judul Data --}}
     <div>
         <label class="block text-xs font-semibold text-[#035f9c] mb-1">Judul Data <span class="text-red-400">*</span></label>
-        <input type="text" name="judul_data"
-            value="{{ old('judul_data', $title->judul_data ?? '') }}"
-            placeholder="Contoh: Struktur PDRB Menurut Lapangan Usaha (persen)"
-            class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+       <input type="text" name="judul_data"
+    value="{{ old('judul_data') }}"
+    placeholder="Contoh: Struktur PDRB Menurut Lapangan Usaha (persen)"
+    class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
         @error('judul_data')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
     </div>
 
@@ -30,11 +33,11 @@
     <div>
         <label class="block text-xs font-semibold text-[#035f9c] mb-1">
             Judul Kolom Kategori
-            <span class="font-normal text-gray-400 normal-case ml-1">(header kolom pertama tabel, misal: "Lapangan Usaha")</span>
+            <span class="font-normal text-gray-400 normal-case ml-1">(header kolom pertama tabel, misal: "Komponen")</span>
         </label>
         <input type="text" name="judul_kolom"
-            value="{{ old('judul_kolom', $title->judul_kolom ?? '') }}"
-            placeholder="Lapangan Usaha"
+            value="{{ old('judul_kolom') }}"
+            placeholder="Komponen"
             class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
     </div>
 
@@ -79,17 +82,19 @@
                             class="flex-1 bg-transparent focus:outline-none dark:text-gray-300 placeholder-gray-300">
 
                         {{-- Satuan --}}
-                        <input type="text"
-                            :name="'components[' + i + '][satuan]'"
-                            x-model="comp.satuan"
-                            placeholder="satuan..."
-                            class="w-24 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-2 py-1 text-xs text-gray-500 dark:text-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-400 shrink-0"
-                            :title="'Satuan: ' + (comp.satuan || '-')">
-
+                    <template x-if="!comp.is_sub">
+    <input type="text"
+        :name="'components[' + i + '][satuan]'"
+        x-model="comp.satuan"
+        placeholder="satuan..."
+        class="w-24 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-2 py-1 text-xs text-gray-500 dark:text-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-400 shrink-0"
+        :title="'Satuan: ' + (comp.satuan || '-')">
+</template>
                         <input type="hidden" :name="'components[' + i + '][is_sub]'" :value="comp.is_sub ? '1' : '0'">
 
                         {{-- Toggle expand interpretasi --}}
                         <button type="button" @click="comp.showInterp = !comp.showInterp"
+                        x-show="!comp.is_sub"
                             :title="comp.showInterp ? 'Sembunyikan interpretasi' : 'Tambah interpretasi per kategori'"
                             :class="comp.showInterp ? 'text-[#035f9c] bg-[#035f9c]/10' : 'text-gray-300 hover:text-[#035f9c]'"
                             class="w-6 h-6 flex items-center justify-center rounded transition shrink-0">
@@ -97,13 +102,13 @@
                         </button>
 
                         {{-- Toggle sub/utama --}}
-                        <button type="button" @click="comp.is_sub = !comp.is_sub"
+                        <button type="button" @click="comp.is_sub = !comp.is_sub; if(comp.is_sub) comp.showInterp = false"
                             :class="comp.is_sub ? 'text-indigo-400 hover:text-indigo-600' : 'text-gray-300 hover:text-indigo-400'"
                             class="w-6 h-6 flex items-center justify-center rounded transition shrink-0">
                             <i class="ti ti-indent-increase text-xs"></i>
                         </button>
 
-                        <span class="text-gray-300 cursor-grab shrink-0"><i class="ti ti-grip-vertical text-sm"></i></span>
+                        <!-- <span class="text-gray-300 cursor-grab shrink-0"><i class="ti ti-grip-vertical text-sm"></i></span> -->
 
                         <button type="button" @click="removeComponent(i)"
                             class="w-6 h-6 flex items-center justify-center rounded text-gray-300 hover:text-rose-500 transition shrink-0">
@@ -112,7 +117,7 @@
                     </div>
 
                     {{-- Expandable: Interpretasi per kategori (3 kolom) --}}
-                    <div x-show="comp.showInterp" x-collapse
+                    <div x-show="comp.showInterp" && !comp.is_sub" x-collapse   
                         class="border-t px-3 pb-3 pt-2 grid grid-cols-3 gap-3"
                         :class="comp.is_sub
                             ? 'border-indigo-100 dark:border-indigo-800 bg-indigo-50/30'
@@ -191,17 +196,17 @@
                 <label class="block text-xs font-semibold text-green-500 mb-1">
                     <i class="ti ti-trending-down text-xs"></i> Lebih Kecil (Turun)
                 </label>
-                <textarea name="interpretasi_lebih_kecil" rows="3"
-                    placeholder="Penjelasan jika data mengalami penurunan..."
-                    class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 resize-none">{{ old('interpretasi_lebih_kecil', $title->interpretasi_lebih_kecil ?? '') }}</textarea>
-            </div>
+           <textarea name="interpretasi_lebih_kecil" rows="3"
+    placeholder="Penjelasan jika data mengalami penurunan..."
+    class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 resize-none">{{ old('interpretasi_lebih_kecil') }}</textarea>
+                </div>
             <div>
                 <label class="block text-xs font-semibold text-red-400 mb-1">
                     <i class="ti ti-trending-up text-xs"></i> Lebih Besar (Naik)
                 </label>
                 <textarea name="interpretasi_lebih_besar" rows="3"
                     placeholder="Penjelasan jika data mengalami kenaikan..."
-                    class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-red-400 resize-none">{{ old('interpretasi_lebih_besar', $title->interpretasi_lebih_besar ?? '') }}</textarea>
+                    class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-red-400 resize-none">{{ old('interpretasi_lebih_besar') }}</textarea>
             </div>
             <div>
                 <label class="block text-xs font-semibold text-gray-500 mb-1">
@@ -209,7 +214,7 @@
                 </label>
                 <textarea name="interpretasi_tetap" rows="3"
                     placeholder="Penjelasan jika data tidak berubah..."
-                    class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 resize-none">{{ old('interpretasi_tetap', $title->interpretasi_tetap ?? '') }}</textarea>
+                    class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 resize-none">{{ old('interpretasi_tetap') }}</textarea>
             </div>
         </div>
     </div>

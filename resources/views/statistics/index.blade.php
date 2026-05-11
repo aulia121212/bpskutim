@@ -20,7 +20,7 @@
                 Preview Grafik &amp; Tabel
             </a>
             <a href="{{ route('statistics.create') }}"
-               class="inline-flex items-center gap-2 bg-[#035f9c] text-white hover:bg-white hover:text-[#035f9c] text-sm font-semibold px-4 py-2 rounded-xl transition">
+               class="inline-flex items-center gap-2 border border-[#035f9c] bg-[#035f9c] text-white hover:bg-white hover:text-[#035f9c] text-sm font-semibold px-4 py-2 rounded-xl transition">
                 <i class="ti ti-plus text-base"></i>
                 TAMBAH DATA STATISTIK
             </a>

@@ -392,13 +392,13 @@ function buildTrenMiniCard(labels, values, dataset, komponen) {
     const tren = sel > 0 ? "naik" : sel < 0 ? "turun" : "tetap";
     const cfg = {
         naik: {
-            color: "red",
+            color: "green",
             icon: "ti-trending-up",
             label: "Naik",
             sign: "+",
         },
         turun: {
-            color: "green",
+            color: "red",
             icon: "ti-trending-down",
             label: "Turun",
             sign: "",
@@ -426,13 +426,13 @@ function renderTrenCard(labels, values, dataset, komponen) {
     const tren = sel > 0 ? "naik" : sel < 0 ? "turun" : "tetap";
     const cfg = {
         naik: {
-            color: "red",
+            color: "green",
             icon: "ti-trending-up",
             label: "Naik",
             sign: "+",
         },
         turun: {
-            color: "green",
+            color: "red",
             icon: "ti-trending-down",
             label: "Turun",
             sign: "",
@@ -440,21 +440,26 @@ function renderTrenCard(labels, values, dataset, komponen) {
         tetap: { color: "gray", icon: "ti-minus", label: "Tetap", sign: "" },
     }[tren];
 
-    const interpKecil =
-        komponen?.interpretasi_lebih_kecil ||
-        dataset?.interp_kecil ||
-        currentData.interpKecil ||
-        "";
-    const interpBesar =
-        komponen?.interpretasi_lebih_besar ||
-        dataset?.interp_besar ||
-        currentData.interpBesar ||
-        "";
-    const interpTetap =
-        komponen?.interpretasi_tetap ||
-        dataset?.interp_tetap ||
-        currentData.interpTetap ||
-        "";
+    // const interpKecil =
+    //     komponen?.interpretasi_lebih_kecil ||
+    //     dataset?.interp_kecil ||
+    //     currentData.interpKecil ||
+    //     "";
+    // const interpBesar =
+    //     komponen?.interpretasi_lebih_besar ||
+    //     dataset?.interp_besar ||
+    //     currentData.interpBesar ||
+    //     "";
+    // const interpTetap =
+    //     komponen?.interpretasi_tetap ||
+    //     dataset?.interp_tetap ||
+    //     currentData.interpTetap ||
+    //     "";
+
+    const interpKecil = currentData.interpKecil || dataset?.interp_kecil || "";
+    const interpBesar = currentData.interpBesar || dataset?.interp_besar || "";
+    const interpTetap = currentData.interpTetap || dataset?.interp_tetap || "";
+
     const teksMap = {
         naik: interpBesar || "Data mengalami kenaikan.",
         turun: interpKecil || "Data mengalami penurunan.",
@@ -747,13 +752,13 @@ function renderInterpretasiTabel(datasets, selectedCat) {
             const tren = sel > 0 ? "naik" : sel < 0 ? "turun" : "tetap";
             const cfg = {
                 naik: {
-                    color: "red",
+                    color: "green",
                     icon: "ti-trending-up",
                     label: "Naik",
                     sign: "+",
                 },
                 turun: {
-                    color: "green",
+                    color: "red",
                     icon: "ti-trending-down",
                     label: "Turun",
                     sign: "",
@@ -1040,13 +1045,13 @@ function buildPairCard(
     const tren = selisih > 0 ? "naik" : selisih < 0 ? "turun" : "tetap";
     const cfg = {
         naik: {
-            color: "red",
+            color: "green",
             icon: "ti-trending-up",
             label: "Naik",
             sign: "+",
         },
         turun: {
-            color: "green",
+            color: "red",
             icon: "ti-trending-down",
             label: "Turun",
             sign: "",
@@ -1106,50 +1111,95 @@ function generateInterpretasiTeks(
     komponen,
     dataset,
 ) {
-    const judul = currentData.judul || "data";
+    const selectedCat =
+        document.querySelector(".kat-radio:checked")?.value ?? null;
+    const namaKomponen = selectedCat
+        ? selectedCat.startsWith("· ")
+            ? selectedCat.slice(2)
+            : selectedCat
+        : currentData.judul || "data";
+
+    const satuan = komponen?.satuan ? ` ${komponen.satuan}` : "";
     const wilayah = dataset?.wilayah || "wilayah ini";
-    const absSel = Math.abs(selisih).toFixed(2);
+    const absSelisih = Math.abs(selisih).toFixed(2);
     const absPct = Math.abs(parseFloat(pct)).toFixed(1);
-    const mag = Math.abs(parseFloat(pct));
-    const skala = mag < 2 ? "kecil" : mag < 5 ? "sedang" : "besar";
+
+    // ── Satu deklarasi teksAdmin saja ────────────────────────────────────────
     let teksAdmin = "";
-    if (tren === "tetap")
+    if (tren === "tetap") {
         teksAdmin =
             komponen?.interpretasi_tetap ||
             dataset?.interp_tetap ||
             currentData.interpTetap ||
             "";
-    else if (tren === "naik")
+    } else if (tren === "naik") {
         teksAdmin =
             komponen?.interpretasi_lebih_besar ||
             dataset?.interp_besar ||
             currentData.interpBesar ||
             "";
-    else
+    } else {
         teksAdmin =
             komponen?.interpretasi_lebih_kecil ||
             dataset?.interp_kecil ||
             currentData.interpKecil ||
             "";
+    }
 
-    if (tren === "tetap")
-        return (
-            `Nilai ${judul} di ${wilayah} tidak berubah antara ${tA} dan ${tB}, tetap di ${vA.toFixed(2)}. ` +
-            (teksAdmin || "")
-        ).trim();
+    // ── Tren tetap ────────────────────────────────────────────────────────────
+    if (tren === "tetap") {
+        let teks = `${namaKomponen} ${wilayah} tidak berubah antara tahun ${tA} dan ${tB}, tetap di angka ${vA.toFixed(2)}${satuan}.`;
+        if (teksAdmin) teks += ` ${teksAdmin}`;
+        return teks.trim();
+    }
 
+    // ── Tren naik / turun ─────────────────────────────────────────────────────
     const arah = tren === "naik" ? "meningkat" : "menurun";
-    const arahkata = tren === "naik" ? "Peningkatan" : "Penurunan";
-    let teks = `Pada periode ${tA}–${tB}, nilai ${judul} di ${wilayah} ${arah} sebesar ${absSel} (${absPct}%), dari ${vA.toFixed(2)} menjadi ${vB.toFixed(2)}. `;
-    if (skala === "kecil")
-        teks += "Perubahan ini tergolong kecil dan kondisi relatif stabil. ";
-    else if (skala === "sedang")
-        teks += `${arahkata} ini cukup signifikan dan perlu mendapat perhatian. `;
-    else
-        teks += `${arahkata} yang cukup besar ini memerlukan perhatian khusus dari pemangku kebijakan. `;
-    if (teksAdmin) teks += teksAdmin + " ";
-    if (isTotal && allLabels?.length > 2)
-        teks += `Secara keseluruhan selama ${allLabels.length} periode (${tA}–${tB}), tren menunjukkan ${tren === "naik" ? "kenaikan" : "penurunan"} kumulatif.`;
+    const arahPasif = tren === "naik" ? "peningkatan" : "penurunan";
+
+    let teks = `Pada periode tahun ${tA}–${tB}, ${namaKomponen} di ${wilayah} ${arah} dari ${vA.toFixed(2)}${satuan} menjadi ${vB.toFixed(2)}${satuan}.`;
+
+    const selectedKomponen =
+        allComponents.find(
+            (c) =>
+                c.nama ===
+                (document.querySelector(".kat-radio:checked")?.value ?? null),
+        ) ||
+        komponen ||
+        null;
+
+    const interpKomponen =
+        tren === "naik"
+            ? selectedKomponen?.interpretasi_lebih_besar || ""
+            : tren === "turun"
+              ? selectedKomponen?.interpretasi_lebih_kecil || ""
+              : selectedKomponen?.interpretasi_tetap || "";
+
+    if (interpKomponen) {
+        const hasPlaceholder = /\{(selisih|pct|nilai|tahunA|tahunB)\}/.test(
+            interpKomponen,
+        );
+        if (hasPlaceholder) {
+            teks +=
+                ` ` +
+                interpKomponen
+                    .replace(/\{selisih\}/g, `${absSelisih}${satuan}`)
+                    .replace(/\{pct\}/g, `${absPct}%`)
+                    .replace(/\{nilai\}/g, `${vB.toFixed(2)}${satuan}`)
+                    .replace(/\{tahunA\}/g, tA)
+                    .replace(/\{tahunB\}/g, tB);
+        } else {
+            teks += ` Nilai ${namaKomponen} pada tahun ${tB} sebesar ${vB.toFixed(2)}${satuan} menunjukkan ${arahPasif} sebesar ${absSelisih}${satuan} (${absPct}%) dibandingkan tahun ${tA}.`;
+            teks += ` ${interpKomponen}`; // ← langsung dari komponen
+        }
+    } else {
+        teks += ` Nilai ${namaKomponen} sebesar ${vB.toFixed(2)}${satuan} menunjukkan ${arahPasif} sebesar ${absSelisih}${satuan} (${absPct}%) dibandingkan tahun ${tA}.`;
+    }
+
+    if (isTotal && allLabels && allLabels.length > 2) {
+        teks += ` Secara keseluruhan selama ${allLabels.length} periode (${tA}–${tB}), tren ${namaKomponen} di ${wilayah} menunjukkan ${tren === "naik" ? "kenaikan" : "penurunan"} kumulatif.`;
+    }
+
     return teks.trim();
 }
 

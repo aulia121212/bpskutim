@@ -36,6 +36,16 @@ body {
 /* ════════════════════════════════════════
    HERO — biru gradient + ilustrasi kiri
    ════════════════════════════════════════ */
+
+.info-box {
+    margin-top: 10px;
+    padding: 12px;
+    background: #f0f7ff;
+    border-left: 4px solid #3b82f6;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #1e3a8a;
+}
 .hero {
     padding-top: 200px;
     margin-top: 72px;
@@ -343,7 +353,21 @@ body {
 
 .cara-section .section-title {
     font-family: "Montserrat", sans-serif;
-    color: #1f6e8c;
+    color: var(--biru);
+    font-size: 38px;
+    margin-bottom: 10px;
+}
+
+.topik-section .section-title {
+    font-family: "Montserrat", sans-serif;
+    color: var(--biru);
+    font-size: 38px;
+    margin-bottom: 10px;
+}
+
+.reservasi-section .section-title {
+    font-family: "Montserrat", sans-serif;
+    color: var(--biru);
     font-size: 38px;
     margin-bottom: 10px;
 }
@@ -498,10 +522,11 @@ body {
 .reservasi-section {
     padding: 80px;
     background: var(--bg);
+    /* text-align: center; */
 }
 .reservasi-header {
     display: flex;
-    align-items: flex-start;
+    text-align: center;
     justify-content: space-between;
     gap: 16px;
     margin-bottom: 32px;
@@ -562,7 +587,7 @@ body {
 }
 .petugas-role {
     font-size: 12px;
-    color: var(--blue);
+    color: var(--biru);
     font-weight: 600;
 }
 .petugas-tags {
@@ -573,7 +598,7 @@ body {
 }
 .petugas-tag {
     background: var(--blue-light);
-    color: var(--blue);
+    color: var(--biru);
     font-size: 11px;
     font-weight: 600;
     padding: 4px 10px;
@@ -581,7 +606,7 @@ body {
 }
 .btn-reservasi {
     width: 100%;
-    background: var(--green);
+    background: var(--biru);
     color: #fff;
     border: none;
     border-radius: 10px;
@@ -596,7 +621,9 @@ body {
     font-family: "Plus Jakarta Sans", sans-serif;
 }
 .btn-reservasi:hover {
-    background: var(--blue-dark);
+    background: var(--putih);
+    color: var(--biru);
+    border: 2px solid var(--biru);
 }
 
 /* Filter empty state */
@@ -639,10 +666,12 @@ body {
 .topik-section {
     padding: 80px;
     background: #fff;
+    /* text-align: center; */
 }
 .topik-header {
     display: flex;
-    align-items: flex-start;
+    text-align: center;
+    flex-direction: column;
     justify-content: space-between;
     gap: 16px;
     margin-bottom: 36px;
@@ -674,7 +703,7 @@ body {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.13);
 }
 .topik-item.active .topik-icon {
-    background: var(--blue);
+    background: var(--biru);
     box-shadow: 0 8px 24px rgba(26, 86, 219, 0.4);
 }
 .topik-item.active .topik-icon img {
@@ -742,6 +771,47 @@ body {
     background: #fecaca;
 }
 
+.btn-wrapper {
+    text-align: center;
+}
+
+.btn-submit {
+    background: #035f9c;
+    color: #fff;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    padding: 13px 48px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    box-shadow: 0 4px 16px rgba(0, 60, 99, 0.3);
+    transition: all 0.25s ease;
+}
+
+/* Hover effect */
+.btn-submit:hover {
+    background: #005a94;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 60, 99, 0.4);
+}
+
+/* Klik effect */
+.btn-submit:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(0, 60, 99, 0.3);
+}
+
+/* Icon biar lebih balance */
+.btn-submit i {
+    font-size: 16px;
+}
 /* ── RESPONSIVE ── */
 @media (max-width: 1024px) {
     .hero,
