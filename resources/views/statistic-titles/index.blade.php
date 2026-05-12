@@ -58,7 +58,7 @@
                             <div class="flex flex-wrap gap-1">
                                 @foreach($title->components->take(3) as $comp)
                                     <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-[10px] font-semibold
-                                        {{ $comp->is_sub ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20' : 'bg-gray-100 text-gray-600 dark:bg-gray-800' }}">
+                                        {{ $comp->is_sub ? 'bg-indigo-50 text-[#035f9c] dark:bg-indigo-900/20' : 'bg-gray-100 text-gray-600 dark:bg-gray-800' }}">
                                         {{ $comp->is_sub ? '· ' : '' }}{{ Str::limit($comp->nama, 18) }}
                                     </span>
                                 @endforeach

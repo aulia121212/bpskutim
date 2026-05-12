@@ -19,12 +19,12 @@
         <table class="w-full text-sm">
             <thead>
                 <tr class="border-b border-gray-100">
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">No</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Nama Lengkap</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Instansi</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Jabatan</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Bidang Keahlian</th>
-                    <th class="text-left px-6 py-4 font-semibold text-blue-600">Aksi</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">No</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Nama Lengkap</th>
+                    <!-- <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Instansi</th> -->
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Jabatan</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Bidang Keahlian</th>
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,13 +32,13 @@
                 <tr class="border-b border-gray-50 hover:bg-gray-50 transition">
                     <td class="px-6 py-4 text-gray-600">{{ $i + 1 }}.</td>
                     <td class="px-6 py-4 text-gray-700">{{ $p->nama_lengkap }}</td>
-                    <td class="px-6 py-4 text-gray-700">BPS Kutai Timur</td>
+                    <!-- <td class="px-6 py-4 text-gray-700">BPS Kutai Timur</td> -->
                     <td class="px-6 py-4 text-gray-700">{{ $p->jabatan }}</td>
                     <td class="px-6 py-4 text-gray-700">
                         @php $bidang = is_array($p->bidang_keahlian) ? $p->bidang_keahlian : json_decode($p->bidang_keahlian, true); @endphp
                         <div class="flex flex-wrap gap-1">
                             @foreach(array_slice($bidang ?? [], 0, 2) as $b)
-                            <span class="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">{{ $b }}</span>
+                            <span class="text-xs bg-blue-50 text-[#035f9c] px-2 py-0.5 rounded-full">{{ $b }}</span>
                             @endforeach
                             @if(count($bidang ?? []) > 2)
                             <span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">+{{ count($bidang) - 2 }}</span>
@@ -55,7 +55,7 @@
                                 <button class="p-1.5 text-gray-400 hover:text-red-500 transition"><i class="ti ti-trash"></i></button>
                             </form>
                             <a href="{{ route('pelayanan.petugas.show', $p->id) }}"
-                                class="inline-flex items-center gap-1 border border-blue-300 text-blue-600 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 transition">
+                                class="inline-flex items-center gap-1 border border-[#035f9c] text-[#035f9c] text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-[#035f9c] hover:text-white transition">
                                 Detail <i class="ti ti-chevrons-right text-sm"></i>
                             </a>
                         </div>

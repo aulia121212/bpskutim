@@ -1,7 +1,3 @@
-// public/js/show_data.js
-// Logika identik dengan grafik_blade.php
-
-// ── STATE ─────────────────────────────────────────────────────────────────
 let chartInstance = null;
 let currentData = {};
 let wilayahList = [];
@@ -9,12 +5,54 @@ let allComponents = [];
 let currentTab = "grafik";
 
 const COLORS = [
-    { border: "#2563eb", bg: "rgba(37,99,235,0.10)" },
-    { border: "#dc2626", bg: "rgba(220,38,38,0.10)" },
-    { border: "#16a34a", bg: "rgba(22,163,74,0.10)" },
-    { border: "#d97706", bg: "rgba(217,119,6,0.10)" },
-    { border: "#7c3aed", bg: "rgba(124,58,237,0.10)" },
+    { border: "#2563eb", bg: "rgba(37,99,235,0.10)" }, // Biru
+    { border: "#dc2626", bg: "rgba(220,38,38,0.10)" }, // Merah
+    { border: "#16a34a", bg: "rgba(22,163,74,0.10)" }, // Hijau
+    { border: "#d97706", bg: "rgba(217,119,6,0.10)" }, // Orange
+    { border: "#7c3aed", bg: "rgba(124,58,237,0.10)" }, // Ungu
+    { border: "#0891b2", bg: "rgba(8,145,178,0.10)" }, // Cyan
+    { border: "#db2777", bg: "rgba(219,39,119,0.10)" }, // Pink
+    { border: "#65a30d", bg: "rgba(101,163,13,0.10)" }, // Lime
+    { border: "#ea580c", bg: "rgba(234,88,12,0.10)" }, // Dark Orange
+    { border: "#0f766e", bg: "rgba(15,118,110,0.10)" }, // Teal
+    { border: "#4f46e5", bg: "rgba(79,70,229,0.10)" }, // Indigo
+    { border: "#a21caf", bg: "rgba(162,28,175,0.10)" }, // Fuchsia
 ];
+
+// const container = document.getElementById("filter-wilayah");
+
+const wilayahOrder = [
+    "Paser",
+    "Kutai Barat",
+    "Kutai Kartanegara",
+    "Kutai Timur",
+    "Berau",
+    "Penajam Paser Utara",
+    "Mahakam Ulu",
+    "Balikpapan",
+    "Samarinda",
+    "Bontang",
+    "Kalimantan Timur",
+    "Indonesia",
+];
+
+// data.sort((a, b) => {
+//     return (
+//         wilayahOrder.indexOf(a.wilayah_data) -
+//         wilayahOrder.indexOf(b.wilayah_data)
+//     );
+// });
+
+// container.innerHTML = data
+//     .map(
+//         (item) => `
+//     <label class="flex items-center gap-2">
+//         <input type="checkbox" value="${item.wilayah_data}">
+//         <span>${item.wilayah_data}</span>
+//     </label>
+// `,
+//     )
+//     .join("");
 
 // ── INIT ──────────────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", function () {
@@ -28,17 +66,24 @@ document.addEventListener("DOMContentLoaded", function () {
         interpTetap: cfg.interp?.tetap || "",
     };
 
-    wilayahList = (cfg.wilayahList || []).map((w) => ({
-        ...w,
-        interp_kecil: w.interp_kecil || cfg.interp?.kecil || "",
-        interp_besar: w.interp_besar || cfg.interp?.besar || "",
-        interp_tetap: w.interp_tetap || cfg.interp?.tetap || "",
-        values: (w.values || []).map((v) => ({
-            ...v,
-            x_label: v.x_label || null,
-            y_label: v.y_label || (v.year ? String(v.year) : null),
-        })),
-    }));
+    wilayahList = (cfg.wilayahList || [])
+        .map((w) => ({
+            ...w,
+            interp_kecil: w.interp_kecil || cfg.interp?.kecil || "",
+            interp_besar: w.interp_besar || cfg.interp?.besar || "",
+            interp_tetap: w.interp_tetap || cfg.interp?.tetap || "",
+            values: (w.values || []).map((v) => ({
+                ...v,
+                x_label: v.x_label || null,
+                y_label: v.y_label || (v.year ? String(v.year) : null),
+            })),
+        }))
+        .sort((a, b) => {
+            return (
+                wilayahOrder.indexOf(a.wilayah) -
+                wilayahOrder.indexOf(b.wilayah)
+            );
+        });
 
     allComponents = cfg.components || [];
 
@@ -59,9 +104,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Hanya auto-render jika TIDAK ada komponen (data tanpa kategori)
     // Jika ada komponen, tunggu user pilih dulu → onKategoriChange() akan call applyFilters()
     const mainComponents = allComponents.filter((c) => !c.is_sub);
-    if (mainComponents.length === 0) {
-        applyFilters();
-    }
+    // if (mainComponents.length === 0) {
+    //     applyFilters();
+    // }
 });
 
 // ── TAB SWITCH ────────────────────────────────────────────────────────────
@@ -104,11 +149,25 @@ function buildWilayahFilter() {
     div.innerHTML = wilayahList
         .map((w, wi) => {
             const color = COLORS[wi % COLORS.length].border;
-            return `<label class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
-            <input type="checkbox" value="${escH(w.wilayah)}" checked class="wilayah-check rounded accent-blue-600" onchange="applyFilters()">
-            <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:${color}"></span>
-            ${escH(w.wilayah)}
-        </label>`;
+
+            return `
+            <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer hover:text-[#035f9c] transition">
+                
+                <input 
+                    type="checkbox"
+                    value="${escH(w.wilayah)}"
+                    class="wilayah-check rounded accent-[#035f9c]"
+                    onchange="applyFilters()"
+                >
+
+                <span 
+                    class="w-2.5 h-2.5 rounded-full shrink-0"
+                    style="background:${color}">
+                </span>
+
+                <span>${escH(w.wilayah)}</span>
+            </label>
+            `;
         })
         .join("");
 }
@@ -128,7 +187,7 @@ function buildKategoriFilter() {
                 .map((c) => {
                     const label = c.nama.replace(/^· /, "");
                     return `<label class="flex items-center gap-2 text-xs cursor-pointer hover:text-blue-600 transition text-gray-600 font-medium">
-                    <input type="radio" name="kat_radio" value="${escH(c.nama)}" class="kat-radio shrink-0 accent-blue-600" onchange="onKategoriChange()">
+                    <input type="radio" name="kat_radio" value="${escH(c.nama)}" class="kat-radio shrink-0 accent-[#035f9c]" onchange="onKategoriChange()">
                     <span class="truncate" title="${escH(label)}">${escH(label)}</span>
                 </label>`;
                 })
@@ -204,14 +263,41 @@ function applyFilters() {
 
     const selectedCat =
         document.querySelector(".kat-radio:checked")?.value ?? null;
+
     const checkedYears = [
         ...document.querySelectorAll(".tahun-check:checked"),
     ].map((c) => c.value);
+
     const checkedWilayah = [
         ...document.querySelectorAll(".wilayah-check:checked"),
     ].map((c) => c.value);
 
+    // ── BELUM ADA WILAYAH DIPILIH ─────────────────────
+    if (!checkedWilayah.length) {
+        document.getElementById("view-grafik")?.classList.add("hidden");
+        document.getElementById("view-tabel")?.classList.add("hidden");
+        document
+            .getElementById("interpretasi-section")
+            ?.classList.add("hidden");
+        return;
+    }
+
+    // ── BELUM ADA KOMPONEN DIPILIH (jika ada komponen) ──  ← TAMBAHKAN INI
+    const mainComponents = allComponents.filter((c) => !c.is_sub);
+    if (mainComponents.length > 0 && !selectedCat) {
+        document.getElementById("view-grafik")?.classList.add("hidden");
+        document.getElementById("view-tabel")?.classList.add("hidden");
+        document
+            .getElementById("interpretasi-section")
+            ?.classList.add("hidden");
+        return;
+    }
+
+    // ── TAMPILKAN VIEW SESUAI TAB ────────────────────
+    _applyTabVisibility(currentTab);
+
     const datasets = [];
+
     wilayahList.forEach((w, wi) => {
         if (!checkedWilayah.includes(w.wilayah)) return;
 
@@ -232,6 +318,7 @@ function applyFilters() {
         if (!rows.length) return;
 
         const color = COLORS[wi % COLORS.length];
+
         datasets.push({
             wilayah: w.wilayah,
             updated: w.updated || "",
@@ -1113,6 +1200,33 @@ function generateInterpretasiTeks(
 ) {
     const selectedCat =
         document.querySelector(".kat-radio:checked")?.value ?? null;
+    const mainComponents = allComponents.filter((c) => !c.is_sub);
+
+    // Jika ada kategori tapi belum dipilih,
+    // jangan tampilkan grafik/tabel/interprestasi
+    if (mainComponents.length > 0 && !selectedCat) {
+        document.getElementById("view-grafik")?.classList.add("hidden");
+        document.getElementById("view-tabel")?.classList.add("hidden");
+
+        // Hide interpretasi
+        document
+            .getElementById("interpretasi-section")
+            ?.classList.add("hidden");
+
+        // Reset isi interpretasi
+        document.getElementById("interpretasi-pairs").innerHTML = "";
+        document.getElementById("interpretasi-wilayah").innerHTML = "";
+        document.getElementById("interpretasi-tabel-komponen").innerHTML = "";
+
+        document.getElementById("tren-card")?.classList.add("hidden");
+        document.getElementById("interpretasi-card")?.classList.add("hidden");
+        document
+            .getElementById("interpretasi-wilayah")
+            ?.classList.add("hidden");
+
+        return;
+    }
+
     const namaKomponen = selectedCat
         ? selectedCat.startsWith("· ")
             ? selectedCat.slice(2)

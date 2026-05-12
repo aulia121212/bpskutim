@@ -33,11 +33,11 @@
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
 
-            <div>
+            <!-- <div>
     <label class="block text-sm font-semibold text-gray-600 mb-1">Instansi</label>
     <input type="text" name="instansi" value="{{ old('instansi') }}" placeholder="Instansi Petugas"
         class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-</div>
+</div> -->
 
             {{-- Jabatan --}}
             <div>

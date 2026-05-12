@@ -124,12 +124,28 @@ Route::post('/konsultasi/reservasi/{id}',        [App\Http\Controllers\Konsultas
 Route::prefix('pelayanan')->name('pelayanan.')->group(function () {
     Route::get('/', fn() => view('pelayanan.index'))->name('index');
 
-    Route::get('/petugas',           [PelayananController::class, 'petugas'])->name('petugas.index');
-    Route::get('/petugas/create',    [PelayananController::class, 'petugasCreate'])->name('petugas.create');
-    Route::post('/petugas',          [PelayananController::class, 'petugasStore'])->name('petugas.store');
-    Route::delete('/petugas/{id}',   [PelayananController::class, 'petugasDestroy'])->name('petugas.destroy');
-    Route::get('/petugas/{id}',      [PelayananController::class, 'petugasShow'])->name('petugas.show');
-    Route::get('/petugas/{id}/edit', [PelayananController::class, 'petugasEdit'])->name('petugas.edit');
+     Route::get('/petugas', [PelayananController::class, 'petugas'])
+        ->name('petugas.index');
+
+    Route::get('/petugas/create', [PelayananController::class, 'petugasCreate'])
+        ->name('petugas.create');
+
+    Route::post('/petugas', [PelayananController::class, 'petugasStore'])
+        ->name('petugas.store');
+
+    Route::get('/petugas/{id}', [PelayananController::class, 'petugasShow'])
+        ->name('petugas.show');
+
+    Route::get('/petugas/{id}/edit', [PelayananController::class, 'petugasEdit'])
+        ->name('petugas.edit');
+
+    Route::put('/petugas/{id}', [PelayananController::class, 'petugasUpdate'])
+        ->name('petugas.update');
+
+    Route::delete('/petugas/{id}', [PelayananController::class, 'petugasDestroy'])
+        ->name('petugas.destroy');
+
+    
 
     Route::get('/jadwal',  [PelayananController::class, 'jadwal'])->name('jadwal.index');
     Route::post('/jadwal', [PelayananController::class, 'jadwalStore'])->name('jadwal.store');

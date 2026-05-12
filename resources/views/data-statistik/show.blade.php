@@ -33,7 +33,7 @@
     {{-- Tab bar — identik grafik_blade --}}
     <div class="flex gap-2 mb-6">
         <button id="tab-grafik" onclick="switchTab('grafik')"
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition bg-blue-600 text-white">
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition bg-[#035f9c] text-white">
             <i class="ti ti-chart-line"></i> Grafik
         </button>
         <button id="tab-tabel" onclick="switchTab('tabel')"
@@ -66,7 +66,7 @@
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-sm font-semibold text-gray-700">Data Tabel</h3>
                         <button onclick="downloadTable()"
-                            class="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition">
+                            class="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-[#035f9c] bg-blue-50 hover:bg-blue-100 rounded-lg transition">
                             <i class="ti ti-download"></i> Download CSV
                         </button>
                     </div>
@@ -126,7 +126,7 @@
 
             {{-- Wilayah --}}
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-2">Wilayah data</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-2">Wilayah data</label>
                 <div id="filter-wilayah" class="space-y-2">
                     <p class="text-xs text-gray-400">Memuat...</p>
                 </div>
@@ -134,7 +134,7 @@
 
             {{-- Komponen — hanya grafik --}}
             <div id="filter-kategori-wrap">
-                <label class="block text-sm font-semibold text-blue-500 mb-2">Komponen / Kategori</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-2">Komponen / Kategori</label>
                 <div id="filter-kategori" class="space-y-1.5">
                     <p class="text-xs text-gray-400">Memuat...</p>
                 </div>
@@ -142,7 +142,7 @@
 
             {{-- Tahun --}}
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-2">Tahun data</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-2">Tahun data</label>
                 <div id="filter-tahun" class="space-y-1.5">
                     <p class="text-xs text-gray-400">Pilih kategori dulu</p>
                 </div>

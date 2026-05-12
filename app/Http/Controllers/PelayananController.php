@@ -5,7 +5,8 @@ use App\Models\User;
 use App\Models\ReservasiKonsultasi;
 use App\Models\RiwayatKonsultasi;
 use Carbon\Carbon;
-
+use App\Models\Petugas;
+use Illuminate\Support\Facades\File;
 
 
 use Illuminate\Http\Request;
@@ -40,7 +41,7 @@ public function petugasStore(Request $request) {
     \App\Models\Petugas::create([
         'nama_lengkap'    => $request->nama_lengkap,
         'nomor_wa'        => $request->nomor_wa,
-        'instansi'        => $request->instansi,
+        // 'instansi'        => $request->instansi,
         'jabatan'         => $request->jabatan,
         'bidang_keahlian' => $request->bidang_keahlian,
         'foto'            => $foto,
@@ -48,6 +49,64 @@ public function petugasStore(Request $request) {
 
     return redirect()->route('pelayanan.petugas.index')->with('success', 'Petugas berhasil ditambahkan.');
 }
+
+public function petugasEdit($id)
+{
+    $petugas = Petugas::findOrFail($id);
+
+    return view('pelayanan.petugas.edit', compact('petugas'));
+}
+
+ public function petugasUpdate(Request $request, $id)
+{
+    $petugas = Petugas::findOrFail($id);
+
+    $request->validate([
+        'nama_lengkap'    => 'required|string|max:255',
+        'nomor_wa'        => 'nullable|digits_between:1,13',
+        // 'instansi'        => 'nullable|string|max:255',
+        'jabatan'         => 'required|string|max:255',
+        'bidang_keahlian' => 'required|array|min:1',
+        'foto'            => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+    ]);
+
+    // upload foto baru
+    if ($request->hasFile('foto')) {
+
+        // hapus foto lama
+        if ($petugas->foto && File::exists(public_path($petugas->foto))) {
+            File::delete(public_path($petugas->foto));
+        }
+
+        $file = $request->file('foto');
+        $filename = time() . '_' . $file->getClientOriginalName();
+
+        $file->move(public_path('uploads/petugas'), $filename);
+
+        $petugas->foto = 'uploads/petugas/' . $filename;
+    }
+
+    // update data
+    $petugas->nama_lengkap = $request->nama_lengkap;
+    $petugas->nomor_wa = $request->nomor_wa;
+    // $petugas->instansi = $request->instansi;
+    $petugas->jabatan = $request->jabatan;
+    $petugas->bidang_keahlian = $request->bidang_keahlian;
+
+    $petugas->save();
+
+    return redirect()
+        ->route('pelayanan.petugas.index')
+        ->with('success', 'Petugas berhasil diperbarui.');
+}
+
+public function petugasShow($id)
+{
+    $petugas = Petugas::findOrFail($id);
+
+    return view('pelayanan.petugas.show', compact('petugas'));
+}
+
 public function petugasDestroy($id) {
     \App\Models\Petugas::findOrFail($id)->delete();
     return redirect()->route('pelayanan.petugas.index')->with('success', 'Petugas berhasil dihapus.');

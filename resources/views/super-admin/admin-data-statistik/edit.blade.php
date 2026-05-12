@@ -77,7 +77,7 @@
                     {{-- Info --}}
                     <div>
                         <h2 class="text-lg font-bold text-gray-800 dark:text-white">
-                            {{ $admin->name }}
+                            {{ $admin->nama_lengkap }}
                         </h2>
 
                         <p class="text-sm text-gray-500 dark:text-gray-400">
@@ -99,8 +99,8 @@
                     </label>
 
                     <input type="text"
-                        name="name"
-                        value="{{ old('name', $admin->name) }}"
+                        name="nama_lengkap"
+                        value="{{ old('nama_lengkap', $admin->nama_lengkap) }}"
                         placeholder="Masukkan nama lengkap"
                         class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
                 </div>
