@@ -10,6 +10,7 @@ class StatisticTitleComponent extends Model
         'statistic_title_id',
         'nama',
         'satuan',
+        'definisi',
         'is_sub',
         'urutan',
         'interpretasi_lebih_kecil',  

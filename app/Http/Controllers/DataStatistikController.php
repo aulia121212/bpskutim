@@ -16,10 +16,7 @@ class DataStatistikController extends Controller
         'gender'                        => 'Gender',
     ];
 
-    // =========================================================
-    // INDEX → pakai logic dari HOME (chart + grouping)
-    // =========================================================
-    public function index()
+        public function index()
 {
     $rawStatistics = Statistic::with('values')
         ->where('status', 'published')
@@ -117,10 +114,6 @@ class DataStatistikController extends Controller
         'indikatorMap'  => $this->indikatorMap,
     ]);
 }
-
-    // =========================================================
-    // DETAIL (SHOW) → tetap pakai logic lama (multi wilayah)
-    // =========================================================
     public function show(int $id)
     {
         $statTitle = StatisticTitle::with([
@@ -130,34 +123,45 @@ class DataStatistikController extends Controller
 
         $allWilayahs = $statTitle->statistics->map(function ($s) use ($statTitle) {
 
-            $processedValues = $s->values->map(function ($val) {
-                if (is_null($val->y_label) && !is_null($val->year)) {
-                    $val->y_label = (string) $val->year;
-                }
+    $processedValues = $s->values->map(function ($val) {
+        if (is_null($val->y_label) && !is_null($val->year)) {
+            $val->y_label = (string) $val->year;
+        }
+        if (is_null($val->x_label)) {
+            $val->x_label = 'Lainnya';
+        }
+        return [
+            'x_label' => $val->x_label,
+            'y_label' => $val->y_label,
+            'value'   => (float) $val->value,
+        ];
+    })->sortBy([
+        ['x_label', 'asc'],
+        ['y_label', 'asc'],
+    ])->values();
 
-                if (is_null($val->x_label)) {
-                    $val->x_label = 'Lainnya';
-                }
-
-                return [
-                    'x_label' => $val->x_label,
-                    'y_label' => $val->y_label,
-                    'value'   => (float) $val->value,
-                ];
-            })->sortBy([
-                ['x_label', 'asc'],
-                ['y_label', 'asc'],
-            ])->values();
-
-            return [
-                'wilayah' => $s->wilayah_data,
-                'values'  => $processedValues->toArray(),
-            ];
-        })->values();
+    return [
+        'wilayah' => $s->wilayah_data,
+        'values'  => $processedValues->toArray(),
+    ];
+})
+->groupBy('wilayah')                          // ← group by wilayah
+->map(function ($group) {
+    return [
+        'wilayah' => $group->first()['wilayah'],
+        'values'  => collect($group->flatMap(fn($g) => $g['values']))
+                        ->sortBy([['x_label', 'asc'], ['y_label', 'asc']])
+                        ->values()
+                        ->toArray(),
+    ];
+})
+->values();
 
         $components = $statTitle->components->map(fn($c) => [
             'id'     => $c->id,
             'nama'   => $c->nama,
+            'satuan' => $c->satuan ?? '',
+            'definisi' => $c->definisi ?? '',
             'is_sub' => (bool) $c->is_sub,
             'urutan' => $c->urutan,
             'interpretasi_lebih_kecil' => $c->interpretasi_lebih_kecil ?? '',

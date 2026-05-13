@@ -8,13 +8,13 @@ class Statistic extends Model
 {
     protected $fillable = [
         'indikator_data',
-        'statistic_title_id',        // ✅ tambah
+        'statistic_title_id',        
         'judul_data',
         'wilayah_data',
         'file_data',
         'interpretasi_lebih_kecil',
         'interpretasi_lebih_besar',
-        'interpretasi_tetap',        // ✅ tambah
+        'interpretasi_tetap',        
         'status',
     ];
 
@@ -28,7 +28,6 @@ class Statistic extends Model
         return $this->belongsTo(StatisticTitle::class, 'statistic_title_id');
     }
 
-    // ✅ alias agar blade bisa pakai ->statisticTitle
     public function statisticTitle()
     {
         return $this->belongsTo(StatisticTitle::class, 'statistic_title_id');

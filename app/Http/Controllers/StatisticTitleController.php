@@ -36,6 +36,7 @@ class StatisticTitleController extends Controller
             ->map(fn($c) => [
                 'nama'                     => $c->nama,
                 'satuan'                   => $c->satuan ?? '',
+                'definisi' => $c->definisi ?? '',
                 'is_sub'                   => (bool) $c->is_sub,
                 'interpretasi_lebih_kecil' => $c->interpretasi_lebih_kecil ?? '',
                 'interpretasi_lebih_besar' => $c->interpretasi_lebih_besar ?? '',
@@ -122,6 +123,7 @@ class StatisticTitleController extends Controller
                 'nama'                     => $c->nama,
                 'is_sub'                   => $c->is_sub,
                 'satuan'                   => $c->satuan,
+                'definisi' => $c->definisi,
                 'urutan'                   => $c->urutan,
                 'interpretasi_lebih_kecil' => $c->interpretasi_lebih_kecil,
                 'interpretasi_lebih_besar' => $c->interpretasi_lebih_besar,
@@ -141,6 +143,7 @@ class StatisticTitleController extends Controller
                 'nama'                     => $nama,
                 'is_sub'                   => !empty($comp['is_sub']),
                 'satuan'                   => $comp['satuan'] ?? null,
+                'definisi' => $comp['definisi'] ?? null,
                 'urutan'                   => $i,
                 'interpretasi_lebih_kecil' => $comp['interpretasi_lebih_kecil'] ?? null,
                 'interpretasi_lebih_besar' => $comp['interpretasi_lebih_besar'] ?? null,

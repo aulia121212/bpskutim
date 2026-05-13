@@ -12,12 +12,14 @@ class StatisticController extends Controller
     public function index()
     {
         $statistics = Statistic::with(['values', 'title.components'])->get();
+
         return view('statistics.index', compact('statistics'));
     }
 
     public function create()
     {
-        $statisticTitles = \App\Models\StatisticTitle::orderBy('judul_data')->get();
+        $statisticTitles = StatisticTitle::orderBy('judul_data')->get();
+
         return view('statistics.create', compact('statisticTitles'));
     }
 
@@ -26,112 +28,121 @@ class StatisticController extends Controller
         $request->validate([
             'indikator_data'     => 'required|string|max:255',
             'statistic_title_id' => 'required|exists:statistic_titles,id',
-            'wilayah_data'       => 'required',
-            'file_data'          => 'nullable|file|mimes:pdf,xlsx,csv|max:2048',
+            'wilayah_data'       => 'required|string|max:255',
         ]);
 
-        $title = \App\Models\StatisticTitle::findOrFail($request->statistic_title_id);
-
-        $filePath = null;
-        if ($request->hasFile('file_data')) {
-            $file     = $request->file('file_data');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/statistics'), $filename);
-            $filePath = 'uploads/statistics/' . $filename;
-        }
+        $title = StatisticTitle::findOrFail($request->statistic_title_id);
 
         $statistic = Statistic::create([
             'indikator_data'           => $request->indikator_data,
             'statistic_title_id'       => $title->id,
             'judul_data'               => $title->judul_data,
             'wilayah_data'             => $request->wilayah_data,
-            'file_data'                => $filePath,
             'interpretasi_lebih_kecil' => $title->interpretasi_lebih_kecil,
             'interpretasi_lebih_besar' => $title->interpretasi_lebih_besar,
             'interpretasi_tetap'       => $title->interpretasi_tetap,
             'status'                   => 'draft',
         ]);
 
-        $this->saveGridJson($request->input('grid_json'), $statistic->id);
+        $this->saveGridJson(
+            $request->input('grid_json'),
+            $statistic->id
+        );
 
         return redirect()->route('statistics.preview', $statistic->id);
     }
 
     public function preview($id)
     {
-        $statistic = Statistic::with(['values', 'title.components'])->findOrFail($id);
+        $statistic = Statistic::with([
+            'values',
+            'title.components'
+        ])->findOrFail($id);
 
-        $values = $statistic->values->map(function ($val) {
-            $val = clone $val;
-            if (is_null($val->y_label) && !is_null($val->year)) {
-                $val->y_label = (string) $val->year;
-            }
-            if (is_null($val->x_label)) {
-                $val->x_label = 'Tanpa Kategori';
-            }
-            return $val;
-        })->sortBy([
-            ['x_label', 'asc'],
-            ['y_label', 'asc'],
-        ])->values();
+        $values = $statistic->values
+            ->map(function ($val) {
+                $val = clone $val;
 
-        $is2D           = $values->whereNotNull('y_label')->count() > 0;
+                if (is_null($val->y_label) && !is_null($val->year)) {
+                    $val->y_label = (string) $val->year;
+                }
+
+                if (is_null($val->x_label)) {
+                    $val->x_label = 'Tanpa Kategori';
+                }
+
+                return $val;
+            })
+            ->sortBy([
+                ['x_label', 'asc'],
+                ['y_label', 'asc'],
+            ])
+            ->values();
+
+        $is2D = $values->whereNotNull('y_label')->count() > 0;
+
         $interpretation = $this->generateInterpretation($values, $is2D);
 
-        return view('statistics.preview', compact('statistic', 'values', 'interpretation', 'is2D'));
+        return view('statistics.preview', compact(
+            'statistic',
+            'values',
+            'interpretation',
+            'is2D'
+        ));
     }
 
     /**
-     * Tampilkan form edit dengan data existing dimuat ke grid
+     * Form edit
      */
     public function edit($id)
     {
         $statistic = Statistic::with('values')->findOrFail($id);
 
-        // Bentuk array sederhana untuk dikirim ke Alpine.js
-        $existingGrid = $statistic->values->map(function ($val) {
-            return [
-                'x_label' => $val->x_label ?? 'Tanpa Kategori',
-                'y_label' => $val->y_label ?? ($val->year ? (string) $val->year : null),
-                'value'   => $val->value,
-            ];
-        })->values()->toArray();
+        $existingGrid = $statistic->values
+            ->map(function ($val) {
+                return [
+                    'x_label' => $val->x_label ?? 'Tanpa Kategori',
+                    'y_label' => $val->y_label ?? (
+                        $val->year ? (string) $val->year : null
+                    ),
+                    'value' => $val->value,
+                ];
+            })
+            ->values()
+            ->toArray();
 
-        return view('statistics.edit', compact('statistic', 'existingGrid'));
+        return view('statistics.edit', compact(
+            'statistic',
+            'existingGrid'
+        ));
     }
 
     /**
-     * Simpan perubahan dari form edit
+     * Update data
      */
     public function update(Request $request, $id)
     {
         $request->validate([
-            'wilayah_data' => 'required',
-            'file_data'    => 'nullable|file|mimes:pdf,xlsx,csv|max:2048',
+            'wilayah_data' => 'required|string|max:255',
         ]);
 
         $statistic = Statistic::findOrFail($id);
 
-        // Ganti file jika ada upload baru
-        if ($request->hasFile('file_data')) {
-            // Hapus file lama
-            if ($statistic->file_data && file_exists(public_path($statistic->file_data))) {
-                unlink(public_path($statistic->file_data));
-            }
-            $file     = $request->file('file_data');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/statistics'), $filename);
-            $statistic->file_data = 'uploads/statistics/' . $filename;
-        }
+        $statistic->update([
+            'wilayah_data' => $request->wilayah_data,
+        ]);
 
-        $statistic->wilayah_data = $request->wilayah_data;
-        $statistic->save();
-
-        // Hapus nilai lama lalu simpan nilai baru dari grid
+        // Hapus data lama
         $statistic->values()->delete();
-        $this->saveGridJson($request->input('grid_json'), $statistic->id);
 
-        return redirect()->route('statistics.preview', $statistic->id)
+        // Simpan data baru
+        $this->saveGridJson(
+            $request->input('grid_json'),
+            $statistic->id
+        );
+
+        return redirect()
+            ->route('statistics.preview', $statistic->id)
             ->with('success', 'Data statistik berhasil diperbarui.');
     }
 
@@ -139,118 +150,106 @@ class StatisticController extends Controller
     {
         $statistic = Statistic::with('values')->findOrFail($id);
 
-        if ($statistic->file_data && file_exists(public_path($statistic->file_data))) {
-            unlink(public_path($statistic->file_data));
-        }
-
         $statistic->values()->delete();
         $statistic->delete();
 
-        return redirect()->route('statistics.index')
+        return redirect()
+            ->route('statistics.index')
             ->with('success', 'Data statistik berhasil dihapus.');
     }
 
     public function publish($id)
     {
         $statistic = Statistic::findOrFail($id);
-        $statistic->update(['status' => 'published']);
+
+        $statistic->update([
+            'status' => 'published'
+        ]);
+
         return redirect()->route('statistics.index');
     }
 
     public function grafik()
     {
-        $titlesByJudul = StatisticTitle::with('components')
-            ->get()
-            ->keyBy('judul_data');
-
-        $grouped = Statistic::with(['values', 'title.components'])
-            ->where('status', 'published')
-            ->get()
-            ->groupBy(fn($s) => $s->judul_data . '|||' . $s->wilayah_data);
-
-        $statistics = $grouped->map(function ($group) use ($titlesByJudul) {
-            $stat = $group->first();
-
-            $allValues = $group->flatMap(fn($s) => $s->values)->map(function ($val) {
-                if (is_null($val->y_label) && !is_null($val->year)) {
-                    $val->y_label = (string) $val->year;
-                }
-                return $val;
-            })->sortBy([
-                ['x_label', 'asc'],
-                ['y_label', 'asc'],
-            ])->values();
-
-            $stat->setRelation('values', $allValues);
-
-            $title = $stat->title;
-            $stat->setAttribute('judul_kolom', $title?->judul_kolom ?: 'Kategori');
-            $stat->setAttribute(
-                'components',
-                $title?->components?->map(fn($c) => [
-                    'id'     => $c->id,
-                    'nama'   => $c->nama,
-                    'is_sub' => (bool) $c->is_sub,
-                    'urutan' => $c->urutan,
-                    'interpretasi_lebih_kecil' => $c->interpretasi_lebih_kecil ?? '',
-        'interpretasi_lebih_besar' => $c->interpretasi_lebih_besar ?? '',
-        'interpretasi_tetap'       => $c->interpretasi_tetap ?? '',
-                ])->values() ?? collect()
-            );
-
-            return $stat;
-        })->values();
-
-        $statistics = Statistic::with(['values', 'statisticTitle.components'])
+        $statistics = Statistic::with([
+                'values',
+                'title.components'
+            ])
             ->where('status', 'published')
             ->get();
 
         return view('statistics.grafik', compact('statistics'));
     }
 
-    // ── Helper: Simpan grid_json ke statistic_values ─────────────────────────
+    // ─────────────────────────────────────────────
+    // Helper: Simpan grid_json ke statistic_values
+    // ─────────────────────────────────────────────
     private function saveGridJson(?string $gridJson, int $statisticId): void
     {
-        if (!$gridJson || $gridJson === '[]' || $gridJson === 'null') return;
+        if (
+            !$gridJson ||
+            $gridJson === '[]' ||
+            $gridJson === 'null'
+        ) {
+            return;
+        }
 
         $rows = json_decode($gridJson, true);
-        if (!is_array($rows) || count($rows) === 0) return;
+
+        if (!is_array($rows) || count($rows) === 0) {
+            return;
+        }
 
         foreach ($rows as $row) {
             $xLabel = trim($row['x_label'] ?? '');
-            $yLabel = isset($row['y_label']) && $row['y_label'] !== ''
-                      ? trim($row['y_label'])
-                      : null;
-            $value  = $row['value'] ?? null;
 
-            if ($xLabel === '' || is_null($value)) continue;
+            $yLabel = isset($row['y_label']) &&
+                      $row['y_label'] !== ''
+                ? trim($row['y_label'])
+                : null;
+
+            $value = $row['value'] ?? null;
+
+            if ($xLabel === '' || is_null($value)) {
+                continue;
+            }
 
             StatisticValue::create([
                 'statistic_id' => $statisticId,
                 'year'         => null,
                 'x_label'      => $xLabel,
                 'y_label'      => $yLabel,
-                'value'        => is_numeric($value) ? $value : 0,
+                'value'        => is_numeric($value)
+                    ? $value
+                    : 0,
             ]);
         }
     }
 
-    // ── Helper: Generate interpretasi teks ───────────────────────────────────
+    // ─────────────────────────────────────────────
+    // Helper: Generate interpretasi
+    // ─────────────────────────────────────────────
     private function generateInterpretation($values, bool $is2D = false): string
     {
-        if ($is2D || $values->count() < 2) return '';
+        if ($is2D || $values->count() < 2) {
+            return '';
+        }
 
-        $sorted  = $values->sortBy('x_label');
-        $first   = $sorted->first();
-        $last    = $sorted->last();
-        $diff    = $last->value - $first->value;
+        $sorted = $values->sortBy('x_label');
+
+        $first = $sorted->first();
+        $last  = $sorted->last();
+
+        $diff = $last->value - $first->value;
+
         $highest = $values->sortByDesc('value')->first();
         $lowest  = $values->sortBy('value')->first();
 
-        return "Data menunjukkan perubahan dari {$first->value} ({$first->x_label}) "
-             . "menjadi {$last->value} ({$last->x_label}) "
-             . "dengan selisih " . number_format(abs($diff), 2) . ". "
-             . "Tertinggi: {$highest->x_label} ({$highest->value}), "
-             . "Terendah: {$lowest->x_label} ({$lowest->value}).";
+        return
+            "Data menunjukkan perubahan dari {$first->value} ({$first->x_label}) " .
+            "menjadi {$last->value} ({$last->x_label}) " .
+            "dengan selisih " . number_format(abs($diff), 2) . ". " .
+            "Tertinggi: {$highest->x_label} ({$highest->value}), " .
+            "Terendah: {$lowest->x_label} ({$lowest->value}).";
     }
 }

@@ -41,6 +41,8 @@
         <table class="w-full text-sm">
             <thead>
                 <tr class="border-b border-gray-100 dark:border-gray-800">
+                    <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">No</th>
+
                     <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Indikator</th>
                     <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Judul</th>
                     <th class="text-left px-6 py-4 font-semibold text-[#035f9c]">Wilayah</th>
@@ -51,6 +53,9 @@
             <tbody id="tableBody">
                 @forelse($statistics as $stat)
                 <tr class="border-b border-gray-50 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+                    <td class="px-6 py-4 text-gray-700 dark:text-gray-300">
+                        {{ $loop->iteration }}
+                    </td>
                     <td class="px-6 py-4 text-gray-700 dark:text-gray-300">
                         {{ ucwords(str_replace('_', ' ', $stat->indikator_data)) }}
                     </td>

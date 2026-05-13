@@ -21,11 +21,11 @@
         {{-- Row 1: Indikator + Judul Data --}}
         <div class="grid grid-cols-2 gap-6 mb-6">
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1">Indikator</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1">Indikator</label>
                 <div class="relative">
                     {{-- x-model untuk tracking pilihan indikator --}}
                     <select name="indikator_data" x-model="selectedIndikator" @change="resetJudul()"
-                        class="w-full appearance-none border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        class="w-full appearance-none border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#035f9c]">
                         <option value="">Pilih Indikator</option>
                         <option value="indikator_ekonomi">Indikator Ekonomi</option>
                         <option value="indikator_ketenagakerjaan">Indikator Ketenagakerjaan</option>
@@ -39,11 +39,14 @@
 
             <div>
                 <div class="flex items-center justify-between mb-1">
-                    <label class="block text-sm font-semibold text-blue-500">Judul Data</label>
-                    <a href="{{ route('statistic-titles.index') }}" target="_blank"
-                        class="text-[10px] font-bold text-blue-400 hover:text-blue-600 flex items-center gap-1">
-                        <i class="ti ti-settings text-xs"></i> Kelola Judul
-                    </a>
+                    <label class="block text-sm font-semibold text-[#035f9c]">Judul Data</label>
+                    <a href="{{ route('statistic-titles.index') }}"
+    target="_blank"
+    class="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-[#007bcd] hover:text-[#035f9c] transition-colors duration-200">
+    
+    <i class="ti ti-settings text-sm"></i>
+    Kelola Judul
+</a>
                 </div>
                 <div class="relative">
                     {{-- :disabled akan mengunci dropdown jika indikator kosong --}}
@@ -51,7 +54,7 @@
                         x-model="selectedTitleId"
                         :disabled="!selectedIndikator"
                         @change="fetchInterpretasi($event.target.value)"
-                        class="w-full appearance-none border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm disabled:opacity-50 disabled:bg-gray-50 text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        class="w-full appearance-none border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm disabled:opacity-50 disabled:bg-gray-50 text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#035f9c]">
                         <option value="">Pilih Judul Data</option>
                         @foreach($statisticTitles as $title)
                             {{-- x-show memfilter judul berdasarkan indikator yang dipilih --}}
@@ -69,7 +72,7 @@
                 </div>
 
                 {{-- Preview Interpretasi --}}
-                <div x-show="hasAny" x-cloak
+                <!-- <div x-show="hasAny" x-cloak
                     class="mt-3 rounded-2xl border border-blue-100 dark:border-blue-900/40 bg-blue-50/50 p-3 space-y-2">
                     <p class="text-[10px] font-black uppercase tracking-widest text-blue-400">Preview Interpretasi</p>
 
@@ -87,22 +90,22 @@
                         <p class="text-[10px] font-bold text-gray-400 mb-0.5"><i class="ti ti-minus"></i> Tetap</p>
                         <p class="text-xs text-gray-500 leading-relaxed line-clamp-2" x-text="tetap"></p>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
 
         {{-- Row 2: Wilayah + File Referensi --}}
         <div class="grid grid-cols-2 gap-6 mb-6">
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1">Wilayah Data</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1">Wilayah Data</label>
                 <div class="relative">
                     <select name="wilayah_data"
-                        class="w-full appearance-none border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        class="w-full appearance-none border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#035f9c]">
                         <option value="">Pilih Wilayah</option>                     
                         <option value="Paser">Paser</option>
                         <option value="Kutai Barat">Kutai Barat</option>
                         <option value="Kutai Kartanegara">Kutai Kartanegara</option>
-                        <option value="Kabupaten Kutai Timur">Kutai Timur</option>
+                        <option value="Kutai Timur">Kutai Timur</option>
                         <option value="Berau">Berau</option>
                         <option value="Penajam Paser Utara">Penajam Paser Utara</option>
                         <option value="Mahakam Ulu">Mahakam Ulu</option>
@@ -115,7 +118,7 @@
                     <i class="ti ti-chevron-down absolute right-3 top-3 text-gray-400 pointer-events-none"></i>
                 </div>
             </div>
-            <div>
+            <!-- <div>
                 <label class="block text-sm font-semibold text-blue-500 mb-1">File Referensi</label>
                 <label class="flex items-center justify-between border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-400 dark:bg-gray-800 cursor-pointer hover:bg-gray-50 transition">
                     <span id="file-label">Pilih file...</span>
@@ -124,22 +127,22 @@
                         onchange="document.getElementById('file-label').textContent = this.files[0]?.name || 'Pilih file...'">
                 </label>
                 <p class="text-xs text-gray-400 mt-1">PDF, XLSX, CSV (maks 2MB)</p>
-            </div>
+            </div> -->
         </div>
 
         {{-- NILAI DATA (GRID TABLE) --}}
         <div class="border-t border-gray-100 dark:border-gray-800 pt-6">
             <div class="flex items-center justify-between mb-4">
                 <div>
-                    <p class="text-sm font-semibold text-blue-500">Nilai Data</p>
+                    <p class="text-sm font-semibold text-[#035f9c]">Nilai Data</p>
                     <p class="text-xs text-gray-400 mt-0.5">
                         Baris = <span class="font-semibold text-gray-600 dark:text-gray-300">Kategori/Lapangan Usaha</span> &nbsp;·&nbsp;
                         Kolom = <span class="font-semibold text-gray-600 dark:text-gray-300">Tahun</span>
                     </p>
                 </div>
                 <div class="flex items-center gap-2 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800">
-                    <i class="ti ti-table text-blue-500 text-sm"></i>
-                    <span class="text-xs font-bold text-blue-600">Tabel Grid</span>
+                    <i class="ti ti-table text-[#035f9c] text-sm"></i>
+                    <span class="text-xs font-bold text-[#035f9c]">Tabel Grid</span>
                 </div>
             </div>
 
@@ -151,7 +154,7 @@
                             class="w-20 bg-transparent text-sm text-gray-700 dark:text-gray-300 focus:outline-none"
                             @keydown.enter.prevent="addYear()">
                         <button type="button" @click="addYear()"
-                            class="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 whitespace-nowrap">
+                            class="text-xs font-bold text-[#035f9c] hover:text-blue-800 flex items-center gap-1 whitespace-nowrap">
                             <i class="ti ti-plus text-sm"></i> Tahun
                         </button>
                     </div>
@@ -159,12 +162,12 @@
                     <div class="h-5 w-px bg-gray-200 dark:bg-gray-700"></div>
 
                     <button type="button" @click="addCategory(false)"
-                        class="flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800 bg-blue-50 dark:bg-blue-900/20 rounded-xl px-3 py-2 transition">
+                        class="flex items-center gap-1.5 text-xs font-bold bg-gray-50 text-[#035f9c] hover:text-[#024b7c] hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-xl px-3 py-2 transition-all duration-200">
                         <i class="ti ti-layout-rows text-sm"></i> + Kategori
                     </button>
 
                     <button type="button" @click="addCategory(true)"
-                        class="flex items-center gap-1.5 text-xs font-bold text-indigo-500 hover:text-indigo-700 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl px-3 py-2 transition">
+                        class="flex items-center gap-1.5 text-xs font-bold text-[#035f9c] hover:text-[#024b7c] bg-gray-50 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-xl px-3 py-2 transition-all duration-200">
                         <i class="ti ti-indent-increase text-sm"></i> + Sub-kategori
                     </button>
                 </div>
@@ -251,7 +254,8 @@
                 Batal
             </a>
             <button type="button" onclick="submitStatisticForm()"
-                class="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition">
+                class="px-6 py-2.5 rounded-xl bg-[#035f9c] hover:bg-[#024b7c] text-white text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200 active:scale-[0.98]">
+
                 Simpan
             </button>
         </div>

@@ -67,7 +67,7 @@
         </div>
 
         {{-- ── Card: Interpretasi Level Judul ── --}}
-        <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6">
+        <!-- <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6">
             <h2 class="text-sm font-bold text-gray-700 dark:text-white flex items-center gap-2 mb-5">
                 <span class="w-7 h-7 rounded-lg bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center">
                     <i class="ti ti-message-2-text text-purple-500 text-sm"></i>
@@ -119,102 +119,215 @@
                     @endif
                 </div>
             </div>
+        </div> -->
+
+       {{-- ── Card: Komponen / Kategori ── --}}
+<div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-4 sm:p-6">
+
+    {{-- Header --}}
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+        <div class="flex items-center gap-2">
+            <span class="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center shrink-0">
+                <i class="ti ti-list text-indigo-500 text-sm"></i>
+            </span>
+
+            <div>
+                <h2 class="text-sm font-bold text-gray-700 dark:text-white">
+                    Komponen / Kategori
+                </h2>
+
+                <p class="text-[11px] text-gray-400 mt-0.5">
+                    Daftar komponen beserta definisi dan interpretasi perubahan data
+                </p>
+            </div>
         </div>
 
-        {{-- ── Card: Komponen / Kategori ── --}}
-        <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6">
-            <h2 class="text-sm font-bold text-gray-700 dark:text-white flex items-center gap-2 mb-5">
-                <span class="w-7 h-7 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center">
-                    <i class="ti ti-list text-indigo-500 text-sm"></i>
-                </span>
-                Komponen / Kategori
-                <span class="ml-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-gray-100 dark:bg-gray-800 text-gray-500">
-                    {{ $statisticTitle->components->count() }} komponen
-                </span>
-            </h2>
+        <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-lg text-[10px] font-bold bg-gray-100 dark:bg-gray-800 text-gray-500 w-fit">
+            {{ $statisticTitle->components->count() }} komponen
+        </span>
+    </div>
 
-            @if($statisticTitle->components->count() > 0)
-            <div class="space-y-2">
-                @foreach($statisticTitle->components->sortBy('urutan') as $index => $comp)
-                <div class="rounded-xl border overflow-hidden
-                    {{ $comp->is_sub
-                        ? 'border-indigo-100 dark:border-indigo-800 bg-indigo-50/40 dark:bg-indigo-900/10'
-                        : 'border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/30' }}">
+    @if($statisticTitle->components->count() > 0)
 
-                    {{-- Header komponen --}}
-                    <div class="flex items-center gap-3 px-4 py-3 {{ $comp->is_sub ? 'pl-8' : '' }}">
-                        <span class="text-xs font-bold text-gray-300 w-5 shrink-0 tabular-nums">
+    <div class="space-y-4">
+        @foreach($statisticTitle->components->sortBy('urutan') as $index => $comp)
+
+        <div class="rounded-2xl overflow-hidden border
+            {{ $comp->is_sub
+                ? 'border-indigo-100 dark:border-indigo-800 bg-indigo-50/30 dark:bg-indigo-900/10'
+                : 'border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-900' }}">
+
+            {{-- Header Komponen --}}
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3 px-4 py-4">
+
+                {{-- Kiri --}}
+                <div class="flex items-start gap-3 flex-1 min-w-0">
+
+                    {{-- Nomor --}}
+                    <div class="w-7 h-7 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0">
+                        <span class="text-[11px] font-bold text-gray-500">
                             {{ $loop->iteration }}
                         </span>
+                    </div>
 
-                        @if($comp->is_sub)
-                            <span class="text-indigo-300 font-bold shrink-0">·</span>
-                        @endif
+                    {{-- Nama --}}
+                    <div class="min-w-0 flex-1">
 
-                        <p class="flex-1 text-sm font-{{ $comp->is_sub ? 'normal text-gray-500 dark:text-gray-400 italic' : 'semibold text-gray-700 dark:text-gray-200' }}">
-                            {{ $comp->nama }}
-                        </p>
+                        <div class="flex flex-wrap items-center gap-2">
 
-                        @if($comp->satuan && !$comp->is_sub)
-                            <span class="shrink-0 px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 text-[10px] font-semibold text-gray-400">
-                                {{ $comp->satuan }}
-                            </span>
-                        @endif
+                            <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-200 break-words">
+                                {{ $comp->nama }}
+                            </h3>
 
-                        @if($comp->is_sub)
-                            <span class="shrink-0 px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-900/30 text-[10px] font-semibold text-indigo-500">
+                            @if($comp->is_sub)
+                            <span class="px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-900/30 text-[10px] font-semibold text-indigo-600 dark:text-indigo-300">
                                 Sub
                             </span>
-                        @endif
+                            @endif
 
-                        {{-- Badge interpretasi tersedia --}}
-                        @if(!$comp->is_sub && ($comp->interpretasi_lebih_besar || $comp->interpretasi_lebih_kecil || $comp->interpretasi_tetap))
-                            <span class="shrink-0 px-2 py-0.5 rounded-md bg-purple-50 dark:bg-purple-900/20 text-[10px] font-semibold text-purple-500 flex items-center gap-0.5">
-                                <i class="ti ti-message-2 text-[9px]"></i> Ada interpretasi
+                            @if($comp->satuan)
+                            <span class="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-[10px] font-semibold text-gray-500">
+                                {{ $comp->satuan }}
                             </span>
-                        @endif
+                            @endif
+
+                        </div>
+
+                        @if(!$comp->is_sub)
+{{-- Definisi --}}
+<div class="mt-3 rounded-xl border border-blue-100 dark:border-blue-900/40 bg-blue-50/50 dark:bg-blue-900/10 p-3">
+    <div class="flex items-center gap-1.5 mb-1.5">
+        <i class="ti ti-book-2 text-blue-500 text-xs"></i>
+
+        <p class="text-[10px] font-bold uppercase tracking-widest text-blue-600 dark:text-blue-300">
+            Definisi
+        </p>
+    </div>
+
+    <p class="text-xs leading-relaxed text-gray-600 dark:text-gray-300">
+        {{ $comp->definisi ?: 'Definisi komponen belum tersedia.' }}
+    </p>
+</div>
+@endif
+
+                    </div>
+                </div>
+
+                {{-- Badge --}}
+                @if(
+                    $comp->interpretasi_lebih_besar ||
+                    $comp->interpretasi_lebih_kecil ||
+                    $comp->interpretasi_tetap
+                )
+                <div class="shrink-0">
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-purple-50 dark:bg-purple-900/20 text-[10px] font-semibold text-purple-600 dark:text-purple-300">
+                        <i class="ti ti-message-2 text-[10px]"></i>
+                        Ada Interpretasi
+                    </span>
+                </div>
+                @endif
+
+            </div>
+
+            {{-- Interpretasi --}}
+            @if(
+                $comp->interpretasi_lebih_besar ||
+                $comp->interpretasi_lebih_kecil ||
+                $comp->interpretasi_tetap
+            )
+
+            <div class="border-t border-gray-100 dark:border-gray-800 px-4 py-4 bg-gray-50/50 dark:bg-gray-800/20">
+
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-1.5 h-5 rounded-full bg-emerald-500"></div>
+
+                    <div>
+                        <h4 class="text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest">
+                            Interpretasi Perubahan Data
+                        </h4>
+
+                        <p class="text-[11px] text-gray-400 mt-0.5">
+                            Digunakan saat membandingkan perubahan nilai antar periode
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+                    {{-- Naik --}}
+                    <div class="rounded-xl border border-green-100 dark:border-green-900/30 bg-green-50/60 dark:bg-green-900/10 p-3">
+                        <div class="flex items-center gap-1.5 mb-2">
+                            <i class="ti ti-trending-up text-green-600 text-xs"></i>
+
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-green-600 dark:text-green-300">
+                                Jika Nilai Naik
+                            </p>
+                        </div>
+
+                        <p class="text-xs leading-relaxed text-gray-600 dark:text-gray-300">
+                            {{ $comp->interpretasi_lebih_besar ?: 'Belum tersedia.' }}
+                        </p>
                     </div>
 
-                    {{-- Interpretasi per komponen (jika ada) --}}
-                    @if(!$comp->is_sub && ($comp->interpretasi_lebih_besar || $comp->interpretasi_lebih_kecil || $comp->interpretasi_tetap))
-                    <div class="border-t border-gray-100 dark:border-gray-700 px-4 py-3 grid grid-cols-3 gap-3 bg-white/60 dark:bg-gray-900/40">
-                        <div>
-                            <p class="text-[9px] font-bold text-green-500 uppercase tracking-widest mb-1 flex items-center gap-0.5">
-                                <i class="ti ti-trending-up text-[9px]"></i> Naik
-                            </p>
-                            <p class="text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed">
-                                {{ $comp->interpretasi_lebih_besar ?: '—' }}
+                    {{-- Turun --}}
+                    <div class="rounded-xl border border-red-100 dark:border-red-900/30 bg-red-50/60 dark:bg-red-900/10 p-3">
+                        <div class="flex items-center gap-1.5 mb-2">
+                            <i class="ti ti-trending-down text-red-500 text-xs"></i>
+
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-red-500 dark:text-red-300">
+                                Jika Nilai Turun
                             </p>
                         </div>
-                        <div>
-                            <p class="text-[9px] font-bold text-rose-500 uppercase tracking-widest mb-1 flex items-center gap-0.5">
-                                <i class="ti ti-trending-down text-[9px]"></i> Turun
-                            </p>
-                            <p class="text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed">
-                                {{ $comp->interpretasi_lebih_kecil ?: '—' }}
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-1 flex items-center gap-0.5">
-                                <i class="ti ti-minus text-[9px]"></i> Tetap
-                            </p>
-                            <p class="text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed">
-                                {{ $comp->interpretasi_tetap ?: '—' }}
-                            </p>
-                        </div>
+
+                        <p class="text-xs leading-relaxed text-gray-600 dark:text-gray-300">
+                            {{ $comp->interpretasi_lebih_kecil ?: 'Belum tersedia.' }}
+                        </p>
                     </div>
-                    @endif
+
+                    {{-- Tetap --}}
+                    <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/40 p-3">
+                        <div class="flex items-center gap-1.5 mb-2">
+                            <i class="ti ti-minus text-gray-500 text-xs"></i>
+
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-300">
+                                Jika Nilai Tetap
+                            </p>
+                        </div>
+
+                        <p class="text-xs leading-relaxed text-gray-600 dark:text-gray-300">
+                            {{ $comp->interpretasi_tetap ?: 'Belum tersedia.' }}
+                        </p>
+                    </div>
 
                 </div>
-                @endforeach
-            </div>
-            @else
-            <div class="text-center py-10 border-2 border-dashed border-gray-100 dark:border-gray-800 rounded-xl">
-                <i class="ti ti-list-details text-3xl text-gray-300 mb-2 block"></i>
-                <p class="text-sm text-gray-400">Belum ada komponen yang ditambahkan</p>
+
             </div>
             @endif
+
         </div>
+
+        @endforeach
+    </div>
+
+    @else
+
+    {{-- Empty State --}}
+    <div class="text-center py-12 border-2 border-dashed border-gray-100 dark:border-gray-800 rounded-2xl">
+        <div class="w-14 h-14 mx-auto rounded-2xl bg-gray-50 dark:bg-gray-800 flex items-center justify-center mb-3">
+            <i class="ti ti-list-details text-2xl text-gray-300"></i>
+        </div>
+
+        <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-300">
+            Belum Ada Komponen
+        </h3>
+
+        <p class="text-xs text-gray-400 mt-1">
+            Tambahkan komponen untuk melengkapi detail statistik.
+        </p>
+    </div>
+
+    @endif
+</div>
 
         {{-- ── Footer actions ── --}}
         <div class="flex items-center justify-between pt-1">

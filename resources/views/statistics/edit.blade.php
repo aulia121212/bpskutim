@@ -49,18 +49,18 @@
                     <i class="ti ti-chevron-down absolute right-3 top-3 text-gray-400 pointer-events-none"></i>
                 </div>
             </div>
-            <div>
+            <!-- <div>
                 <label class="block text-sm font-semibold text-blue-500 mb-1">File Referensi (opsional, ganti jika perlu)</label>
                 <label class="flex items-center justify-between border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-400 dark:bg-gray-800 cursor-pointer hover:bg-gray-50 transition">
                     <span id="file-label">
-                        {{ $statistic->file_data ? basename($statistic->file_data) : 'Pilih file...' }}
+                         {{ $statistic->file_data ? basename($statistic->file_data) : 'Pilih file...' }}
                     </span>
                     <i class="ti ti-upload text-gray-400"></i>
                     <input type="file" name="file_data" accept=".pdf,.xlsx,.csv" class="hidden"
                         onchange="document.getElementById('file-label').textContent = this.files[0]?.name || 'Pilih file...'">
                 </label>
                 <p class="text-xs text-gray-400 mt-1">PDF, XLSX, CSV (maks 2MB). Kosongkan jika tidak ingin mengganti.</p>
-            </div>
+            </div> -->
         </div>
 
         {{-- NILAI DATA (GRID TABLE EDITABLE) --}}

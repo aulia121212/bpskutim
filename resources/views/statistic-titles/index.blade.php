@@ -166,9 +166,9 @@
                         Batal
                     </button>
                     <button type="submit"
-                        class="px-5 py-2.5 rounded-xl bg-[#035f9c] hover:bg-blue-700 text-white text-sm font-semibold transition">
+                        class="px-5 py-2.5 rounded-xl bg-[#035f9c] hover:bg-[#024b7c] text-white text-sm font-semibold transition">
                         Simpan
-                    </button>
+
                 </div>
             </form>
         </div>
@@ -181,8 +181,9 @@ function componentForm(existing = []) {
         components: existing.length > 0 ? existing : [],
         addComponent(isSub = false) {
             this.components.push({
-                nama: '', is_sub: isSub, showInterp: false,
+                nama: '', is_sub: isSub, showDetail: false, 
                 satuan: '',
+                definisi: '', 
                 interpretasi_lebih_kecil: '',
                 interpretasi_lebih_besar: '',
                 interpretasi_tetap: '',

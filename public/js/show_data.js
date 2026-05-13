@@ -5,21 +5,32 @@ let allComponents = [];
 let currentTab = "grafik";
 
 const COLORS = [
-    { border: "#2563eb", bg: "rgba(37,99,235,0.10)" }, // Biru
-    { border: "#dc2626", bg: "rgba(220,38,38,0.10)" }, // Merah
-    { border: "#16a34a", bg: "rgba(22,163,74,0.10)" }, // Hijau
-    { border: "#d97706", bg: "rgba(217,119,6,0.10)" }, // Orange
-    { border: "#7c3aed", bg: "rgba(124,58,237,0.10)" }, // Ungu
-    { border: "#0891b2", bg: "rgba(8,145,178,0.10)" }, // Cyan
-    { border: "#db2777", bg: "rgba(219,39,119,0.10)" }, // Pink
-    { border: "#65a30d", bg: "rgba(101,163,13,0.10)" }, // Lime
-    { border: "#ea580c", bg: "rgba(234,88,12,0.10)" }, // Dark Orange
-    { border: "#0f766e", bg: "rgba(15,118,110,0.10)" }, // Teal
-    { border: "#4f46e5", bg: "rgba(79,70,229,0.10)" }, // Indigo
-    { border: "#a21caf", bg: "rgba(162,28,175,0.10)" }, // Fuchsia
+    { border: "#2563eb", bg: "rgba(37,99,235,0.10)" },
+    { border: "#dc2626", bg: "rgba(220,38,38,0.10)" },
+    { border: "#16a34a", bg: "rgba(22,163,74,0.10)" },
+    { border: "#d97706", bg: "rgba(217,119,6,0.10)" },
+    { border: "#7c3aed", bg: "rgba(124,58,237,0.10)" },
+    { border: "#0891b2", bg: "rgba(8,145,178,0.10)" },
+    { border: "#db2777", bg: "rgba(219,39,119,0.10)" },
+    { border: "#65a30d", bg: "rgba(101,163,13,0.10)" },
+    { border: "#ea580c", bg: "rgba(234,88,12,0.10)" },
+    { border: "#0f766e", bg: "rgba(15,118,110,0.10)" },
+    { border: "#4f46e5", bg: "rgba(79,70,229,0.10)" },
+    { border: "#a21caf", bg: "rgba(162,28,175,0.10)" },
 ];
 
-// const container = document.getElementById("filter-wilayah");
+// naik=green, turun=red, tetap=gray — konsisten di seluruh kode
+const TREN_CFG = {
+    naik: { color: "green", icon: "ti-trending-up", label: "Naik", sign: "+" },
+    turun: { color: "red", icon: "ti-trending-down", label: "Turun", sign: "" },
+    tetap: { color: "gray", icon: "ti-minus", label: "Tetap", sign: "" },
+    fluktuatif: {
+        color: "amber",
+        icon: "ti-chart-arcs",
+        label: "Fluktuatif",
+        sign: "±",
+    },
+};
 
 const wilayahOrder = [
     "Paser",
@@ -35,24 +46,6 @@ const wilayahOrder = [
     "Kalimantan Timur",
     "Indonesia",
 ];
-
-// data.sort((a, b) => {
-//     return (
-//         wilayahOrder.indexOf(a.wilayah_data) -
-//         wilayahOrder.indexOf(b.wilayah_data)
-//     );
-// });
-
-// container.innerHTML = data
-//     .map(
-//         (item) => `
-//     <label class="flex items-center gap-2">
-//         <input type="checkbox" value="${item.wilayah_data}">
-//         <span>${item.wilayah_data}</span>
-//     </label>
-// `,
-//     )
-//     .join("");
 
 // ── INIT ──────────────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", function () {
@@ -78,35 +71,24 @@ document.addEventListener("DOMContentLoaded", function () {
                 y_label: v.y_label || (v.year ? String(v.year) : null),
             })),
         }))
-        .sort((a, b) => {
-            return (
+        .sort(
+            (a, b) =>
                 wilayahOrder.indexOf(a.wilayah) -
-                wilayahOrder.indexOf(b.wilayah)
-            );
-        });
+                wilayahOrder.indexOf(b.wilayah),
+        );
 
     allComponents = cfg.components || [];
 
-    // Build filters
     buildWilayahFilter();
     buildKategoriFilter();
 
-    // Tab events — pakai onclick attribute di blade, TAPI juga bind di sini sebagai fallback
     const btnGrafik = document.getElementById("tab-grafik");
     const btnTabel = document.getElementById("tab-tabel");
     if (btnGrafik)
         btnGrafik.addEventListener("click", () => switchTab("grafik"));
     if (btnTabel) btnTabel.addEventListener("click", () => switchTab("tabel"));
 
-    // Pastikan state awal benar
     _applyTabVisibility("grafik");
-
-    // Hanya auto-render jika TIDAK ada komponen (data tanpa kategori)
-    // Jika ada komponen, tunggu user pilih dulu → onKategoriChange() akan call applyFilters()
-    const mainComponents = allComponents.filter((c) => !c.is_sub);
-    // if (mainComponents.length === 0) {
-    //     applyFilters();
-    // }
 });
 
 // ── TAB SWITCH ────────────────────────────────────────────────────────────
@@ -118,65 +100,41 @@ function switchTab(tab) {
 
 function _applyTabVisibility(tab) {
     const isG = tab === "grafik";
-
-    // View panels — pakai classList (Tailwind hidden)
     document.getElementById("view-grafik")?.classList.toggle("hidden", !isG);
     document.getElementById("view-tabel")?.classList.toggle("hidden", isG);
-
-    // Filter komponen — sembunyikan di tab tabel
     document
         .getElementById("filter-kategori-wrap")
         ?.classList.toggle("hidden", !isG);
 
-    // Tab button styling — identik grafik_blade
     const btnG = document.getElementById("tab-grafik");
     const btnT = document.getElementById("tab-tabel");
-    if (btnG)
-        btnG.className = isG
-            ? "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition bg-blue-600 text-white"
-            : "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition border border-gray-200 text-gray-600 hover:bg-gray-50";
-    if (btnT)
-        btnT.className = !isG
-            ? "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition bg-blue-600 text-white"
-            : "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition border border-gray-200 text-gray-600 hover:bg-gray-50";
+    const activeClass =
+        "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition bg-blue-600 text-white";
+    const inactiveClass =
+        "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition border border-gray-200 text-gray-600 hover:bg-gray-50";
+    if (btnG) btnG.className = isG ? activeClass : inactiveClass;
+    if (btnT) btnT.className = !isG ? activeClass : inactiveClass;
 }
 
 // ── BUILD FILTER WILAYAH ──────────────────────────────────────────────────
 function buildWilayahFilter() {
     const div = document.getElementById("filter-wilayah");
     if (!div) return;
-
     div.innerHTML = wilayahList
         .map((w, wi) => {
             const color = COLORS[wi % COLORS.length].border;
-
-            return `
-            <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer hover:text-[#035f9c] transition">
-                
-                <input 
-                    type="checkbox"
-                    value="${escH(w.wilayah)}"
-                    class="wilayah-check rounded accent-[#035f9c]"
-                    onchange="applyFilters()"
-                >
-
-                <span 
-                    class="w-2.5 h-2.5 rounded-full shrink-0"
-                    style="background:${color}">
-                </span>
-
-                <span>${escH(w.wilayah)}</span>
-            </label>
-            `;
+            return `<label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer hover:text-[#035f9c] transition">
+            <input type="checkbox" value="${escH(w.wilayah)}" class="wilayah-check rounded accent-[#035f9c]" onchange="applyFilters()">
+            <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:${color}"></span>
+            <span>${escH(w.wilayah)}</span>
+        </label>`;
         })
         .join("");
 }
 
-// ── BUILD FILTER KATEGORI — hanya tampilkan NON-sub ───────────────────────
+// ── BUILD FILTER KATEGORI ─────────────────────────────────────────────────
 function buildKategoriFilter() {
-    // Hanya komponen utama (bukan sub) yang ditampilkan sebagai pilihan radio
     const mainComponents = allComponents.filter((c) => !c.is_sub);
-
     const katDiv = document.getElementById("filter-kategori");
     if (!katDiv) return;
 
@@ -246,8 +204,8 @@ function buildTahunFilter(years) {
     }
     tahunDiv.innerHTML = years
         .map(
-            (y) => `
-        <label class="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 cursor-pointer hover:text-blue-600 transition">
+            (y) =>
+                `<label class="flex items-center gap-2 text-xs text-gray-600 cursor-pointer hover:text-blue-600 transition">
             <input type="checkbox" value="${y}" checked class="tahun-check rounded accent-blue-600"> ${y}
         </label>`,
         )
@@ -263,16 +221,14 @@ function applyFilters() {
 
     const selectedCat =
         document.querySelector(".kat-radio:checked")?.value ?? null;
-
     const checkedYears = [
         ...document.querySelectorAll(".tahun-check:checked"),
     ].map((c) => c.value);
-
     const checkedWilayah = [
         ...document.querySelectorAll(".wilayah-check:checked"),
     ].map((c) => c.value);
 
-    // ── BELUM ADA WILAYAH DIPILIH ─────────────────────
+    // ── Belum ada wilayah dipilih ──────────────────────────────────────────
     if (!checkedWilayah.length) {
         document.getElementById("view-grafik")?.classList.add("hidden");
         document.getElementById("view-tabel")?.classList.add("hidden");
@@ -282,25 +238,22 @@ function applyFilters() {
         return;
     }
 
-    // ── BELUM ADA KOMPONEN DIPILIH (jika ada komponen) ──  ← TAMBAHKAN INI
+    // ── Tampilkan view sesuai tab DULU ────────────────────────────────────
+    _applyTabVisibility(currentTab);
+
+    // ── Guard: grafik butuh komponen terpilih ──────────────────────────────
     const mainComponents = allComponents.filter((c) => !c.is_sub);
-    if (mainComponents.length > 0 && !selectedCat) {
+    if (mainComponents.length > 0 && !selectedCat && currentTab === "grafik") {
         document.getElementById("view-grafik")?.classList.add("hidden");
-        document.getElementById("view-tabel")?.classList.add("hidden");
         document
             .getElementById("interpretasi-section")
             ?.classList.add("hidden");
         return;
     }
 
-    // ── TAMPILKAN VIEW SESUAI TAB ────────────────────
-    _applyTabVisibility(currentTab);
-
     const datasets = [];
-
     wilayahList.forEach((w, wi) => {
         if (!checkedWilayah.includes(w.wilayah)) return;
-
         const rows = w.values
             .filter(
                 (v) =>
@@ -314,11 +267,8 @@ function applyFilters() {
                     String(b.y_label || b.year),
                 ),
             );
-
         if (!rows.length) return;
-
         const color = COLORS[wi % COLORS.length];
-
         datasets.push({
             wilayah: w.wilayah,
             updated: w.updated || "",
@@ -344,8 +294,7 @@ function applyFilters() {
 // ── RENDER CHART ──────────────────────────────────────────────────────────
 function renderChart(datasets, kategori) {
     const canvas = document.getElementById("mainChart");
-    if (!canvas) return;
-    if (!datasets.length) return;
+    if (!canvas || !datasets.length) return;
 
     const katLabel = kategori
         ? kategori.startsWith("· ")
@@ -370,6 +319,8 @@ function renderChart(datasets, kategori) {
         chartInstance = null;
     }
 
+    const isMobile = window.innerWidth < 768;
+
     chartInstance = new Chart(canvas.getContext("2d"), {
         type: "line",
         data: {
@@ -384,8 +335,8 @@ function renderChart(datasets, kategori) {
                 backgroundColor: d.color.bg,
                 borderWidth: 2,
                 pointBackgroundColor: d.color.border,
-                pointRadius: 5,
-                pointHoverRadius: 7,
+                pointRadius: isMobile ? 3 : 5,
+                pointHoverRadius: isMobile ? 5 : 7,
                 fill: datasets.length === 1,
                 tension: 0.3,
                 spanGaps: true,
@@ -397,23 +348,50 @@ function renderChart(datasets, kategori) {
             plugins: {
                 legend: {
                     display: datasets.length > 1,
-                    position: "top",
-                    labels: { boxWidth: 12, font: { size: 11 } },
+                    position: isMobile ? "bottom" : "top",
+                    labels: { boxWidth: 10, font: { size: isMobile ? 9 : 11 } },
                 },
                 tooltip: { mode: "index", intersect: false },
             },
             scales: {
                 x: {
-                    title: { display: true, text: "Tahun", font: { size: 11 } },
+                    title: {
+                        display: !isMobile,
+                        text: "Tahun",
+                        font: { size: 11 },
+                    },
                     grid: { display: false },
+                    ticks: {
+                        maxRotation: isMobile ? 45 : 0,
+                        font: { size: isMobile ? 9 : 11 },
+                    },
                 },
                 y: {
-                    title: { display: true, text: "Nilai", font: { size: 11 } },
+                    title: {
+                        display: !isMobile,
+                        text: "Nilai",
+                        font: { size: 11 },
+                    },
                     grid: { color: "#f3f4f6" },
+                    ticks: { font: { size: isMobile ? 9 : 11 } },
                 },
             },
         },
     });
+}
+
+// ── DEFINISI KOMPONEN CARD ────────────────────────────────────────────────
+function buildDefinisiCard(komponen) {
+    if (!komponen?.definisi) return "";
+    return `<div class="flex items-start gap-3 p-4 rounded-2xl bg-blue-50/60 border border-blue-100">
+        <div class="shrink-0 w-8 h-8 rounded-xl bg-blue-100 flex items-center justify-center mt-0.5">
+            <i class="ti ti-book-2 text-blue-500 text-sm"></i>
+        </div>
+        <div class="flex-1">
+            <p class="text-xs font-bold uppercase tracking-widest text-blue-500 mb-1">Definisi Komponen</p>
+            <p class="text-xs text-gray-600 leading-relaxed">${escH(komponen.definisi)}</p>
+        </div>
+    </div>`;
 }
 
 // ── INTERPRETASI GRAFIK ───────────────────────────────────────────────────
@@ -429,10 +407,37 @@ function renderInterpretasiGrafik(datasets, selectedCat) {
 
     const komponen = allComponents.find((c) => c.nama === selectedCat) || null;
 
+    // ── Definisi selalu tampil kalau ada ──────────────────────────────────
+    const definisiEl = document.getElementById("definisi-card");
+    if (definisiEl) {
+        if (komponen?.definisi) {
+            definisiEl.innerHTML = buildDefinisiCard(komponen);
+            definisiEl.classList.remove("hidden");
+        } else {
+            definisiEl.classList.add("hidden");
+        }
+    }
+
     if (datasets.length === 1) {
         const d = datasets[0];
+
+        // 1 tahun → hanya tampilkan definisi, tidak ada interpretasi
         if (d.labels.length < 2) {
-            if (section) section.classList.add("hidden");
+            document.getElementById("tren-card")?.classList.add("hidden");
+            document
+                .getElementById("interpretasi-card")
+                ?.classList.add("hidden");
+            document.getElementById("interpretasi-pairs")?.innerHTML &&
+                (document.getElementById("interpretasi-pairs").innerHTML = "");
+            document
+                .getElementById("interpretasi-wilayah")
+                ?.classList.add("hidden");
+            // Tetap tampilkan section jika ada definisi
+            if (komponen?.definisi) {
+                if (section) section.classList.remove("hidden");
+            } else {
+                if (section) section.classList.add("hidden");
+            }
             return;
         }
 
@@ -450,23 +455,30 @@ function renderInterpretasiGrafik(datasets, selectedCat) {
         document.getElementById("tren-card")?.classList.add("hidden");
         document.getElementById("interpretasi-card")?.classList.add("hidden");
 
+        // Hitung dataset yg punya ≥2 tahun
+        const validDatasets = datasets.filter((d) => d.labels.length >= 2);
+
         let html = "";
         datasets.forEach((d, i) => {
-            if (d.labels.length < 2) return;
             const color = COLORS[i % COLORS.length].border;
             html += `<div class="rounded-2xl border border-gray-100 p-4 space-y-3">
                 <div class="flex items-center gap-2">
                     <span class="w-3 h-3 rounded-full shrink-0" style="background:${color}"></span>
                     <span class="text-xs font-bold text-gray-700 uppercase tracking-wide">${escH(d.wilayah)}</span>
                 </div>`;
-            html += buildTrenMiniCard(d.labels, d.values, d, komponen);
-            html += buildPairsHtml(d.labels, d.values, d, komponen);
+            if (d.labels.length >= 2) {
+                html += buildTrenMiniCard(d.labels, d.values, d, komponen);
+                html += buildPairsHtml(d.labels, d.values, d, komponen);
+            } else {
+                html += `<p class="text-xs text-gray-400 italic">Hanya 1 tahun data — tidak ada perbandingan periode.</p>`;
+            }
             html += `</div>`;
         });
 
         const pairsDiv = document.getElementById("interpretasi-pairs");
         if (pairsDiv) pairsDiv.innerHTML = html;
-        renderPerbandinganWilayahMultiTahun(datasets, selectedCat);
+        if (validDatasets.length >= 2)
+            renderPerbandinganWilayahMultiTahun(datasets, selectedCat);
         if (section) section.classList.remove("hidden");
     }
 }
@@ -477,21 +489,7 @@ function buildTrenMiniCard(labels, values, dataset, komponen) {
         vB = values[values.length - 1];
     const sel = vB - vA;
     const tren = sel > 0 ? "naik" : sel < 0 ? "turun" : "tetap";
-    const cfg = {
-        naik: {
-            color: "green",
-            icon: "ti-trending-up",
-            label: "Naik",
-            sign: "+",
-        },
-        turun: {
-            color: "red",
-            icon: "ti-trending-down",
-            label: "Turun",
-            sign: "",
-        },
-        tetap: { color: "gray", icon: "ti-minus", label: "Tetap", sign: "" },
-    }[tren];
+    const cfg = TREN_CFG[tren];
     return `<div class="flex items-center justify-between gap-3 p-3 rounded-xl bg-${cfg.color}-50 border border-${cfg.color}-100">
         <div class="text-center"><p class="text-[10px] text-gray-400">${labels[0]}</p><p class="text-lg font-black text-gray-800">${vA.toFixed(2)}</p></div>
         <div class="flex flex-col items-center gap-0.5">
@@ -503,45 +501,36 @@ function buildTrenMiniCard(labels, values, dataset, komponen) {
     </div>`;
 }
 
-// ── TREN CARD UTAMA (1 wilayah) ───────────────────────────────────────────
+// ── TREN CARD UTAMA (1 wilayah, ≥2 tahun) ────────────────────────────────
 function renderTrenCard(labels, values, dataset, komponen) {
     const vA = values[0],
         vB = values[values.length - 1];
     const tahunAwal = labels[0],
         tahunAkhir = labels[labels.length - 1];
     const sel = vB - vA;
-    const tren = sel > 0 ? "naik" : sel < 0 ? "turun" : "tetap";
-    const cfg = {
-        naik: {
-            color: "green",
-            icon: "ti-trending-up",
-            label: "Naik",
-            sign: "+",
-        },
-        turun: {
-            color: "red",
-            icon: "ti-trending-down",
-            label: "Turun",
-            sign: "",
-        },
-        tetap: { color: "gray", icon: "ti-minus", label: "Tetap", sign: "" },
-    }[tren];
 
-    // const interpKecil =
-    //     komponen?.interpretasi_lebih_kecil ||
-    //     dataset?.interp_kecil ||
-    //     currentData.interpKecil ||
-    //     "";
-    // const interpBesar =
-    //     komponen?.interpretasi_lebih_besar ||
-    //     dataset?.interp_besar ||
-    //     currentData.interpBesar ||
-    //     "";
-    // const interpTetap =
-    //     komponen?.interpretasi_tetap ||
-    //     dataset?.interp_tetap ||
-    //     currentData.interpTetap ||
-    //     "";
+    let naikCount = 0;
+    let turunCount = 0;
+
+    for (let i = 1; i < values.length; i++) {
+        if (values[i] > values[i - 1]) {
+            naikCount++;
+        } else if (values[i] < values[i - 1]) {
+            turunCount++;
+        }
+    }
+
+    let tren = "tetap";
+
+    if (naikCount > 0 && turunCount === 0) {
+        tren = "naik";
+    } else if (turunCount > 0 && naikCount === 0) {
+        tren = "turun";
+    } else if (naikCount > 0 && turunCount > 0) {
+        tren = "fluktuatif";
+    }
+
+    const cfg = TREN_CFG[tren];
 
     const interpKecil = currentData.interpKecil || dataset?.interp_kecil || "";
     const interpBesar = currentData.interpBesar || dataset?.interp_besar || "";
@@ -549,9 +538,40 @@ function renderTrenCard(labels, values, dataset, komponen) {
 
     const teksMap = {
         naik: interpBesar || "Data mengalami kenaikan.",
+
         turun: interpKecil || "Data mengalami penurunan.",
+
         tetap: interpTetap || "Data tidak berubah secara signifikan.",
+
+        fluktuatif:
+            "Data menunjukkan pola yang berfluktuasi selama periode pengamatan.",
     };
+
+    const checkedYears = [...document.querySelectorAll(".tahun-check:checked")];
+
+    const selectedYears = checkedYears
+        .map((el) => parseInt(el.value))
+        .filter((year) => !isNaN(year))
+        .sort((a, b) => a - b);
+
+    const isSequential = selectedYears.every((year, index) => {
+        if (index === 0) return true;
+
+        return year === selectedYears[index - 1] + 1;
+    });
+
+    let interpretationTitle = "";
+
+    if (selectedYears.length <= 1) {
+        interpretationTitle = "Definisi Komponen";
+    } else if (isSequential) {
+        interpretationTitle = `Tren Keseluruhan ${selectedYears[0]}–${selectedYears[selectedYears.length - 1]}`;
+    } else {
+        interpretationTitle = `Tren Berdasarkan Data Terpilih (${selectedYears.join(", ")})`;
+    }
+
+    document.getElementById("interpretasi-label").textContent =
+        interpretationTitle;
 
     document.getElementById("tren-tahun-awal").textContent =
         "Tahun " + tahunAwal;
@@ -561,7 +581,7 @@ function renderTrenCard(labels, values, dataset, komponen) {
     document.getElementById("tren-nilai-akhir").textContent = vB.toFixed(2);
 
     document.getElementById("tren-card").className =
-        `flex items-center justify-between gap-4 p-5 rounded-2xl border bg-${cfg.color}-50 dark:bg-${cfg.color}-900/20 border-${cfg.color}-100 dark:border-${cfg.color}-800`;
+        `flex items-center justify-between gap-4 p-5 rounded-2xl border bg-${cfg.color}-50 border-${cfg.color}-100`;
     document.getElementById("tren-icon").className =
         `text-3xl ti ${cfg.icon} text-${cfg.color}-500`;
     document.getElementById("tren-label").className =
@@ -572,16 +592,17 @@ function renderTrenCard(labels, values, dataset, komponen) {
     document.getElementById("tren-selisih").textContent =
         cfg.sign + Math.abs(sel).toFixed(2);
 
+    // ── "Interpretasi Keseluruhan" → "Definisi Komponen" digabung di renderInterpretasiGrafik
     document.getElementById("interpretasi-card").className =
-        `rounded-2xl border p-5 border-${cfg.color}-100 dark:border-${cfg.color}-800 bg-${cfg.color}-50/50 dark:bg-${cfg.color}-900/10`;
+        `rounded-2xl border p-5 border-${cfg.color}-100 bg-${cfg.color}-50/50`;
     document.getElementById("interpretasi-icon-wrap").className =
-        `mt-0.5 shrink-0 w-8 h-8 rounded-xl flex items-center justify-center bg-${cfg.color}-100 dark:bg-${cfg.color}-900/30`;
+        `mt-0.5 shrink-0 w-8 h-8 rounded-xl flex items-center justify-center bg-${cfg.color}-100`;
     document.getElementById("interpretasi-icon").className =
         `ti ${cfg.icon} text-${cfg.color}-500 text-lg`;
     document.getElementById("interpretasi-label").className =
         `text-xs font-bold uppercase tracking-widest mb-2 text-${cfg.color}-500`;
-    document.getElementById("interpretasi-label").textContent =
-        `Interpretasi Keseluruhan ${tahunAwal}–${tahunAkhir}`;
+    // document.getElementById("interpretasi-label").textContent =
+    //     `Tren Keseluruhan ${tahunAwal}–${tahunAkhir}`;
     document.getElementById("interpretasi-teks").textContent = teksMap[tren];
 
     renderPairsForDataset(labels, values, dataset, komponen);
@@ -592,9 +613,9 @@ function renderPairsForDataset(labels, values, dataset, komponen) {
     const pairsDiv = document.getElementById("interpretasi-pairs");
     if (!pairsDiv) return;
     let html = `<div class="flex items-center gap-2 mb-1">
-        <div class="flex-1 h-px bg-gray-100 dark:bg-gray-700"></div>
+        <div class="flex-1 h-px bg-gray-100"></div>
         <span class="text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Perubahan Per Periode</span>
-        <div class="flex-1 h-px bg-gray-100 dark:bg-gray-700"></div>
+        <div class="flex-1 h-px bg-gray-100"></div>
     </div>`;
     for (let i = 0; i < labels.length - 1; i++) {
         html += buildPairCard(
@@ -611,9 +632,9 @@ function renderPairsForDataset(labels, values, dataset, komponen) {
     }
     if (labels.length > 2) {
         html += `<div class="flex items-center gap-2 mt-4 mb-1">
-            <div class="flex-1 h-px bg-gray-100 dark:bg-gray-700"></div>
+            <div class="flex-1 h-px bg-gray-100"></div>
             <span class="text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Perubahan Total</span>
-            <div class="flex-1 h-px bg-gray-100 dark:bg-gray-700"></div>
+            <div class="flex-1 h-px bg-gray-100"></div>
         </div>`;
         html += buildPairCard(
             labels[0],
@@ -679,6 +700,7 @@ function renderPerbandinganWilayahMultiTahun(datasets, kategori) {
                 `<th class="px-3 py-2 text-xs font-bold text-center" style="color:${COLORS[i % COLORS.length].border}">${escH(d.wilayah)}</th>`,
         )
         .join("");
+
     const rowsHtml = allYears
         .map((year) => {
             const vals = datasets.map((d) => {
@@ -728,7 +750,7 @@ function renderPerbandinganWilayahMultiTahun(datasets, kategori) {
     container.innerHTML = `
         <div class="flex items-start gap-3">
             <div class="w-8 h-8 flex items-center justify-center rounded-xl bg-indigo-100 shrink-0"><i class="ti ti-map-pin text-indigo-600"></i></div>
-            <div class="flex-1">
+            <div class="flex-1 min-w-0">
                 <p class="text-xs font-bold uppercase text-indigo-500 mb-3">Perbandingan Antar Wilayah (${datasets.length} wilayah, ${allYears.length} tahun)</p>
                 <div class="overflow-x-auto mb-4">
                     <table class="w-full text-sm">
@@ -754,6 +776,7 @@ function renderInterpretasiTabel(datasets, selectedCat) {
 
     document.getElementById("tren-card")?.classList.add("hidden");
     document.getElementById("interpretasi-card")?.classList.add("hidden");
+    document.getElementById("definisi-card")?.classList.add("hidden");
     const pairsDiv = document.getElementById("interpretasi-pairs");
     if (pairsDiv) pairsDiv.innerHTML = "";
     document.getElementById("interpretasi-wilayah")?.classList.add("hidden");
@@ -780,7 +803,7 @@ function renderInterpretasiTabel(datasets, selectedCat) {
 
     let html = `<div class="flex items-center gap-2 mb-3">
         <div class="flex-1 h-px bg-gray-100"></div>
-        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Interpretasi Per Komponen</span>
+        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Penjelasan Per Komponen</span>
         <div class="flex-1 h-px bg-gray-100"></div>
     </div>`;
 
@@ -829,34 +852,37 @@ function renderInterpretasiTabel(datasets, selectedCat) {
                 ${komponen?.satuan ? `<span class="text-xs text-gray-400">(${escH(komponen.satuan)})</span>` : ""}
             </div>`;
 
+        // ── Definisi komponen — selalu tampil di tabel ──────────────────
+        if (!isSub && komponen?.definisi) {
+            html += `<div class="flex items-start gap-2.5 p-3 rounded-xl bg-blue-50/60 border border-blue-100">
+                <i class="ti ti-book-2 text-blue-400 text-sm mt-0.5 shrink-0"></i>
+                <p class="text-xs text-gray-600 leading-relaxed"><span class="font-semibold text-blue-500">Definisi: </span>${escH(komponen.definisi)}</p>
+            </div>`;
+        }
+
         katDatasets.forEach((kd, i) => {
-            if (kd.labels.length < 2) return;
+            const colorBar = COLORS[i % COLORS.length].border;
+            const hasMultiYear = kd.labels.length >= 2;
+
+            if (!hasMultiYear) {
+                // 1 tahun: tampilkan nilai saja, tanpa interpretasi naik/turun
+                html += `<div class="flex items-start gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50/40">
+                    <span class="w-2 h-full rounded-full shrink-0 self-stretch" style="background:${colorBar};min-width:4px;min-height:24px"></span>
+                    <div class="flex-1">
+                        <span class="text-xs font-semibold text-gray-600">${escH(kd.wilayah)}</span>
+                        <p class="text-xs text-gray-500 mt-0.5">Nilai ${kd.labels[0]}: <span class="font-bold text-gray-700">${kd.values[0].toFixed(2)}${komponen?.satuan ? " " + komponen.satuan : ""}</span></p>
+                    </div>
+                </div>`;
+                return;
+            }
+
             const vA = kd.values[0],
                 vB = kd.values[kd.values.length - 1];
             const sel = vB - vA;
             const pct =
                 vA !== 0 ? ((sel / Math.abs(vA)) * 100).toFixed(1) : "0.0";
             const tren = sel > 0 ? "naik" : sel < 0 ? "turun" : "tetap";
-            const cfg = {
-                naik: {
-                    color: "green",
-                    icon: "ti-trending-up",
-                    label: "Naik",
-                    sign: "+",
-                },
-                turun: {
-                    color: "red",
-                    icon: "ti-trending-down",
-                    label: "Turun",
-                    sign: "",
-                },
-                tetap: {
-                    color: "gray",
-                    icon: "ti-minus",
-                    label: "Tetap",
-                    sign: "",
-                },
-            }[tren];
+            const cfg = TREN_CFG[tren];
             const teksAdmin =
                 tren === "naik"
                     ? komponen?.interpretasi_lebih_besar ||
@@ -872,6 +898,7 @@ function renderInterpretasiTabel(datasets, selectedCat) {
                         kd.interp_tetap ||
                         currentData.interpTetap ||
                         "";
+
             const absSel = Math.abs(sel).toFixed(2),
                 absPct = Math.abs(parseFloat(pct)).toFixed(1);
             let teksCerita = `Nilai ${escH(currentData.judul)} (${escH(kat)}) di ${escH(kd.wilayah)} `;
@@ -880,7 +907,7 @@ function renderInterpretasiTabel(datasets, selectedCat) {
                     ? `tidak berubah dari ${kd.labels[0]} hingga ${kd.labels[kd.labels.length - 1]}, tetap di ${vA.toFixed(2)}.`
                     : `${tren === "naik" ? "meningkat" : "menurun"} sebesar ${absSel} (${absPct}%) dari ${kd.labels[0]} (${vA.toFixed(2)}) ke ${kd.labels[kd.labels.length - 1]} (${vB.toFixed(2)}).`;
             if (teksAdmin) teksCerita += " " + teksAdmin;
-            const colorBar = COLORS[i % COLORS.length].border;
+
             html += `<div class="flex items-start gap-3 p-3 rounded-xl border border-${cfg.color}-100 bg-${cfg.color}-50/40">
                 <span class="w-2 h-full rounded-full shrink-0 self-stretch" style="background:${colorBar};min-width:4px;min-height:24px"></span>
                 <div class="flex-1">
@@ -896,26 +923,29 @@ function renderInterpretasiTabel(datasets, selectedCat) {
         });
 
         if (katDatasets.length > 1) {
-            const lastY = [...new Set(katDatasets.flatMap((d) => d.labels))]
-                .sort()
-                .at(-1);
-            const lv = katDatasets
-                .map((d) => {
-                    const i = d.labels.indexOf(lastY);
-                    return {
-                        wilayah: d.wilayah,
-                        value: i >= 0 ? d.values[i] : null,
-                    };
-                })
-                .filter((x) => x.value !== null)
-                .sort((a, b) => b.value - a.value);
-            if (lv.length > 1) {
-                const t = lv[0],
-                    b = lv.at(-1);
-                html += `<div class="flex items-center gap-2 p-2 rounded-lg bg-indigo-50 border border-indigo-100 text-xs text-indigo-700">
-                    <i class="ti ti-arrows-diff text-indigo-400"></i>
-                    Pada ${lastY}: <b>${escH(t.wilayah)}</b> tertinggi (${t.value.toFixed(2)}), <b>${escH(b.wilayah)}</b> terendah (${b.value.toFixed(2)}), selisih <b>${(t.value - b.value).toFixed(2)}</b>
-                </div>`;
+            const validKd = katDatasets.filter((kd) => kd.labels.length >= 2);
+            if (validKd.length > 1) {
+                const lastY = [...new Set(validKd.flatMap((d) => d.labels))]
+                    .sort()
+                    .at(-1);
+                const lv = validKd
+                    .map((d) => {
+                        const i = d.labels.indexOf(lastY);
+                        return {
+                            wilayah: d.wilayah,
+                            value: i >= 0 ? d.values[i] : null,
+                        };
+                    })
+                    .filter((x) => x.value !== null)
+                    .sort((a, b) => b.value - a.value);
+                if (lv.length > 1) {
+                    const t = lv[0],
+                        b = lv.at(-1);
+                    html += `<div class="flex items-center gap-2 p-2 rounded-lg bg-indigo-50 border border-indigo-100 text-xs text-indigo-700">
+                        <i class="ti ti-arrows-diff text-indigo-400"></i>
+                        Pada ${lastY}: <b>${escH(t.wilayah)}</b> tertinggi (${t.value.toFixed(2)}), <b>${escH(b.wilayah)}</b> terendah (${b.value.toFixed(2)}), selisih <b>${(t.value - b.value).toFixed(2)}</b>
+                    </div>`;
+                }
             }
         }
         html += `</div>`;
@@ -967,10 +997,10 @@ function renderTable(datasets, kategori) {
     ].sort();
 
     thead.innerHTML = `<tr class="border-b border-gray-100">
-        <th class="text-left px-4 py-3 font-semibold text-blue-600">Kategori</th>
-        <th class="text-left px-4 py-3 font-semibold text-blue-600">Satuan</th>
-        <th class="text-left px-4 py-3 font-semibold text-blue-600">Tahun</th>
-        ${datasets.map((d) => `<th class="text-left px-4 py-3 font-semibold text-blue-600">${escH(d.wilayah)}</th>`).join("")}
+        <th class="text-left px-4 py-3 font-semibold text-[#035f9c]">Kategori</th>
+        <th class="text-left px-4 py-3 font-semibold text-[#035f9c]">Satuan</th>
+        <th class="text-left px-4 py-3 font-semibold text-[#035f9c]">Tahun</th>
+        ${datasets.map((d) => `<th class="text-left px-4 py-3 font-semibold text-[#035f9c]">${escH(d.wilayah)}</th>`).join("")}
     </tr>`;
 
     let bodyHtml = "";
@@ -1026,7 +1056,7 @@ function downloadTable() {
         ...document.querySelectorAll(".wilayah-check:checked"),
     ].map((c) => c.value);
     const datasets = wilayahList
-        .map((w, wi) => {
+        .map((w) => {
             if (!checkedWilayah.includes(w.wilayah)) return null;
             const rows = w.values
                 .filter((v) =>
@@ -1130,21 +1160,7 @@ function buildPairCard(
     const selisih = vB - vA;
     const pct = vA !== 0 ? ((selisih / Math.abs(vA)) * 100).toFixed(1) : "0.0";
     const tren = selisih > 0 ? "naik" : selisih < 0 ? "turun" : "tetap";
-    const cfg = {
-        naik: {
-            color: "green",
-            icon: "ti-trending-up",
-            label: "Naik",
-            sign: "+",
-        },
-        turun: {
-            color: "red",
-            icon: "ti-trending-down",
-            label: "Turun",
-            sign: "",
-        },
-        tetap: { color: "gray", icon: "ti-minus", label: "Tetap", sign: "" },
-    }[tren];
+    const cfg = TREN_CFG[tren];
     const selisihStr = cfg.sign + selisih.toFixed(2);
     const pctFormatted = (parseFloat(pct) > 0 ? "+" : "") + pct + "%";
     const borderCls = isTotal
@@ -1163,6 +1179,7 @@ function buildPairCard(
         komponen,
         dataset,
     );
+
     return `<div class="rounded-2xl p-4 bg-${cfg.color}-50/60 ${borderCls}">
         <div class="flex items-center justify-between mb-3">
             <span class="text-xs font-bold uppercase tracking-widest text-${cfg.color}-500">${isTotal ? "⭐ " : ""}${tA} → ${tB}</span>
@@ -1200,33 +1217,6 @@ function generateInterpretasiTeks(
 ) {
     const selectedCat =
         document.querySelector(".kat-radio:checked")?.value ?? null;
-    const mainComponents = allComponents.filter((c) => !c.is_sub);
-
-    // Jika ada kategori tapi belum dipilih,
-    // jangan tampilkan grafik/tabel/interprestasi
-    if (mainComponents.length > 0 && !selectedCat) {
-        document.getElementById("view-grafik")?.classList.add("hidden");
-        document.getElementById("view-tabel")?.classList.add("hidden");
-
-        // Hide interpretasi
-        document
-            .getElementById("interpretasi-section")
-            ?.classList.add("hidden");
-
-        // Reset isi interpretasi
-        document.getElementById("interpretasi-pairs").innerHTML = "";
-        document.getElementById("interpretasi-wilayah").innerHTML = "";
-        document.getElementById("interpretasi-tabel-komponen").innerHTML = "";
-
-        document.getElementById("tren-card")?.classList.add("hidden");
-        document.getElementById("interpretasi-card")?.classList.add("hidden");
-        document
-            .getElementById("interpretasi-wilayah")
-            ?.classList.add("hidden");
-
-        return;
-    }
-
     const namaKomponen = selectedCat
         ? selectedCat.startsWith("· ")
             ? selectedCat.slice(2)
@@ -1238,65 +1228,47 @@ function generateInterpretasiTeks(
     const absSelisih = Math.abs(selisih).toFixed(2);
     const absPct = Math.abs(parseFloat(pct)).toFixed(1);
 
-    // ── Satu deklarasi teksAdmin saja ────────────────────────────────────────
+    const selectedKomponen =
+        allComponents.find((c) => c.nama === selectedCat) || komponen || null;
+
     let teksAdmin = "";
-    if (tren === "tetap") {
+    if (tren === "tetap")
         teksAdmin =
-            komponen?.interpretasi_tetap ||
+            selectedKomponen?.interpretasi_tetap ||
             dataset?.interp_tetap ||
             currentData.interpTetap ||
             "";
-    } else if (tren === "naik") {
+    else if (tren === "naik")
         teksAdmin =
-            komponen?.interpretasi_lebih_besar ||
+            selectedKomponen?.interpretasi_lebih_besar ||
             dataset?.interp_besar ||
             currentData.interpBesar ||
             "";
-    } else {
+    else
         teksAdmin =
-            komponen?.interpretasi_lebih_kecil ||
+            selectedKomponen?.interpretasi_lebih_kecil ||
             dataset?.interp_kecil ||
             currentData.interpKecil ||
             "";
-    }
 
-    // ── Tren tetap ────────────────────────────────────────────────────────────
     if (tren === "tetap") {
         let teks = `${namaKomponen} ${wilayah} tidak berubah antara tahun ${tA} dan ${tB}, tetap di angka ${vA.toFixed(2)}${satuan}.`;
         if (teksAdmin) teks += ` ${teksAdmin}`;
         return teks.trim();
     }
 
-    // ── Tren naik / turun ─────────────────────────────────────────────────────
     const arah = tren === "naik" ? "meningkat" : "menurun";
     const arahPasif = tren === "naik" ? "peningkatan" : "penurunan";
-
     let teks = `Pada periode tahun ${tA}–${tB}, ${namaKomponen} di ${wilayah} ${arah} dari ${vA.toFixed(2)}${satuan} menjadi ${vB.toFixed(2)}${satuan}.`;
 
-    const selectedKomponen =
-        allComponents.find(
-            (c) =>
-                c.nama ===
-                (document.querySelector(".kat-radio:checked")?.value ?? null),
-        ) ||
-        komponen ||
-        null;
-
-    const interpKomponen =
-        tren === "naik"
-            ? selectedKomponen?.interpretasi_lebih_besar || ""
-            : tren === "turun"
-              ? selectedKomponen?.interpretasi_lebih_kecil || ""
-              : selectedKomponen?.interpretasi_tetap || "";
-
-    if (interpKomponen) {
+    if (teksAdmin) {
         const hasPlaceholder = /\{(selisih|pct|nilai|tahunA|tahunB)\}/.test(
-            interpKomponen,
+            teksAdmin,
         );
         if (hasPlaceholder) {
             teks +=
-                ` ` +
-                interpKomponen
+                " " +
+                teksAdmin
                     .replace(/\{selisih\}/g, `${absSelisih}${satuan}`)
                     .replace(/\{pct\}/g, `${absPct}%`)
                     .replace(/\{nilai\}/g, `${vB.toFixed(2)}${satuan}`)
@@ -1304,7 +1276,7 @@ function generateInterpretasiTeks(
                     .replace(/\{tahunB\}/g, tB);
         } else {
             teks += ` Nilai ${namaKomponen} pada tahun ${tB} sebesar ${vB.toFixed(2)}${satuan} menunjukkan ${arahPasif} sebesar ${absSelisih}${satuan} (${absPct}%) dibandingkan tahun ${tA}.`;
-            teks += ` ${interpKomponen}`; // ← langsung dari komponen
+            teks += ` ${teksAdmin}`;
         }
     } else {
         teks += ` Nilai ${namaKomponen} sebesar ${vB.toFixed(2)}${satuan} menunjukkan ${arahPasif} sebesar ${absSelisih}${satuan} (${absPct}%) dibandingkan tahun ${tA}.`;
@@ -1313,7 +1285,6 @@ function generateInterpretasiTeks(
     if (isTotal && allLabels && allLabels.length > 2) {
         teks += ` Secara keseluruhan selama ${allLabels.length} periode (${tA}–${tB}), tren ${namaKomponen} di ${wilayah} menunjukkan ${tren === "naik" ? "kenaikan" : "penurunan"} kumulatif.`;
     }
-
     return teks.trim();
 }
 

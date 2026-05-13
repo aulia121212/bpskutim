@@ -14,7 +14,7 @@ class StatisticTitle extends Model
         'interpretasi_lebih_kecil',
         'interpretasi_lebih_besar',
         'interpretasi_tetap',
-    ];
+    ];  
 
     public function statistics(): HasMany
     {

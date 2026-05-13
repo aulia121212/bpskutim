@@ -69,7 +69,7 @@
             </div>
 
             {{-- ── Card: Interpretasi Level Judul ── --}}
-            <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-4">
+            <!-- <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-4">
                 <h2 class="text-sm font-bold text-gray-700 dark:text-white flex items-center gap-2">
                     <i class="ti ti-message-2-text text-purple-500"></i> Interpretasi Level Judul
                     <span class="text-xs font-normal text-gray-400">(tampil di "Interpretasi Keseluruhan")</span>
@@ -101,7 +101,7 @@
                             class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 resize-none">{{ old('interpretasi_tetap', $statisticTitle->interpretasi_tetap) }}</textarea>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             {{-- ── Card: Komponen / Kategori ── --}}
             <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6">
@@ -172,39 +172,90 @@
                             <input type="hidden" :name="`components[${idx}][is_sub]`" :value="comp.is_sub ? 1 : 0">
 
                             {{-- Body: interpretasi per komponen (collapsible) --}}
-                            <div x-show="comp._open" x-transition class="px-4 py-3 space-y-3 border-t border-gray-100 dark:border-gray-800">
-                                <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest">Interpretasi Komponen Ini</p>
+                          {{-- ── Card: Definisi & Interpretasi Komponen ── --}}
+<div x-show="comp._open"
+    x-transition
+    class="px-4 py-4 space-y-4 border-t border-gray-100 dark:border-gray-800">
 
-                                <div class="grid grid-cols-1 gap-3">
-                                    <div>
-                                        <label class="block text-xs font-semibold text-green-600 mb-1">
-                                            <i class="ti ti-trending-up"></i> Jika Naik
-                                        </label>
-                                        <textarea :name="`components[${idx}][interpretasi_lebih_besar]`"
-                                            x-model="comp.interpretasi_lebih_besar"
-                                            rows="2" placeholder="Interpretasi jika nilai naik..."
-                                            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 focus:outline-none focus:ring-1 focus:ring-green-400 resize-none"></textarea>
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-red-500 mb-1">
-                                            <i class="ti ti-trending-down"></i> Jika Turun
-                                        </label>
-                                        <textarea :name="`components[${idx}][interpretasi_lebih_kecil]`"
-                                            x-model="comp.interpretasi_lebih_kecil"
-                                            rows="2" placeholder="Interpretasi jika nilai turun..."
-                                            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 focus:outline-none focus:ring-1 focus:ring-red-400 resize-none"></textarea>
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-500 mb-1">
-                                            <i class="ti ti-minus"></i> Jika Tetap
-                                        </label>
-                                        <textarea :name="`components[${idx}][interpretasi_tetap]`"
-                                            x-model="comp.interpretasi_tetap"
-                                            rows="2" placeholder="Interpretasi jika nilai tetap..."
-                                            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-400 resize-none"></textarea>
-                                    </div>
-                                </div>
-                            </div>
+    <div class="flex items-center gap-2">
+        <div class="w-1.5 h-5 rounded-full bg-blue-500"></div>
+        <p class="text-xs font-bold text-gray-500 uppercase tracking-widest">
+            Detail Komponen
+        </p>
+    </div>
+
+    {{-- Definisi --}}
+    <div class="bg-blue-50/60 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800 rounded-xl p-3">
+        <label class="flex items-center gap-2 text-xs font-semibold text-blue-700 dark:text-blue-300 mb-2">
+            <i class="ti ti-book-2"></i>
+            Definisi Komponen
+        </label>
+
+        <textarea :name="`components[${idx}][definisi]`"
+            x-model="comp.definisi"
+            rows="3"
+            placeholder="Masukkan definisi atau penjelasan komponen..."
+            class="w-full border border-blue-100 dark:border-blue-800 rounded-lg px-3 py-2 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-400 resize-none"></textarea>
+
+        <p class="text-[11px] text-blue-500 mt-1">
+            Definisi akan selalu tampil di bawah grafik dan tabel saat komponen dipilih.
+        </p>
+    </div>
+
+    {{-- Interpretasi --}}
+    <div class="space-y-3">
+
+        <div class="flex items-center gap-2">
+            <div class="w-1.5 h-5 rounded-full bg-emerald-500"></div>
+            <p class="text-xs font-bold text-gray-500 uppercase tracking-widest">
+                Interpretasi Perubahan Data
+            </p>
+        </div>
+
+        {{-- Naik --}}
+        <div class="rounded-xl border border-green-100 dark:border-green-900 bg-green-50/40 dark:bg-green-900/10 p-3">
+            <label class="flex items-center gap-2 text-xs font-semibold text-green-700 dark:text-green-300 mb-2">
+                <i class="ti ti-trending-up"></i>
+                Jika Nilai Naik
+            </label>
+
+            <textarea :name="`components[${idx}][interpretasi_lebih_besar]`"
+                x-model="comp.interpretasi_lebih_besar"
+                rows="2"
+                placeholder="Contoh: Peningkatan nilai menunjukkan kondisi yang semakin baik..."
+                class="w-full border border-green-100 dark:border-green-800 rounded-lg px-3 py-2 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-green-400 resize-none"></textarea>
+        </div>
+
+        {{-- Turun --}}
+        <div class="rounded-xl border border-red-100 dark:border-red-900 bg-red-50/40 dark:bg-red-900/10 p-3">
+            <label class="flex items-center gap-2 text-xs font-semibold text-red-600 dark:text-red-300 mb-2">
+                <i class="ti ti-trending-down"></i>
+                Jika Nilai Turun
+            </label>
+
+            <textarea :name="`components[${idx}][interpretasi_lebih_kecil]`"
+                x-model="comp.interpretasi_lebih_kecil"
+                rows="2"
+                placeholder="Contoh: Penurunan nilai menunjukkan perlunya perhatian lebih..."
+                class="w-full border border-red-100 dark:border-red-800 rounded-lg px-3 py-2 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-red-400 resize-none"></textarea>
+        </div>
+
+        {{-- Tetap --}}
+        <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/60 dark:bg-gray-800/40 p-3">
+            <label class="flex items-center gap-2 text-xs font-semibold text-gray-600 dark:text-gray-300 mb-2">
+                <i class="ti ti-minus"></i>
+                Jika Nilai Tetap
+            </label>
+
+            <textarea :name="`components[${idx}][interpretasi_tetap]`"
+                x-model="comp.interpretasi_tetap"
+                rows="2"
+                placeholder="Contoh: Nilai relatif stabil dibanding periode sebelumnya..."
+                class="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400 resize-none"></textarea>
+        </div>
+
+    </div>
+</div>
 
                         </div>
                     </template>
@@ -245,6 +296,7 @@ function titleForm() {
 
             this.components = existing.map(c => ({
                 ...c,
+                definisi: c.definisi || '',
                 _key:  ++this._keyCounter,
                 _open: false,
             }));
@@ -256,6 +308,7 @@ function titleForm() {
                 _open:                    true,
                 nama:                     '',
                 satuan:                   '',
+                definisi: '',
                 is_sub:                   false,
                 interpretasi_lebih_kecil: '',
                 interpretasi_lebih_besar: '',
