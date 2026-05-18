@@ -109,7 +109,7 @@ function _applyTabVisibility(tab) {
     const btnG = document.getElementById("tab-grafik");
     const btnT = document.getElementById("tab-tabel");
     const activeClass =
-        "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition bg-blue-600 text-white";
+        "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition bg-[#035f9c] text-white";
     const inactiveClass =
         "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition border border-gray-200 text-gray-600 hover:bg-gray-50";
     if (btnG) btnG.className = isG ? activeClass : inactiveClass;
@@ -140,11 +140,11 @@ function buildKategoriFilter() {
 
     if (mainComponents.length > 0) {
         katDiv.innerHTML =
-            `<p class="text-xs text-blue-400 font-semibold mb-2">Pilih salah satu ↓</p>` +
+            `<p class="text-xs text-[#035f9c] font-semibold mb-2">Pilih salah satu ↓</p>` +
             mainComponents
                 .map((c) => {
                     const label = c.nama.replace(/^· /, "");
-                    return `<label class="flex items-center gap-2 text-xs cursor-pointer hover:text-blue-600 transition text-gray-600 font-medium">
+                    return `<label class="flex items-center gap-2 text-xs cursor-pointer hover:text-[#035f9c] transition text-gray-600 font-medium">
                     <input type="radio" name="kat_radio" value="${escH(c.nama)}" class="kat-radio shrink-0 accent-[#035f9c]" onchange="onKategoriChange()">
                     <span class="truncate" title="${escH(label)}">${escH(label)}</span>
                 </label>`;
@@ -205,8 +205,8 @@ function buildTahunFilter(years) {
     tahunDiv.innerHTML = years
         .map(
             (y) =>
-                `<label class="flex items-center gap-2 text-xs text-gray-600 cursor-pointer hover:text-blue-600 transition">
-            <input type="checkbox" value="${y}" checked class="tahun-check rounded accent-blue-600"> ${y}
+                `<label class="flex items-center gap-2 text-xs text-gray-600 cursor-pointer hover:text-[#035f9c] transition">
+            <input type="checkbox" value="${y}" checked class="tahun-check rounded accent-[#035f9c]"> ${y}
         </label>`,
         )
         .join("");
@@ -847,7 +847,7 @@ function renderInterpretasiTabel(datasets, selectedCat) {
 
         html += `<div class="rounded-2xl border p-4 space-y-3 ${headerBg}">
             <div class="flex items-center gap-2 ${isSub ? "pl-3" : ""}">
-                <i class="ti ${isSub ? "ti-minus text-indigo-300" : "ti-category text-blue-500"} text-sm"></i>
+                <i class="ti ${isSub ? "ti-minus text-indigo-300" : "ti-category text-[#035f9c]"} text-sm"></i>
                 <span class="text-sm font-${isSub ? "medium text-gray-500 italic" : "bold text-gray-700"}">${isSub ? '<span class="text-indigo-300 mr-1">·</span>' : ""}${escH(katLabel)}</span>
                 ${komponen?.satuan ? `<span class="text-xs text-gray-400">(${escH(komponen.satuan)})</span>` : ""}
             </div>`;
@@ -855,8 +855,8 @@ function renderInterpretasiTabel(datasets, selectedCat) {
         // ── Definisi komponen — selalu tampil di tabel ──────────────────
         if (!isSub && komponen?.definisi) {
             html += `<div class="flex items-start gap-2.5 p-3 rounded-xl bg-blue-50/60 border border-blue-100">
-                <i class="ti ti-book-2 text-blue-400 text-sm mt-0.5 shrink-0"></i>
-                <p class="text-xs text-gray-600 leading-relaxed"><span class="font-semibold text-blue-500">Definisi: </span>${escH(komponen.definisi)}</p>
+                <i class="ti ti-book-2 text-[#035f9c] text-sm mt-0.5 shrink-0"></i>
+                <p class="text-xs text-gray-600 leading-relaxed"><span class="font-semibold text-[#035f9c]">Definisi: </span>${escH(komponen.definisi)}</p>
             </div>`;
         }
 

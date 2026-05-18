@@ -169,8 +169,14 @@
                             </div>
 
                             {{-- Hidden inputs wajib --}}
-                            <input type="hidden" :name="`components[${idx}][is_sub]`" :value="comp.is_sub ? 1 : 0">
+{{-- Hidden inputs wajib --}}
+<input type="hidden"
+    :name="`components[${idx}][id]`"
+    :value="comp.id || ''">
 
+<input type="hidden"
+    :name="`components[${idx}][is_sub]`"
+    :value="comp.is_sub ? 1 : 0">
                             {{-- Body: interpretasi per komponen (collapsible) --}}
                           {{-- ── Card: Definisi & Interpretasi Komponen ── --}}
 <div x-show="comp._open"
@@ -291,19 +297,27 @@ function titleForm() {
         _keyCounter: 0,
 
         init() {
-            {{-- ✅ $existingComponents sudah di-map di controller, aman di-pass ke @json() --}}
-            const existing = @json($existingComponents);
+    const existing = @json($existingComponents);
 
-            this.components = existing.map(c => ({
-                ...c,
-                definisi: c.definisi || '',
-                _key:  ++this._keyCounter,
-                _open: false,
-            }));
-        },
+    this.components = existing.map(c => ({
+        id: c.id || null, // ✅ penting
+        nama: c.nama || '',
+        satuan: c.satuan || '',
+        definisi: c.definisi || '',
+        is_sub: Boolean(c.is_sub),
+
+        interpretasi_lebih_kecil: c.interpretasi_lebih_kecil || '',
+        interpretasi_lebih_besar: c.interpretasi_lebih_besar || '',
+        interpretasi_tetap: c.interpretasi_tetap || '',
+
+        _key: ++this._keyCounter,
+        _open: false,
+    }));
+},
 
         addComponent() {
             this.components.push({
+                id: null, // 
                 _key:                     ++this._keyCounter,
                 _open:                    true,
                 nama:                     '',

@@ -9,8 +9,7 @@
     /* --biru: #385d8d; */
     /* --biru: #669dc1; */
     --biru: #035f9c;
-    --biru-dark: #003c63;
-    /* --biru: #5692ba; */
+    --biru-dark: #123b5d; /* --biru: #5692ba; */
     --green: #1f6d8c;
     --green-soft: #f0f7ff;
     --text: #1e293b;
@@ -37,17 +36,20 @@ body {
     gap: 0.75rem;
     font-size: 0.875rem;
     color: #64748b;
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid #f8fafc;
+
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+
+    padding-bottom: 0.75rem;
+    /* border-bottom: 1px solid #f1f5f9; */
 }
 .show-breadcrumb a {
-    color: #2563eb;
+    color: var(--biru);
     text-decoration: none;
     font-weight: 500;
 }
 .show-breadcrumb a:hover {
-    color: #1d4ed8;
+    text-decoration: underline;
 }
 .show-breadcrumb i {
     font-size: 0.75rem;
@@ -148,7 +150,7 @@ body {
     gap: 0.5rem;
     font-size: 0.875rem;
     font-weight: 700;
-    color: #1a56db;
+    color: var(--biru);
     margin-bottom: 1rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -189,7 +191,7 @@ body {
 }
 .filter-options label:hover {
     background: #f0f9ff;
-    color: #2563eb;
+    color: var(--biru);
 }
 .filter-options input[type="checkbox"],
 .filter-options input[type="radio"] {
@@ -391,5 +393,79 @@ body {
     .show-sidebar {
         width: 100%;
         position: static;
+    }
+}
+
+@media (max-width: 1023px) {
+    .filter-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.45);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 40;
+
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.3s ease;
+    }
+
+    .filter-overlay.show {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .filter-sheet {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        z-index: 50;
+
+        background: white;
+
+        border-radius: 24px 24px 0 0;
+
+        padding: 1.25rem;
+
+        max-height: 82vh;
+        overflow-y: auto;
+
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.12);
+
+        transform: translateY(105%);
+        transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .filter-sheet.show {
+        transform: translateY(0);
+    }
+}
+
+@media (min-width: 1024px) {
+    .filter-overlay {
+        display: none !important;
+    }
+
+    .filter-sheet {
+        position: sticky !important;
+        top: 100px;
+
+        transform: none !important;
+
+        width: 320px;
+        max-height: calc(100vh - 120px);
+
+        overflow-y: auto;
+
+        border-radius: 24px;
+        border: 1px solid #e5e7eb;
+
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+
+        padding: 1.5rem;
+
+        background: white;
     }
 }

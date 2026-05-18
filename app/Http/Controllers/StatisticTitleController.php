@@ -18,7 +18,6 @@ class StatisticTitleController extends Controller
         return view('statistic-titles.index', compact('titles'));
     }
 
-    // ✅ Method baru: halaman detail read-only
     public function show(StatisticTitle $statisticTitle)
     {
         $statisticTitle->load(['components' => fn($q) => $q->orderBy('urutan')]);
@@ -34,9 +33,10 @@ class StatisticTitleController extends Controller
             ->sortBy('urutan')
             ->values()
             ->map(fn($c) => [
+                'id'                       => $c->id,   // ✅ Sertakan id agar update() bisa match
                 'nama'                     => $c->nama,
                 'satuan'                   => $c->satuan ?? '',
-                'definisi' => $c->definisi ?? '',
+                'definisi'                 => $c->definisi ?? '',
                 'is_sub'                   => (bool) $c->is_sub,
                 'interpretasi_lebih_kecil' => $c->interpretasi_lebih_kecil ?? '',
                 'interpretasi_lebih_besar' => $c->interpretasi_lebih_besar ?? '',
@@ -90,11 +90,10 @@ class StatisticTitleController extends Controller
                 'interpretasi_tetap'       => $request->interpretasi_tetap,
             ]);
 
-            $statisticTitle->components()->delete();
-            $this->syncComponents($statisticTitle, $request->input('components', []));
+            // ✅ Ganti: sync cerdas — tidak delete semua
+            $this->syncComponentsForUpdate($statisticTitle, $request->input('components', []));
         });
 
-        // ✅ Redirect ke show setelah update
         return redirect()->route('statistic-titles.show', $statisticTitle->id)
             ->with('success', 'Judul data berhasil diperbarui.');
     }
@@ -123,7 +122,7 @@ class StatisticTitleController extends Controller
                 'nama'                     => $c->nama,
                 'is_sub'                   => $c->is_sub,
                 'satuan'                   => $c->satuan,
-                'definisi' => $c->definisi,
+                'definisi'                 => $c->definisi,
                 'urutan'                   => $c->urutan,
                 'interpretasi_lebih_kecil' => $c->interpretasi_lebih_kecil,
                 'interpretasi_lebih_besar' => $c->interpretasi_lebih_besar,
@@ -132,6 +131,9 @@ class StatisticTitleController extends Controller
         ]);
     }
 
+    // ─────────────────────────────────────────────────────────────
+    // Dipakai saat STORE (data baru, tidak ada komponen existing)
+    // ─────────────────────────────────────────────────────────────
     private function syncComponents(StatisticTitle $title, array $components): void
     {
         foreach ($components as $i => $comp) {
@@ -143,12 +145,90 @@ class StatisticTitleController extends Controller
                 'nama'                     => $nama,
                 'is_sub'                   => !empty($comp['is_sub']),
                 'satuan'                   => $comp['satuan'] ?? null,
-                'definisi' => $comp['definisi'] ?? null,
+                'definisi'                 => $comp['definisi'] ?? null,
                 'urutan'                   => $i,
                 'interpretasi_lebih_kecil' => $comp['interpretasi_lebih_kecil'] ?? null,
                 'interpretasi_lebih_besar' => $comp['interpretasi_lebih_besar'] ?? null,
                 'interpretasi_tetap'       => $comp['interpretasi_tetap'] ?? null,
             ]);
         }
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Dipakai saat UPDATE:
+    // - Komponen dengan id yang dikenal  → UPDATE (nama boleh berubah)
+    // - Komponen tanpa id / id baru      → INSERT
+    // - Komponen yang tidak ada di form  → DELETE
+    // ─────────────────────────────────────────────────────────────
+    private function syncComponentsForUpdate(StatisticTitle $title, array $components): void
+    {
+        // Kumpulkan id yang dikirim dari form (hanya yang valid & milik title ini)
+        $validExistingIds = $title->components()->pluck('id')->toArray();
+        $keptIds          = [];
+
+        foreach ($components as $i => $comp) {
+            $nama = trim($comp['nama'] ?? '');
+            if ($nama === '') continue;
+
+            $incomingId = isset($comp['id']) ? (int) $comp['id'] : null;
+
+            if ($incomingId && in_array($incomingId, $validExistingIds)) {
+
+    // ambil nama lama sebelum update
+    $oldComponent = StatisticTitleComponent::find($incomingId);
+    $oldName = $oldComponent?->nama;
+
+    // update komponen
+    StatisticTitleComponent::where('id', $incomingId)->update([
+        'nama'                     => $nama,
+        'is_sub'                   => !empty($comp['is_sub']),
+        'satuan'                   => $comp['satuan'] ?? null,
+        'definisi'                 => $comp['definisi'] ?? null,
+        'urutan'                   => $i,
+        'interpretasi_lebih_kecil' => $comp['interpretasi_lebih_kecil'] ?? null,
+        'interpretasi_lebih_besar' => $comp['interpretasi_lebih_besar'] ?? null,
+        'interpretasi_tetap'       => $comp['interpretasi_tetap'] ?? null,
+    ]);
+
+    // ✅ sinkronkan nama lama ke data statistik
+    if ($oldName && $oldName !== $nama) {
+
+        \App\Models\StatisticValue::where('x_label', $oldName)
+            ->update([
+                'x_label' => $nama
+            ]);
+
+        \App\Models\StatisticValue::where('y_label', $oldName)
+            ->update([
+                'y_label' => $nama
+            ]);
+    }
+
+    $keptIds[] = $incomingId;
+} else {
+                // ✅ Komponen baru (tidak ada id / id tidak dikenal) → INSERT
+                $newComp   = StatisticTitleComponent::create([
+                    'statistic_title_id'       => $title->id,
+                    'nama'                     => $nama,
+                    'is_sub'                   => !empty($comp['is_sub']),
+                    'satuan'                   => $comp['satuan'] ?? null,
+                    'definisi'                 => $comp['definisi'] ?? null,
+                    'urutan'                   => $i,
+                    'interpretasi_lebih_kecil' => $comp['interpretasi_lebih_kecil'] ?? null,
+                    'interpretasi_lebih_besar' => $comp['interpretasi_lebih_besar'] ?? null,
+                    'interpretasi_tetap'       => $comp['interpretasi_tetap'] ?? null,
+                ]);
+                $keptIds[] = $newComp->id;
+            }
+        }
+
+        // ✅ Hapus HANYA komponen yang memang dihilangkan user dari form
+        if (!empty($keptIds)) {
+            $title->components()
+                ->whereNotIn('id', $keptIds)
+                ->delete();
+        }
+        // Jika $keptIds kosong (form kirim komponen kosong semua), tidak ada yang dihapus
+        // — ini safety net agar tidak wipe semua komponen karena bug form
     }
 }
