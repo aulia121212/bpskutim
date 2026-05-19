@@ -289,15 +289,59 @@ document.querySelector('form')?.addEventListener('submit', function(e) {
 
 // Kirim WA
 function kirimWA() {
-    const no      = document.getElementById('no_wa').value.replace(/^0/, '62').replace(/\D/g,'');
-    const nama    = @json($reservasi->user->name ?? '-');
-    const tanggal = @json($reservasi->tanggal_konsultasi ? \Carbon\Carbon::parse($reservasi->tanggal_konsultasi)->format('d-m-Y') : '-');
-    const jam     = @json($reservasi->waktu_konsultasi ?? '-');
-    const jenis   = @json($reservasi->jenis_konsultasi ?? '-');
-    const lokasi  = document.querySelector('input[name="lokasi_konsultasi"]')?.value || '-';
+    const no = document.getElementById('no_wa').value
+        .replace(/^0/, '62')
+        .replace(/\D/g, '');
 
-    const pesan = `Halo ${nama},\n\nBerikut adalah jadwal konsultasi Anda:\n\n📅 Tanggal : ${tanggal}\n⏰ Jam     : ${jam}\n💻 Jenis   : ${jenis}\n📍 Lokasi  : ${lokasi}\n\nMohon hadir tepat waktu. Terima kasih 🙏\nBPS Kabupaten Kutai Timur`;
-    window.open(`https://wa.me/${no}?text=${encodeURIComponent(pesan)}`, '_blank');
+    const nama = @json($reservasi->user->name ?? '-');
+
+    const tanggal = @json(
+        $reservasi->tanggal_konsultasi
+            ? \Carbon\Carbon::parse($reservasi->tanggal_konsultasi)->format('d-m-Y')
+            : '-'
+    );
+
+    const jam = @json($reservasi->waktu_konsultasi ?? '-');
+
+    const jenisRaw = @json($reservasi->jenis_konsultasi ?? '-');
+
+    // Ubah teks jenis konsultasi
+    let jenis = jenisRaw;
+
+    if (jenisRaw.toLowerCase() === 'offline') {
+        jenis = 'Offline (Luring)';
+    } else if (jenisRaw.toLowerCase() === 'online') {
+        jenis = 'Online (Daring)';
+    }
+
+    const lokasi =
+        document.querySelector('input[name="lokasi_konsultasi"]')?.value || '-';
+
+    const pesan = `
+Halo ${nama}
+
+Berikut adalah jadwal konsultasi Anda:
+
+📅 Tanggal : ${tanggal}
+⏰ Jam     : ${jam}
+💻 Jenis   : ${jenis}
+📍 Lokasi  : ${lokasi}
+
+Mohon hadir tepat waktu.
+Terima kasih 🙏
+
+BPS Kabupaten Kutai Timur
+`.trim();
+
+    const params = new URLSearchParams({
+        phone: no,
+        text: pesan
+    });
+
+    window.open(
+        `https://api.whatsapp.com/send?${params.toString()}`,
+        '_blank'
+    );
 }
 </script>
 @endsection

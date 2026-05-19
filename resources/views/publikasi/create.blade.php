@@ -22,7 +22,7 @@
                         </span>
                         <input type="url" name="link" value="{{ old('link') }}"
                             placeholder="https://bps.go.id/publikasi/..."
-                            class="w-full border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                            class="w-full border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c] dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                             required>
                     </div>
                     @error('link')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
@@ -35,7 +35,7 @@
                     Batal
                 </a>
                 <button type="submit"
-                    class="px-8 py-2.5 rounded-xl bg-[#035f9c] hover:bg-blue-700 text-white text-sm font-semibold transition shadow-sm">
+                    class="px-8 py-2.5 rounded-xl bg-[#035f9c] hover:bg-[#035f9c] text-white text-sm font-semibold transition shadow-sm">
                     Simpan
                 </button>
             </div>

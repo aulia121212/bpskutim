@@ -84,21 +84,25 @@
                 </div>
 
                 {{-- Kata Sandi --}}
-                <div>
-                    <label class="block text-sm font-semibold text-blue-500 mb-1.5">
-                        Kata Sandi<span class="text-red-400">*</span>
-                    </label>
-                    <div class="relative">
-                        <input type="password" name="password" id="password-field"
-                            placeholder="••••••••••"
-                            class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 pr-10 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
-                        <button type="button" onclick="togglePassword()"
-                            class="absolute right-3 top-3 text-gray-400 hover:text-gray-600 transition">
-                            <i class="ti ti-eye" id="password-eye"></i>
-                        </button>
-                    </div>
-                    <p class="text-xs text-gray-400 mt-1">Kosongkan jika tidak ingin mengubah kata sandi</p>
-                </div>
+<div id="current-password-wrap" style="display:none">
+    <label class="block text-sm font-semibold text-blue-500 mb-1.5">
+        Password Saat Ini<span class="text-red-400">*</span>
+    </label>
+    <input type="password" name="current_password" id="current_password"
+        class="w-full border rounded-xl px-4 py-3 text-sm"
+        placeholder="Masukkan password saat ini">
+</div>
+
+{{-- Password Baru --}}
+<div>
+    <label class="block text-sm font-semibold text-blue-500 mb-1.5">
+        Password Baru
+    </label>
+    <input type="password" name="new_password" id="new_password"
+        placeholder="Kosongkan jika tidak ingin mengubah"
+        oninput="toggleCurrentPwField(this)"
+        class="w-full border rounded-xl px-4 py-3 text-sm">
+</div>
 
                 {{-- Asal Instansi --}}
                 <div>
@@ -170,6 +174,20 @@ function togglePassword() {
     } else {
         field.type = 'password';
         eye.className = 'ti ti-eye';
+    }
+}
+
+function toggleCurrentPwField(input) {
+    const wrap = document.getElementById('current-password-wrap');
+    const current = document.getElementById('current_password');
+
+    if (input.value.length > 0) {
+        wrap.style.display = 'block';
+        current.required = true;
+    } else {
+        wrap.style.display = 'none';
+        current.required = false;
+        current.value = '';
     }
 }
 </script>

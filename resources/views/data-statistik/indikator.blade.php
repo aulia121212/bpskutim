@@ -98,7 +98,7 @@ Data Statistik</a>
 
         {{-- Info --}}
         <div class="row-info">
-            <div class="row-title">{{ $stat->judul_data }} {{ $minY }}–{{ $maxY }}</div>
+            <div class="row-title">{{ $stat->judul_data }} </div>
             <div class="row-badge">
                 <i class="ti ti-tag" style="font-size:12px"></i>
                 {{ $labelShortMap[$stat->indikator_data] ?? $stat->indikator_data }}

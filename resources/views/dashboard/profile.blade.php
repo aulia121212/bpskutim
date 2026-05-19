@@ -49,7 +49,7 @@
                                  alt="Foto Profil"
                                  class="w-full h-full object-cover">
                         @else
-                            <div class="w-full h-full flex items-center justify-center bg-blue-50 dark:bg-blue-900/30 text-blue-500 text-3xl font-bold">
+                            <div class="w-full h-full flex items-center justify-center bg-blue-50 dark:bg-blue-900/30 text-[#035f9c] text-3xl font-bold">
                                 {{ strtoupper(substr($user->name, 0, 2)) }}
                             </div>
                         @endif
@@ -69,7 +69,7 @@
                                onchange="document.getElementById('photoForm').submit()">
                         <button type="button"
                                 onclick="document.getElementById('fotoInput').click()"
-                                class="absolute bottom-0 right-0 w-8 h-8 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-md transition-colors">
+                                class="absolute bottom-0 right-0 w-8 h-8 bg-[#035f9c] hover:bg-white text-white hover:text-[#035f9c] rounded-full flex items-center justify-center shadow-md transition-colors">
                             <i class="ti ti-pencil text-sm"></i>
                         </button>
                     </form>
@@ -82,13 +82,22 @@
 
                 {{-- Badge role --}}
                 <div class="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full
-                    @if($user->isSuperAdmin()) bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300
-                    @elseif($user->isAdminPelayanan()) bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300
-                    @else bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300
-                    @endif">
-                    <i class="ti ti-shield-check text-sm"></i>
-                    <span class="text-xs font-bold">{{ $user->role_label }}</span>
-                </div>
+    @if($user->isSuperAdmin()) 
+        bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300
+
+    @elseif($user->isAdminPelayanan()) 
+        bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300
+
+    @elseif($user->isAdminStatistik()) 
+        bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300
+
+    @else 
+        bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300
+    @endif">
+
+    <i class="ti ti-shield-check text-sm"></i>
+    <span class="text-xs font-bold">{{ $user->role_label }}</span>
+</div>
             </div>
 
             {{-- Info singkat --}}
@@ -138,7 +147,7 @@
 
                 {{-- Section: Informasi Dasar --}}
                 <h2 class="text-sm font-bold text-gray-700 dark:text-white mb-4 flex items-center gap-2">
-                    <i class="ti ti-user text-blue-500"></i> Informasi Dasar
+                    <i class="ti ti-user text-[#035f9c]"></i> Informasi Dasar
                 </h2>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
@@ -149,7 +158,7 @@
                         <input type="text"
                                name="name"
                                value="{{ old('name', $user->name) }}"
-                               class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3.5 py-2.5 text-sm text-gray-800 dark:text-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition">
+                               class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3.5 py-2.5 text-sm text-gray-800 dark:text-white outline-none focus:border-[#035f9c] focus:ring-2 focus:ring-[#035f9c]/20 transition">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1.5">
@@ -158,7 +167,7 @@
                         <input type="email"
                                name="email"
                                value="{{ old('email', $user->email) }}"
-                               class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3.5 py-2.5 text-sm text-gray-800 dark:text-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition">
+                               class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3.5 py-2.5 text-sm text-gray-800 dark:text-white outline-none focus:border-[#035f9c] focus:ring-2 focus:ring-[#035f9c]/20 transition">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1.5">
@@ -168,7 +177,7 @@
                                name="no_whatsapp"
                                value="{{ old('no_whatsapp', $user->no_whatsapp) }}"
                                placeholder="08xx-xxxx-xxxx"
-                               class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3.5 py-2.5 text-sm text-gray-800 dark:text-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition">
+                               class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3.5 py-2.5 text-sm text-gray-800 dark:text-white outline-none focus:border-[#035f9c] focus:ring-2 focus:ring-[#035f9c]/20 transition">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1.5">
@@ -177,7 +186,7 @@
                         <input type="text"
                                name="instansi"
                                value="{{ old('instansi', $user->instansi) }}"
-                               class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3.5 py-2.5 text-sm text-gray-800 dark:text-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition">
+                               class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3.5 py-2.5 text-sm text-gray-800 dark:text-white outline-none focus:border-[#035f9c] focus:ring-2 focus:ring-[#035f9c]/20 transition">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1.5">
@@ -186,7 +195,7 @@
                         <input type="text"
                                name="jabatan"
                                value="{{ old('jabatan', $user->jabatan) }}"
-                               class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3.5 py-2.5 text-sm text-gray-800 dark:text-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition">
+                               class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3.5 py-2.5 text-sm text-gray-800 dark:text-white outline-none focus:border-[#035f9c] focus:ring-2 focus:ring-[#035f9c]/20 transition">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1.5">
@@ -195,7 +204,7 @@
                         <input type="text"
                                name="tim"
                                value="{{ old('tim', $user->tim) }}"
-                               class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3.5 py-2.5 text-sm text-gray-800 dark:text-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition">
+                               class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3.5 py-2.5 text-sm text-gray-800 dark:text-white outline-none focus:border-[#035f9c] focus:ring-2 focus:ring-[#035f9c]/20 transition">
                     </div>
                     <div class="sm:col-span-2">
                         <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1.5">
@@ -204,55 +213,136 @@
                         <input type="text"
                                name="alamat"
                                value="{{ old('alamat', $user->alamat) }}"
-                               class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3.5 py-2.5 text-sm text-gray-800 dark:text-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition">
+                               class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3.5 py-2.5 text-sm text-gray-800 dark:text-white outline-none focus:border-[#035f9c] focus:ring-2 focus:ring-[#035f9c]/20 transition">
                     </div>
                 </div>
 
                 <hr class="border-gray-100 dark:border-gray-800 my-5">
 
-                {{-- Section: Ubah Password --}}
-                <h2 class="text-sm font-bold text-gray-700 dark:text-white mb-4 flex items-center gap-2">
+               <h2 class="text-sm font-bold text-gray-700 dark:text-white mb-4 flex items-center gap-2">
                     <i class="ti ti-lock text-blue-500"></i> Ubah Kata Sandi
                     <span class="text-xs font-normal text-gray-400">(kosongkan jika tidak ingin mengubah)</span>
                 </h2>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1.5">
-                            Kata Sandi Baru
-                        </label>
-                        <input type="password"
-                               name="password"
-                               placeholder="Min. 8 karakter"
-                               class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3.5 py-2.5 text-sm text-gray-800 dark:text-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1.5">
-                            Konfirmasi Kata Sandi
-                        </label>
-                        <input type="password"
-                               name="password_confirmation"
-                               placeholder="Ulangi kata sandi baru"
-                               class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3.5 py-2.5 text-sm text-gray-800 dark:text-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition">
-                    </div>
-                </div>
+<div class="space-y-5">
 
-                {{-- Tombol aksi --}}
-                <div class="flex items-center justify-end gap-3">
-                    <a href="{{ auth()->user()->dashboardRoute() }}"
-                       class="px-5 py-2.5 text-sm font-semibold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-                        Batal
-                    </a>
-                    <button type="submit"
-                            class="px-5 py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition shadow-sm shadow-blue-500/20">
-                        <i class="ti ti-device-floppy mr-1.5"></i> Simpan Perubahan
-                    </button>
-                </div>
+    {{-- PASSWORD SAAT INI --}}
+    <div id="current-password-wrap" class="sm:col-span-2 hidden">
+        <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1.5">
+            Kata Sandi Saat Ini <span class="text-red-500">*</span>
+        </label>
 
+        <div class="relative">
+            <input type="password"
+                   name="current_password"
+                   id="current_password"
+                   placeholder="Masukkan password saat ini"
+                   class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3.5 py-2.5 pr-11 text-sm">
+
+            <button type="button"
+                    onclick="togglePassword('current_password', this)"
+                    class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-[#035f9c]">
+                <i class="ti ti-eye text-lg"></i>
+            </button>
+        </div>
+    </div>
+
+    {{-- PASSWORD BARU --}}
+    <div>
+        <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1.5">
+            Kata Sandi Baru
+        </label>
+
+        <div class="relative">
+            <input type="password"
+                   name="new_password"
+                   id="new_password"
+                   placeholder="Min. 8 karakter"
+                   oninput="toggleCurrentPwField(this)"
+                   class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3.5 py-2.5 pr-11 text-sm">
+
+            <button type="button"
+                    onclick="togglePassword('new_password', this)"
+                    class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-[#035f9c]">
+                <i class="ti ti-eye text-lg"></i>
+            </button>
+        </div>
+    </div>
+
+    {{-- KONFIRMASI --}}
+    <div>
+        <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1.5">
+            Konfirmasi Kata Sandi
+        </label>
+
+        <div class="relative">
+            <input type="password"
+                   name="new_password_confirmation"
+                   id="new_password_confirmation"
+                   placeholder="Ulangi kata sandi baru"
+                   class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3.5 py-2.5 pr-11 text-sm">
+
+            <button type="button"
+                    onclick="togglePassword('new_password_confirmation', this)"
+                    class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-[#035f9c]">
+                <i class="ti ti-eye text-lg"></i>
+            </button>
+        </div>
+    </div>
+
+</div>
+
+    {{-- BUTTON --}}
+    <div class="flex items-center justify-end gap-3 pt-3">
+        <a href="{{ auth()->user()->dashboardRoute() }}"
+           class="px-5 py-2.5 text-sm font-semibold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+            Batal
+        </a>
+
+        <button type="submit"
+                class="px-5 py-2.5 text-sm font-bold text-white bg-[#035f9c] hover:bg-white hover:text-[#035f9c] rounded-xl transition shadow-sm shadow-[#035f9c]/20">
+            <i class="ti ti-device-floppy mr-1.5"></i> Simpan Perubahan
+        </button>
+    </div>
+
+</div>
             </form>
         </div>
 
     </div>
 </div>
+
+<script>
+function toggleCurrentPwField(input) {
+    const wrap = document.getElementById('current-password-wrap');
+    const current = document.getElementById('current_password');
+
+    if (input.value.length > 0) {
+        wrap.style.display = 'block';
+        current.required = true;
+    } else {
+        wrap.style.display = 'none';
+        current.required = false;
+        current.value = '';
+    }
+}
+</script>
+
+<script>
+function togglePassword(inputId, button) {
+    const input = document.getElementById(inputId);
+    const icon = button.querySelector('i');
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('ti-eye');
+        icon.classList.add('ti-eye-off');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('ti-eye-off');
+        icon.classList.add('ti-eye');
+    }
+}
+</script>
 
 @endsection
