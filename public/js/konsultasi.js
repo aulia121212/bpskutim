@@ -1,34 +1,36 @@
 // public/js/konsultasi.js
 
-let activeTopik = null;
+let activeKeahlian = null;
 
-// ── Filter topik ──────────────────────────────────────────────────────
-function filterTopik(el) {
-    const topik = el.dataset.topik;
+// ── Filter keahlian via sidebar ───────────────────────────────────────
+function filterKeahlian(el) {
+    const keahlian = el.dataset.keahlian;
 
-    if (activeTopik === topik) {
+    // Toggle off jika klik yg sama
+    if (activeKeahlian === keahlian || keahlian === "semua") {
         hapusFilter();
         return;
     }
-    activeTopik = topik;
+    activeKeahlian = keahlian;
 
-    // Tombol aktif
+    // Aktifkan tombol sidebar
     document
-        .querySelectorAll(".topik-item")
+        .querySelectorAll(".filter-btn")
         .forEach((btn) => btn.classList.remove("active"));
     el.classList.add("active");
 
-    // Tampilkan tombol hapus filter
-    const btnHapus = document.getElementById("btnHapusFilter");
-    if (btnHapus) btnHapus.style.display = "inline-flex";
+    // Tampilkan tombol reset
+    const btnReset = document.getElementById("btnResetFilter");
+    if (btnReset) btnReset.style.display = "flex";
 
     // Filter kartu petugas
     const cards = document.querySelectorAll(".petugas-card");
     let visible = 0;
     cards.forEach((card) => {
-        const keahlian = card.dataset.keahlian || "";
-        const tags = keahlian.split("|").map((t) => t.trim().toLowerCase());
-        const match = tags.some((t) => t === topik.toLowerCase());
+        const tags = (card.dataset.keahlian || "")
+            .split("|")
+            .map((t) => t.trim().toLowerCase());
+        const match = tags.some((t) => t === keahlian.toLowerCase());
         card.style.display = match ? "" : "none";
         if (match) visible++;
     });
@@ -42,27 +44,34 @@ function filterTopik(el) {
     const emptyTopik = document.getElementById("filterEmptyTopik");
     if (emptyEl) {
         emptyEl.style.display = visible === 0 ? "flex" : "none";
-        if (emptyTopik) emptyTopik.textContent = topik;
+        if (emptyTopik) emptyTopik.textContent = keahlian;
     }
+}
 
-    // Scroll ke reservasi
-    document
-        .getElementById("reservasi")
-        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+// ── Legacy alias (jika ada tombol lain yang masih pakai filterTopik) ──
+function filterTopik(el) {
+    // Topik section sekarang display-only, tidak ada aksi
 }
 
 // ── Hapus filter ──────────────────────────────────────────────────────
 function hapusFilter() {
-    activeTopik = null;
+    activeKeahlian = null;
+
     document
-        .querySelectorAll(".topik-item")
+        .querySelectorAll(".filter-btn")
         .forEach((btn) => btn.classList.remove("active"));
+    // Aktifkan "Semua Keahlian"
+    const semuaBtn = document.querySelector(
+        '.filter-btn[data-keahlian="semua"]',
+    );
+    if (semuaBtn) semuaBtn.classList.add("active");
+
     document
         .querySelectorAll(".petugas-card")
         .forEach((card) => (card.style.display = ""));
 
-    const btnHapus = document.getElementById("btnHapusFilter");
-    if (btnHapus) btnHapus.style.display = "none";
+    const btnReset = document.getElementById("btnResetFilter");
+    if (btnReset) btnReset.style.display = "none";
 
     const emptyEl = document.getElementById("filterEmpty");
     if (emptyEl) emptyEl.style.display = "none";
@@ -70,3 +79,32 @@ function hapusFilter() {
     const paginasi = document.getElementById("paginasiWrap");
     if (paginasi) paginasi.style.display = "";
 }
+
+function animateSteps() {
+    const caraSection = document.querySelector(".cara-section");
+    if (!caraSection) return;
+
+    const rows = caraSection.querySelectorAll(".step-row");
+    if (!rows.length) return;
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("visible");
+                    observer.unobserve(entry.target);
+                }
+            });
+        },
+        {
+            threshold: 0.2,
+        },
+    );
+
+    rows.forEach((row) => observer.observe(row));
+}
+
+// Jalankan setelah halaman siap
+document.addEventListener("DOMContentLoaded", () => {
+    animateSteps();
+});

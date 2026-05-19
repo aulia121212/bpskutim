@@ -103,33 +103,70 @@
     <p class="section-sub">
         Empat langkah sederhana untuk mendapatkan bantuan konsultasi data profesional secara gratis.
     </p>
-
-    <div class="steps-grid">
-        <div class="step-card">
-            <div class="step-number-big">1.</div>
-            <div class="step-icon-wrap"><i class="ti ti-user-check"></i></div>
-            <h4>Pilih Petugas</h4>
-            <p>Pilih petugas konsultasi yang sesuai dengan kebutuhan dan bidang data Anda.</p>
+ 
+    <div class="steps-z">
+ 
+        {{-- Step 1: content LEFT, visual RIGHT --}}
+        <div class="step-row step-odd">
+            <div class="step-content">
+                <div class="step-num">01</div>
+                <h4>Pilih Petugas</h4>
+                <p>Pilih petugas konsultasi yang sesuai dengan kebutuhan dan bidang data Anda.</p>
+            </div>
+            <div class="step-center">
+                <div class="step-icon-circle"><i class="ti ti-user-check"></i></div>
+            </div>
+            <div class="step-visual">
+                <div class="step-visual-inner">🧑‍💼</div>
+            </div>
         </div>
-        <div class="step-card">
-            <div class="step-number-big">2.</div>
-            <div class="step-icon-wrap"><i class="ti ti-clipboard-list"></i></div>
-            <h4>Isi Formulir</h4>
-            <p>Isi formulir reservasi lengkap dan tentukan jenis konsultasi Online atau Offline.</p>
+ 
+        {{-- Step 2: visual LEFT, content RIGHT --}}
+        <div class="step-row step-even">
+            <div class="step-visual">
+                <div class="step-visual-inner">📋</div>
+            </div>
+            <div class="step-center">
+                <div class="step-icon-circle"><i class="ti ti-clipboard-list"></i></div>
+            </div>
+            <div class="step-content">
+                <div class="step-num">02</div>
+                <h4>Isi Formulir</h4>
+                <p>Isi formulir reservasi lengkap dan tentukan jenis konsultasi Online atau Offline.</p>
+            </div>
         </div>
-        <div class="step-card">
-            <div class="step-number-big">3.</div>
-            <div class="step-icon-wrap"><i class="ti ti-mail-check"></i></div>
-            <h4>Tinjau Pengajuan</h4>
-            <p>Petugas akan meninjau dan mengirim konfirmasi jadwal melalui WhatsApp Anda.</p>
+ 
+        {{-- Step 3: content LEFT, visual RIGHT --}}
+        <div class="step-row step-odd">
+            <div class="step-content">
+                <div class="step-num">03</div>
+                <h4>Tinjau Pengajuan</h4>
+                <p>Petugas akan meninjau dan mengirim konfirmasi jadwal melalui WhatsApp Anda.</p>
+            </div>
+            <div class="step-center">
+                <div class="step-icon-circle"><i class="ti ti-mail-check"></i></div>
+            </div>
+            <div class="step-visual">
+                <div class="step-visual-inner">📩</div>
+            </div>
         </div>
-        <div class="step-card">
-            <div class="step-number-big">4.</div>
-            <div class="step-icon-wrap"><i class="ti ti-video"></i></div>
-            <h4>Mulai Sesi</h4>
-            <p>Untuk Online, Anda akan menerima link meeting. Offline, datang ke lokasi yang ditentukan.</p>
-            <p class="step-note">Pastikan terdaftar dan login terlebih dahulu.</p>
+ 
+        {{-- Step 4: visual LEFT, content RIGHT --}}
+        <div class="step-row step-even">
+            <div class="step-visual">
+                <div class="step-visual-inner">💻</div>
+            </div>
+            <div class="step-center">
+                <div class="step-icon-circle"><i class="ti ti-video"></i></div>
+            </div>
+            <div class="step-content">
+                <div class="step-num">04</div>
+                <h4>Mulai Sesi</h4>
+                <p>Untuk Online, Anda akan menerima link meeting. Offline, datang ke lokasi yang ditentukan.</p>
+                <p class="step-note">Pastikan terdaftar dan login terlebih dahulu.</p>
+            </div>
         </div>
+ 
     </div>
 </section>
 
@@ -137,57 +174,106 @@
 
 <section class="reservasi-section" id="reservasi">
     <div class="reservasi-header">
-        <div>
-            <h2 class="section-title" style="margin-bottom:8px">Reservasi Konsultasi</h2>
-            <p class="section-sub" id="reservasiSub" style="margin:0">
-                Pilih petugas konsultasi berdasarkan bidang keahlian yang sesuai dengan topik konsultasi Anda untuk mendapatkan pelayanan yang maksimal.
-            </p>
-        </div>
-    </div>
-
-    <div class="petugas-grid" id="petugasGrid">
-        @forelse($petugas as $p)
-        <div class="petugas-card"
-             data-keahlian="{{ implode('|', $p->bidang_keahlian ?? []) }}">
-            <div class="petugas-header">
-                <div class="petugas-avatar">
-                    @if($p->foto)
-                        <img src="{{ asset($p->foto) }}" alt="{{ $p->nama_lengkap }}">
-                    @else
-                        🧑‍💼
-                    @endif
-                </div>
-                <div>
-                    <div class="petugas-name">{{ $p->nama_lengkap }}</div>
-                    <div class="petugas-instansi">BPS Kutai Timur</div>
-                    <div class="petugas-role">{{ $p->jabatan }}</div>
-                </div>
-            </div>
-            <div class="petugas-tags">
-                @foreach($p->bidang_keahlian ?? [] as $tag)
-                    <span class="petugas-tag">{{ $tag }}</span>
-                @endforeach
-            </div>
-            <a href="{{ route('konsultasi.reservasi', $p->id) }}" class="btn-reservasi">
-                Buat Reservasi
-            </a>
-        </div>
-        @empty
-        <p style="text-align:center;color:#64748b;padding:40px 0;grid-column:1/-1">
-            Belum ada petugas tersedia.
+        <h2 class="section-title" style="margin-bottom:8px">Reservasi Konsultasi</h2>
+        <p class="section-sub" id="reservasiSub" style="margin:0">
+            Pilih petugas konsultasi berdasarkan bidang keahlian yang sesuai dengan topik konsultasi Anda.
         </p>
-        @endforelse
     </div>
 
-    <!-- Empty state filter -->
-    <div class="filter-empty" id="filterEmpty">
-        <i class="ti ti-search-off"></i>
-        <p>Tidak ada petugas untuk topik <strong id="filterEmptyTopik"></strong></p>
-        <button onclick="hapusFilter()">Lihat semua petugas</button>
-    </div>
+    <div class="reservasi-body">
 
-    <div id="paginasiWrap" style="margin-top:20px">
-        {{ $petugas->links() }}
+        {{-- ── SIDEBAR FILTER ── --}}
+        <aside class="filter-sidebar">
+            <div class="filter-sidebar-title">Filter Keahlian</div>
+            <ul class="filter-sidebar-list" id="filterSidebarList">
+                <li>
+                    <button class="filter-btn active" data-keahlian="semua" onclick="filterKeahlian(this)">
+                        <i class="ti ti-layout-grid"></i> Semua Keahlian
+                    </button>
+                </li>
+                @php
+                    $semuaKeahlian = collect($petugas->items())
+                        ->flatMap(fn($p) => $p->bidang_keahlian ?? [])
+                        ->unique()->sort()->values();
+                @endphp
+                @foreach($semuaKeahlian as $keahlian)
+                <li>
+                    <button class="filter-btn" data-keahlian="{{ $keahlian }}" onclick="filterKeahlian(this)">
+                        <i class="ti ti-tag"></i> {{ $keahlian }}
+                    </button>
+                </li>
+                @endforeach
+            </ul>
+            <button class="filter-btn-reset" id="btnResetFilter" onclick="hapusFilter()" style="display:none">
+                <i class="ti ti-filter-off"></i> Reset Filter
+            </button>
+        </aside>
+
+        {{-- ── GRID KARTU PETUGAS ── --}}
+        <div>
+            <div class="petugas-grid" id="petugasGrid">
+                @forelse($petugas as $p)
+                @php
+                    $tags     = $p->bidang_keahlian ?? [];
+                    $maxShow  = 3;
+                    $visible  = array_slice($tags, 0, $maxShow);
+                    $hidden   = array_slice($tags, $maxShow);
+                @endphp
+                <div class="petugas-card" data-keahlian="{{ implode('|', $tags) }}">
+
+                    {{-- Banner + avatar overlap --}}
+                    <div class="petugas-banner">
+                        <div class="petugas-avatar-wrap">
+                            @if($p->foto)
+                                <img src="{{ asset($p->foto) }}" alt="{{ $p->nama_lengkap }}">
+                            @else
+                                🧑‍💼
+                            @endif
+                        </div>
+                    </div>
+
+                    {{-- Body --}}
+                    <div class="petugas-body">
+                        <div class="petugas-name">{{ $p->nama_lengkap }}</div>
+                        <div class="petugas-instansi">BPS Kutai Timur</div>
+                        <div class="petugas-role">{{ $p->jabatan }}</div>
+
+                        <div class="petugas-tags">
+                            @foreach($visible as $tag)
+                                <span class="petugas-tag">{{ $tag }}</span>
+                            @endforeach
+                            @if(count($hidden) > 0)
+                                <span class="tag-more">
+                                    +{{ count($hidden) }} Lainnya
+                                    <span class="tag-more-tooltip">{{ implode("\n", $hidden) }}</span>
+                                </span>
+                            @endif
+                        </div>
+
+                        <a href="{{ route('konsultasi.reservasi', $p->id) }}" class="btn-reservasi">
+                            Buat Reservasi
+                        </a>
+                    </div>
+                </div>
+                @empty
+                <p style="text-align:center;color:#64748b;padding:40px 0;grid-column:1/-1">
+                    Belum ada petugas tersedia.
+                </p>
+                @endforelse
+
+                {{-- Empty state filter --}}
+                <div class="filter-empty" id="filterEmpty">
+                    <i class="ti ti-search-off"></i>
+                    <p>Tidak ada petugas dengan keahlian <strong id="filterEmptyTopik"></strong></p>
+                    <button onclick="hapusFilter()">Lihat semua petugas</button>
+                </div>
+            </div>
+
+            <div id="paginasiWrap" style="margin-top:20px">
+                {{ $petugas->links() }}
+            </div>
+        </div>
+
     </div>
 </section>
 
@@ -221,27 +307,22 @@ $semuaTopik = [
 
 <section class="topik-section" id="topik">
     <div class="topik-header">
-        <div>
-            <h2 class="section-title" style="margin-bottom:8px">Topik Konsultasi</h2>
-            <p class="section-sub" style="margin:0">
-                Klik salah satu kategori untuk memudahkan Anda dalam menemukan petugas yang sesuai dengan permasalahan Anda.
-            </p>
-        </div>
-        <button class="btn-hapus-filter" id="btnHapusFilter" onclick="hapusFilter()" style="display:none">
-            <i class="ti ti-filter-off"></i> Hapus Filter
-        </button>
+        <h2 class="section-title" style="margin-bottom:8px">Topik Konsultasi</h2>
+        <p class="section-sub" style="margin:0">
+            Referensi topik yang tersedia dalam layanan konsultasi statistik BPS Kutai Timur.
+        </p>
     </div>
 
     <div class="topik-grid">
         @foreach($semuaTopik as $topik)
-        <button class="topik-item" data-topik="{{ $topik['label'] }}" onclick="filterTopik(this)">
+        <div class="topik-item">
             <div class="topik-icon">
                 <img src="{{ asset('images/logo_topik_konsultasi/' . $topik['file']) }}"
                      alt="{{ $topik['label'] }}"
                      loading="lazy">
             </div>
             <span class="topik-label">{{ $topik['label'] }}</span>
-        </button>
+        </div>
         @endforeach
     </div>
 </section>
