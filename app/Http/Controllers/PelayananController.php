@@ -279,35 +279,68 @@ public function reservasiShow($id)
     $reservasi = ReservasiKonsultasi::with([
         'user', 'petugas', 'riwayatTerbaru'
     ])->findOrFail($id);
- 
-    // Auto-tandai selesai di DB jika dijadwalkan dan tanggal sudah lewat
+
+    // Auto-tandai selesai jika dijadwalkan dan tanggal sudah lewat
     $riwayatTerbaru = $reservasi->riwayatTerbaru;
     if (
         $riwayatTerbaru?->status_pengajuan === 'dijadwalkan' &&
         $reservasi->tanggal_konsultasi &&
         now()->startOfDay()->gt(Carbon::parse($reservasi->tanggal_konsultasi)->startOfDay())
     ) {
-        // Cek apakah entry selesai sudah ada agar tidak duplikat
         $sudahAdaSelesai = $reservasi->riwayat()
             ->where('status_pengajuan', 'selesai')
             ->exists();
- 
+
         if (!$sudahAdaSelesai) {
             RiwayatKonsultasi::create([
-                'id_reservasi'      => $reservasi->id_reservasi,
-                'status_pengajuan'  => 'selesai',
-                'catatan_konsultasi'=> 'Konsultasi selesai secara otomatis.',
-                'updated_at'        => now(),
-]);
+                'id_reservasi'       => $reservasi->id_reservasi,
+                'status_pengajuan'   => 'selesai',
+                'catatan_konsultasi' => 'Konsultasi selesai secara otomatis.',
+                'updated_at'         => now(),
+            ]);
         }
- 
-        // Reload setelah update
+
         $reservasi->load('riwayatTerbaru');
     }
- 
-    return view('pelayanan.reservasi.show', compact('reservasi'));
+
+    // Hitung $bisaEdit
+    $riwayatTerbaru = $reservasi->riwayatTerbaru;
+    $status         = $riwayatTerbaru?->status_pengajuan ?? 'diajukan';
+    $tglKonsultasi  = $reservasi->tanggal_konsultasi
+        ? Carbon::parse($reservasi->tanggal_konsultasi)->startOfDay()
+        : null;
+    $sudahLewat    = $tglKonsultasi && now()->startOfDay()->gt($tglKonsultasi);
+    $statusDisplay = ($status === 'dijadwalkan' && $sudahLewat) ? 'selesai' : $status;
+    $bisaEdit      = !in_array($statusDisplay, ['dibatalkan']);
+
+    return view('pelayanan.reservasi.show', compact('reservasi', 'bisaEdit'));
 }
+
+public function reservasiDestroy($id)
+{
+    $reservasi = ReservasiKonsultasi::findOrFail($id);
+    $reservasi->riwayat()->delete(); // hapus riwayat dulu (foreign key)
+    $reservasi->delete();
+
+    return redirect()->route('pelayanan.reservasi.index')
+        ->with('success', 'Reservasi berhasil dihapus.');
+}
+public function reservasiEdit($id)
+{
+    $reservasi = ReservasiKonsultasi::with([
+        'user', 'petugas', 'riwayatTerbaru'
+    ])->findOrFail($id);
  
+    // Cegah akses edit jika sudah dibatalkan
+    $status = $reservasi->riwayatTerbaru?->status_pengajuan ?? 'diajukan';
+    if ($status === 'dibatalkan') {
+        return redirect()
+            ->route('pelayanan.reservasi.show', $id)
+            ->with('error', 'Reservasi yang dibatalkan tidak dapat diedit.');
+    }
+ 
+    return view('pelayanan.reservasi.edit', compact('reservasi'));
+}
 
 public function reservasiUpdate(Request $request, $id)
 {
@@ -320,37 +353,37 @@ public function reservasiUpdate(Request $request, $id)
  
     $reservasi = ReservasiKonsultasi::findOrFail($id);
  
-    // Update lokasi di tabel reservasi
+    // Update lokasi
     $reservasi->lokasi_konsultasi = $request->lokasi_konsultasi;
     $reservasi->save();
  
-    // Validasi: jika dibatalkan wajib ada alasan
+    // Validasi alasan wajib jika dibatalkan
     if ($request->status === 'dibatalkan' && empty(trim($request->alasan_pembatalan ?? ''))) {
         return back()->withInput()
             ->withErrors(['alasan_pembatalan' => 'Alasan pembatalan wajib diisi.']);
     }
  
-    // Cek status saat ini
+    // Catat riwayat jika ada perubahan
     $riwayatTerbaru = $reservasi->riwayatTerbaru;
     $statusSekarang = $riwayatTerbaru?->status_pengajuan ?? 'diajukan';
- 
-    // Jika status berubah atau ada update catatan/alasan — buat entry riwayat baru
-    $statusBerubah   = $statusSekarang !== $request->status;
-    $adaUpdateData   = $request->filled('catatan_konsultasi') || $request->filled('alasan_pembatalan');
+    $statusBerubah  = $statusSekarang !== $request->status;
+    $adaUpdateData  = $request->filled('catatan_konsultasi') || $request->filled('alasan_pembatalan');
  
     if ($statusBerubah || $adaUpdateData) {
         RiwayatKonsultasi::create([
-            'id_reservasi'      => $reservasi->id_reservasi,
-            'status_pengajuan'  => $request->status,
-            'catatan_konsultasi'=> $request->catatan_konsultasi,
-            'alasan_pembatalan' => $request->status === 'dibatalkan'
-                                    ? $request->alasan_pembatalan
-                                    : null,
-                                    'updated_at'        => now(),
-]);
+            'id_reservasi'       => $reservasi->id_reservasi,
+            'status_pengajuan'   => $request->status,
+            'catatan_konsultasi' => $request->catatan_konsultasi,
+            'alasan_pembatalan'  => $request->status === 'dibatalkan'
+                                        ? $request->alasan_pembatalan
+                                        : null,
+            'updated_at'         => now(),
+        ]);
     }
  
-    return redirect()->route('pelayanan.reservasi.show', $id)
+    // ✅ Redirect ke halaman DETAIL (show), bukan index
+    return redirect()
+        ->route('pelayanan.reservasi.show', $id)
         ->with('success', 'Reservasi berhasil diperbarui.');
 }
 }

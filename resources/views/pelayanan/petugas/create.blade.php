@@ -23,27 +23,27 @@
             <div>
                 <label class="block text-sm font-semibold text-gray-600 mb-1">Nama Lengkap</label>
                 <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap') }}" placeholder="Nama Lengkap Petugas"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c]">
             </div>
 
             {{-- Nomor WhatsApp --}}
             <div>
                 <label class="block text-sm font-semibold text-gray-600 mb-1">Nomor WhatsApp</label>
                 <input type="text" name="nomor_wa" value="{{ old('nomor_wa') }}" placeholder="0812-xxxx-xxxx"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c]">
             </div>
 
             <!-- <div>
     <label class="block text-sm font-semibold text-gray-600 mb-1">Instansi</label>
     <input type="text" name="instansi" value="{{ old('instansi') }}" placeholder="Instansi Petugas"
-        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c]">
 </div> -->
 
             {{-- Jabatan --}}
             <div>
                 <label class="block text-sm font-semibold text-gray-600 mb-1">Jabatan</label>
                 <input type="text" name="jabatan" value="{{ old('jabatan') }}" placeholder="Jabatan Petugas"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c]">
             </div>
 
             {{-- Bidang Keahlian --}}
@@ -80,7 +80,7 @@
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" name="bidang_keahlian[]" value="{{ $bidang }}"
                             {{ in_array($bidang, old('bidang_keahlian', [])) ? 'checked' : '' }}
-                            class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            class="rounded border-gray-300 text-blue-600 focus:ring-[#035f9c]">
                         <span class="text-sm text-gray-700">{{ $bidang }}</span>
                     </label>
                     @endforeach
@@ -94,7 +94,7 @@
             <label class="flex flex-col items-center justify-center border-2 border-dashed border-blue-200 rounded-xl p-10 cursor-pointer hover:bg-blue-50 transition"
                 id="foto-label">
                 <i class="ti ti-cloud-upload text-3xl text-blue-400 mb-2"></i>
-                <p class="text-sm text-blue-500 font-semibold">Click to upload or drag and drop</p>
+                <p class="text-sm text-[#035f9c] font-semibold">Click to upload or drag and drop</p>
                 <p class="text-xs text-gray-400 mt-1">PNG, JPG or JPEG (max. 800x400px)</p>
                 <input type="file" name="foto" accept="image/*" class="hidden"
                     onchange="previewFoto(this)">

@@ -31,7 +31,7 @@
     <div class="mb-4">
         <div class="relative w-72">
             <input type="text" id="searchInput" placeholder="Cari data..."
-                class="w-full border border-gray-200 rounded-xl px-4 py-2 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:border-gray-700 dark:text-white">
+                class="w-full border border-gray-200 rounded-xl px-4 py-2 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c] dark:bg-gray-900 dark:border-gray-700 dark:text-white">
             <i class="ti ti-search absolute left-3 top-2.5 text-gray-400"></i>
         </div>
     </div>
@@ -77,15 +77,74 @@
                             </a>
 
                             {{-- Tombol Delete --}}
-                            <form method="POST" action="{{ route('statistics.destroy', $stat->id) }}"
-                                  onsubmit="return confirm('Yakin ingin menghapus data \'{{ addslashes($stat->judul_data) }}\'? Tindakan ini tidak dapat dibatalkan.')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="p-1.5 text-gray-400 hover:text-red-500 transition"
-                                        title="Hapus">
-                                    <i class="ti ti-trash text-base"></i>
-                                </button>
-                            </form>
+                            <button
+    type="button"
+    title="Hapus"
+    onclick="openDeleteStatisticModal(
+        '{{ route('statistics.destroy', $stat->id) }}',
+        '{{ addslashes($stat->judul_data) }}'
+    )"
+    class="p-1.5 text-gray-400 hover:text-red-500 transition"
+>
+    <i class="ti ti-trash text-base"></i>
+</button>
+
+<!-- Modal -->
+<div
+    id="deleteStatisticModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 backdrop-blur-sm"
+>
+    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-md p-6 animate-fadeIn">
+
+        <div class="flex items-start gap-3 mb-4">
+
+            <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                <i class="ti ti-trash text-red-600 text-xl"></i>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-bold text-gray-800 dark:text-white">
+                    Hapus Data Statistik
+                </h3>
+
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                    Tindakan ini tidak dapat dibatalkan.
+                </p>
+            </div>
+
+        </div>
+
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-6">
+            Apakah Anda yakin ingin menghapus data
+            <span id="deleteStatisticName" class="font-semibold text-red-600"></span>?
+        </p>
+
+        <div class="flex justify-end gap-3">
+
+            <button
+                type="button"
+                onclick="closeDeleteStatisticModal()"
+                class="px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+            >
+                Batal
+            </button>
+
+            <form id="deleteStatisticForm" method="POST">
+                @csrf
+                @method('DELETE')
+
+                <button
+                    type="submit"
+                    class="px-4 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 transition"
+                >
+                    Ya, Hapus
+                </button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
 
                             <a href="{{ route('statistics.preview', $stat->id) }}"
                                class="inline-flex items-center gap-1 bg-blue-50 hover:bg-blue-100 text-[#035f9c] text-xs font-semibold px-3 py-1.5 rounded-lg transition">
@@ -121,5 +180,28 @@ document.getElementById('searchInput').addEventListener('input', function () {
         row.style.display = row.textContent.toLowerCase().includes(query) ? '' : 'none';
     });
 });
+</script>
+
+<script id="k821js">
+    function openDeleteStatisticModal(actionUrl, statisticName) {
+
+        document.getElementById('deleteStatisticForm').action = actionUrl;
+
+        document.getElementById('deleteStatisticName').textContent =
+            `"${statisticName}"`;
+
+        const modal = document.getElementById('deleteStatisticModal');
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function closeDeleteStatisticModal() {
+
+        const modal = document.getElementById('deleteStatisticModal');
+
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+    }
 </script>
 @endsection

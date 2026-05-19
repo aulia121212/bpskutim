@@ -102,7 +102,7 @@
                         name="nama_lengkap"
                         value="{{ old('nama_lengkap', $admin->nama_lengkap) }}"
                         placeholder="Masukkan nama lengkap"
-                        class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+                        class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-[#035f9c] focus:ring-4 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
                 </div>
 
                 {{-- Email --}}
@@ -115,7 +115,7 @@
                         name="email"
                         value="{{ old('email', $admin->email) }}"
                         placeholder="Masukkan email"
-                        class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+                        class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-[#035f9c] focus:ring-4 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
                 </div>
 
                 {{-- WA --}}
@@ -128,7 +128,7 @@
                         name="no_whatsapp"
                         value="{{ old('no_whatsapp', $admin->no_whatsapp) }}"
                         placeholder="Contoh: 08123456789"
-                        class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+                        class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-[#035f9c] focus:ring-4 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
                 </div>
 
                 {{-- Instansi --}}
@@ -141,7 +141,7 @@
                         name="instansi"
                         value="{{ old('instansi', $admin->instansi) }}"
                         placeholder="Masukkan instansi"
-                        class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+                        class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-[#035f9c] focus:ring-4 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
                 </div>
 
                 {{-- Jabatan --}}
@@ -154,7 +154,7 @@
                         name="jabatan"
                         value="{{ old('jabatan', $admin->jabatan) }}"
                         placeholder="Masukkan jabatan"
-                        class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+                        class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-[#035f9c] focus:ring-4 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
                 </div>
 
                 {{-- Tim --}}
@@ -167,7 +167,7 @@
                         name="tim"
                         value="{{ old('tim', $admin->tim) }}"
                         placeholder="Masukkan tim"
-                        class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+                        class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-[#035f9c] focus:ring-4 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
                 </div>
 
                 {{-- Password --}}
@@ -204,7 +204,7 @@
                                         name="current_password"
                                         id="current_password"
                                         placeholder="Masukkan password saat ini"
-                                        class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 pr-12 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+                                        class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 pr-12 text-sm text-gray-700 outline-none transition focus:border-[#035f9c] focus:ring-4 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
 
                                     <button type="button"
                                         onclick="togglePw('current_password','eye-current')"
@@ -228,7 +228,7 @@
                                         name="new_password"
                                         id="new_password"
                                         placeholder="Masukkan password baru"
-                                        class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 pr-12 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+                                        class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 pr-12 text-sm text-gray-700 outline-none transition focus:border-[#035f9c] focus:ring-4 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
 
                                     <button type="button"
                                         onclick="togglePw('new_password','eye-new')"
@@ -255,7 +255,7 @@
                     <textarea name="alamat"
                         rows="4"
                         placeholder="Masukkan alamat lengkap"
-                        class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">{{ old('alamat', $admin->alamat) }}</textarea>
+                        class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-[#035f9c] focus:ring-4 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white">{{ old('alamat', $admin->alamat) }}</textarea>
                 </div>
 
                 {{-- Foto --}}

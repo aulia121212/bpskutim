@@ -385,10 +385,10 @@ function buildDefinisiCard(komponen) {
     if (!komponen?.definisi) return "";
     return `<div class="flex items-start gap-3 p-4 rounded-2xl bg-blue-50/60 border border-blue-100">
         <div class="shrink-0 w-8 h-8 rounded-xl bg-blue-100 flex items-center justify-center mt-0.5">
-            <i class="ti ti-book-2 text-blue-500 text-sm"></i>
+            <i class="ti ti-book-2 text-[#035f9c] text-sm"></i>
         </div>
         <div class="flex-1">
-            <p class="text-xs font-bold uppercase tracking-widest text-blue-500 mb-1">Definisi Komponen</p>
+            <p class="text-xs font-bold uppercase tracking-widest text-[#035f9c] mb-1">Definisi Komponen</p>
             <p class="text-xs text-gray-600 leading-relaxed">${escH(komponen.definisi)}</p>
         </div>
     </div>`;
@@ -761,7 +761,7 @@ function renderPerbandinganWilayahMultiTahun(datasets, kategori) {
                 <div class="grid grid-cols-2 gap-2 text-xs">
                     <div class="p-2 rounded-lg bg-red-50 border border-red-100"><p class="text-red-500 font-bold mb-0.5">Tertinggi (${lastYear})</p><p class="text-gray-700 font-semibold">${tertinggi ? escH(tertinggi.wilayah) : "-"} — ${tertinggi ? tertinggi.value.toFixed(2) : "-"}</p></div>
                     <div class="p-2 rounded-lg bg-green-50 border border-green-100"><p class="text-green-600 font-bold mb-0.5">Terendah (${lastYear})</p><p class="text-gray-700 font-semibold">${terendah ? escH(terendah.wilayah) : "-"} — ${terendah ? terendah.value.toFixed(2) : "-"}</p></div>
-                    <div class="p-2 rounded-lg bg-blue-50 border border-blue-100"><p class="text-blue-500 font-bold mb-0.5">Rata-rata (${lastYear})</p><p class="text-gray-700 font-semibold">${rataRata}</p></div>
+                    <div class="p-2 rounded-lg bg-blue-50 border border-blue-100"><p class="text-[#035f9c] font-bold mb-0.5">Rata-rata (${lastYear})</p><p class="text-gray-700 font-semibold">${rataRata}</p></div>
                     <div class="p-2 rounded-lg bg-purple-50 border border-purple-100"><p class="text-purple-500 font-bold mb-0.5">Selisih</p><p class="text-gray-700 font-semibold">${selisih}</p></div>
                 </div>
             </div>

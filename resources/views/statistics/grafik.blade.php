@@ -97,10 +97,10 @@
 
             {{-- Filter: Judul Data --}}
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-2">Judul data</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-2">Judul data</label>
                 <div class="relative">
                     <select id="filter-judul"
-                        class="w-full appearance-none border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        class="w-full appearance-none border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-[#035f9c]">
                         <option value="">Pilih judul data...</option>
                         @php
                             $grouped = $statistics->groupBy('statistic_title_id');
@@ -149,7 +149,7 @@ data-components="{{ htmlspecialchars(json_encode(
 
             {{-- Filter: Wilayah --}}
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-2">Wilayah data</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-2">Wilayah data</label>
                 <div id="filter-wilayah" class="space-y-2">
                     <p class="text-xs text-gray-400">Pilih judul data dulu</p>
                 </div>
@@ -157,7 +157,7 @@ data-components="{{ htmlspecialchars(json_encode(
 
             {{-- Filter: Komponen/Kategori — HANYA tampil di tab Grafik --}}
             <div id="filter-kategori-wrap">
-                <label class="block text-sm font-semibold text-blue-500 mb-2">Komponen / Kategori</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-2">Komponen / Kategori</label>
                 <div id="filter-kategori" class="space-y-1.5">
                     <p class="text-xs text-gray-400">Pilih judul data dulu</p>
                 </div>
@@ -165,7 +165,7 @@ data-components="{{ htmlspecialchars(json_encode(
 
             {{-- Filter: Tahun --}}
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-2">Tahun data</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-2">Tahun data</label>
                 <div id="filter-tahun" class="space-y-1.5">
                     <p class="text-xs text-gray-400">Pilih kategori dulu</p>
                 </div>
@@ -646,7 +646,7 @@ function renderPerbandinganWilayahMultiTahun(datasets, kategori) {
                         <p class="text-gray-700 font-semibold">${terendah ? escH(terendah.wilayah) : '-'} — ${terendah ? terendah.value.toFixed(2) : '-'}</p>
                     </div>
                     <div class="p-2 rounded-lg bg-blue-50 border border-blue-100">
-                        <p class="text-blue-500 font-bold mb-0.5">Rata-rata (${lastYear})</p>
+                        <p class="text-[#035f9c] font-bold mb-0.5">Rata-rata (${lastYear})</p>
                         <p class="text-gray-700 font-semibold">${rataRata}</p>
                     </div>
                     <div class="p-2 rounded-lg bg-purple-50 border border-purple-100">
@@ -718,7 +718,7 @@ function renderInterpretasiTabel(datasets, selectedCat) {
 
         html += `<div class="rounded-2xl border p-4 space-y-3 ${headerBg}">
             <div class="flex items-center gap-2 ${isSub ? 'pl-3' : ''}">
-                <i class="ti ${isSub ? 'ti-minus text-indigo-300' : 'ti-category text-blue-500'} text-sm"></i>
+                <i class="ti ${isSub ? 'ti-minus text-indigo-300' : 'ti-category text-[#035f9c]'} text-sm"></i>
                 <span class="text-sm font-${isSub ? 'medium text-gray-500 italic' : 'bold text-gray-700 dark:text-white'}">${isSub ? '<span class="text-indigo-300 mr-1">·</span>' : ''}${escH(katLabel)}</span>
                 ${komponen?.satuan ? `<span class="text-xs text-gray-400">(${escH(komponen.satuan)})</span>` : ''}
             </div>`;

@@ -4,7 +4,7 @@
 <div>
     <label class="block text-sm font-semibold text-[#035f9c] mb-1">Indikator</label>
     <select name="indikator_data"
-        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500"
+        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#035f9c]"
         required>
         <option value="" disabled selected>Pilih indikator...</option>
         <option value="indikator_ekonomi">Indikator Ekonomi</option>
@@ -21,7 +21,7 @@
     <input type="text" name="judul_data"
         value="{{ old('judul_data') }}"
         placeholder="Contoh: Struktur PDRB Menurut Lapangan Usaha (persen)"
-        class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#035f9c]">
     @error('judul_data')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
 </div>
 
@@ -34,7 +34,7 @@
     <input type="text" name="judul_kolom"
         value="{{ old('judul_kolom') }}"
         placeholder="Contoh: Komponen"
-        class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#035f9c]">
 </div>
 
 {{-- KOMPONEN / KATEGORI --}}
@@ -81,7 +81,7 @@
                             :name="'components[' + i + '][satuan]'"
                             x-model="comp.satuan"
                             placeholder="satuan..."
-                            class="w-24 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-2 py-1 text-xs text-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-400 shrink-0">
+                            class="w-24 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-2 py-1 text-xs text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#035f9c] shrink-0">
                     </template>
 
                     <input type="hidden" :name="'components[' + i + '][is_sub]'" :value="comp.is_sub ? '1' : '0'">
@@ -117,14 +117,14 @@
 
                     {{-- Definisi (wajib) --}}
                     <div>
-                        <label class="block text-[10px] font-bold text-blue-500 mb-1 flex items-center gap-1">
+                        <label class="block text-[10px] font-bold text-[#035f9c] mb-1 flex items-center gap-1">
                             <i class="ti ti-book-2 text-[10px]"></i> Definisi
                             <span class="text-red-400 font-bold">*</span>
                         </label>
                         <textarea :name="'components[' + i + '][definisi]'"
                             x-model="comp.definisi" rows="2"
                             placeholder="Jelaskan apa yang dimaksud dengan komponen ini..."
-                            class="w-full border border-blue-200 dark:border-blue-700 rounded-lg px-3 py-2 text-xs dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none placeholder-gray-300"></textarea>
+                            class="w-full border border-blue-200 dark:border-blue-700 rounded-lg px-3 py-2 text-xs dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#035f9c] resize-none placeholder-gray-300"></textarea>
                     </div>
 
                     {{-- Interpretasi: 3 kolom --}}

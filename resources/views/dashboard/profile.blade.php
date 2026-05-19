@@ -220,7 +220,7 @@
                 <hr class="border-gray-100 dark:border-gray-800 my-5">
 
                <h2 class="text-sm font-bold text-gray-700 dark:text-white mb-4 flex items-center gap-2">
-                    <i class="ti ti-lock text-blue-500"></i> Ubah Kata Sandi
+                    <i class="ti ti-lock text-[#035f9c]"></i> Ubah Kata Sandi
                     <span class="text-xs font-normal text-gray-400">(kosongkan jika tidak ingin mengubah)</span>
                 </h2>
 

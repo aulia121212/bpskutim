@@ -96,15 +96,67 @@
                             </a>
 
                             {{-- Hapus --}}
-                            <form method="POST" action="{{ route('statistic-titles.destroy', $title->id) }}"
-                                onsubmit="return confirm('Yakin hapus judul ini? Semua komponen terkait akan ikut terhapus.')">
-                                @csrf @method('DELETE')
-                                <button type="submit"
-                                    title="Hapus"
-                                    class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-900/30 dark:hover:text-rose-400 transition">
-                                    <i class="ti ti-trash text-sm"></i>
-                                </button>
-                            </form>
+                            <button
+    type="button"
+    title="Hapus"
+    onclick="openDeleteTitleModal('{{ route('statistic-titles.destroy', $title->id) }}')"
+    class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-900/30 dark:hover:text-rose-400 transition"
+>
+    <i class="ti ti-trash text-sm"></i>
+</button>
+
+<!-- Modal -->
+<div
+    id="deleteTitleModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 backdrop-blur-sm"
+>
+    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-md p-6 animate-fadeIn">
+
+        <div class="flex items-start gap-3 mb-4">
+            <div class="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center">
+                <i class="ti ti-trash text-rose-600 text-xl"></i>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-bold text-gray-800 dark:text-white">
+                    Hapus Judul
+                </h3>
+
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                    Semua komponen terkait juga akan ikut terhapus.
+                </p>
+            </div>
+        </div>
+
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-6">
+            Apakah Anda yakin ingin melanjutkan?
+        </p>
+
+        <div class="flex justify-end gap-3">
+
+            <button
+                type="button"
+                onclick="closeDeleteTitleModal()"
+                class="px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+            >
+                Batal
+            </button>
+
+            <form id="deleteTitleForm" method="POST">
+                @csrf
+                @method('DELETE')
+
+                <button
+                    type="submit"
+                    class="px-4 py-2 rounded-xl bg-rose-600 text-white hover:bg-rose-700 transition"
+                >
+                    Ya, Hapus
+                </button>
+            </form>
+
+        </div>
+    </div>
+</div>
 
                             <a href="{{ route('statistic-titles.show', $title->id) }}"
                                class="inline-flex items-center gap-1 bg-blue-50 hover:bg-blue-100 text-[#035f9c] text-xs font-semibold px-3 py-1.5 rounded-lg transition">
@@ -197,5 +249,23 @@ function componentForm(existing = []) {
         }
     }
 }
+</script>
+
+<script id="x281js">
+    function openDeleteTitleModal(actionUrl) {
+        document.getElementById('deleteTitleForm').action = actionUrl;
+
+        const modal = document.getElementById('deleteTitleModal');
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function closeDeleteTitleModal() {
+        const modal = document.getElementById('deleteTitleModal');
+
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+    }
 </script>
 @endsection

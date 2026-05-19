@@ -84,13 +84,77 @@
                     </td>
                     <td class="px-6 py-4">
                         <div class="flex items-center gap-2">
-                            <form method="POST" action="{{ route('pelayanan.popup.destroy', $p->id) }}"
+
+
+                            <!-- <form method="POST" action="{{ route('pelayanan.popup.destroy', $p->id) }}"
                                 onsubmit="return confirm('Hapus popup ini?')">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="p-1.5 text-gray-400 hover:text-red-500 transition">
                                     <i class="ti ti-trash"></i>
                                 </button>
-                            </form>
+                            </form> -->
+
+                            <button 
+    type="button"
+    onclick="openDeletePopupModal('{{ route('pelayanan.popup.destroy', $p->id) }}')"
+    class="p-1.5 text-gray-400 hover:text-red-500 transition"
+>
+    <i class="ti ti-trash"></i>
+</button>
+
+<!-- Modal Hapus Popup -->
+<div 
+    id="deletePopupModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 backdrop-blur-sm"
+>
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 animate-fadeIn">
+
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                <i class="ti ti-trash text-red-500 text-xl"></i>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-bold text-gray-800">
+                    Hapus Popup
+                </h3>
+
+                <p class="text-sm text-gray-500">
+                    Popup yang dihapus tidak dapat dikembalikan.
+                </p>
+            </div>
+        </div>
+
+        <p class="text-sm text-gray-600 mb-6">
+            Apakah Anda yakin ingin menghapus popup ini?
+        </p>
+
+        <div class="flex justify-end gap-3">
+
+            <button
+                type="button"
+                onclick="closeDeletePopupModal()"
+                class="px-4 py-2 rounded-xl border border-gray-300 text-gray-600 hover:bg-gray-100 transition"
+            >
+                Batal
+            </button>
+
+            <form id="deletePopupForm" method="POST">
+                @csrf
+                @method('DELETE')
+
+                <button
+                    type="submit"
+                    class="px-4 py-2 rounded-xl bg-red-500 text-white hover:bg-red-600 transition"
+                >
+                    Ya, Hapus
+                </button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
                             <button onclick="previewPopup('{{ asset($p->foto) }}')"
                                 class="inline-flex items-center gap-1 border border-blue-300 text-[#035f9c] text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 transition">
                                 Preview <i class="ti ti-chevrons-right text-sm"></i>
@@ -137,22 +201,22 @@
             @csrf
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-semibold text-blue-500 mb-1">Foto Pop Up</label>
+                    <label class="block text-sm font-semibold text-[#035f9c] mb-1">Foto Pop Up</label>
                     <input type="file" name="foto" accept="image/*" required
-                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c]">
                     <p class="text-xs text-gray-400 mt-1">Format: JPG, JPEG, PNG (maks 2MB)</p>
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold text-blue-500 mb-1">Tanggal Mulai Display</label>
+                    <label class="block text-sm font-semibold text-[#035f9c] mb-1">Tanggal Mulai Display</label>
                     <input type="date" name="tanggal_mulai" id="inp-mulai" required
                         min="{{ now()->toDateString() }}"
-                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c]">
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold text-blue-500 mb-1">Tanggal Akhir Display</label>
+                    <label class="block text-sm font-semibold text-[#035f9c] mb-1">Tanggal Akhir Display</label>
                     <input type="date" name="tanggal_akhir" id="inp-akhir" required
                         min="{{ now()->toDateString() }}"
-                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c]">
                 </div>
             </div>
             <div class="flex justify-end gap-3 mt-6">
@@ -161,7 +225,7 @@
                     Batal
                 </button>
                 <button type="submit"
-                    class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold">
+                    class="px-5 py-2.5 rounded-xl bg-[#035f9c] hover:text-[#035f9c] hover:bg-gray-100 text-white text-sm font-semibold">
                     Simpan
                 </button>
             </div>
@@ -218,6 +282,24 @@ function closePreview(e) {
     if (e.target === document.getElementById('modal-preview') || e.target.classList.contains('absolute')) closePreviewBtn();
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closePreviewBtn(); });
+</script>
+
+<script id="x192js">
+    function openDeletePopupModal(actionUrl) {
+        document.getElementById('deletePopupForm').action = actionUrl;
+
+        const modal = document.getElementById('deletePopupModal');
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function closeDeletePopupModal() {
+        const modal = document.getElementById('deletePopupModal');
+
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+    }
 </script>
 
 @endsection

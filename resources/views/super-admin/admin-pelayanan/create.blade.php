@@ -57,7 +57,7 @@
                 </label>
                 <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap') }}"
                     placeholder="Masukkan nama lengkap"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c] dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                     required>
                 @error('nama_lengkap')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
@@ -76,7 +76,7 @@
         inputmode="numeric"
         pattern="[0-9]{1,13}"
         oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,13)"
-        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c] dark:bg-gray-800 dark:border-gray-700 dark:text-white"
         required
     >
 
@@ -92,7 +92,7 @@
                 </label>
                 <input type="email" name="email" value="{{ old('email') }}"
                     placeholder="Masukkan email"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c] dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                     required>
                 @error('email')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
@@ -105,7 +105,7 @@
                 <div class="relative">
                     <input type="password" name="password" id="passwordField"
                         placeholder="••••••••••"
-                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white pr-10"
+                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c] dark:bg-gray-800 dark:border-gray-700 dark:text-white pr-10"
                         required>
                     <button type="button" onclick="togglePassword()"
                         class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
@@ -120,7 +120,7 @@
                 <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">Asal Instansi <span class="text-red-500">*</span> </label>
                 <input type="text" name="asal_instansi" value="{{ old('asal_instansi', 'BPS Kutai Timur') }}"
                     placeholder="BPS Kutai Timur"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c] dark:bg-gray-800 dark:border-gray-700 dark:text-white">
             </div>
 
             {{-- Alamat --}}
@@ -128,7 +128,7 @@
                 <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">Alamat <span class="text-red-500">*</span> </label>
                 <input type="text" name="alamat" value="{{ old('alamat') }}"
                     placeholder="Masukkan alamat"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c] dark:bg-gray-800 dark:border-gray-700 dark:text-white">
             </div>
 
             {{-- Jabatan --}}
@@ -136,7 +136,7 @@
                 <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">Jabatan <span class="text-red-500">*</span> </label>
                 <input type="text" name="jabatan" value="{{ old('jabatan') }}"
                     placeholder="Masukkan jabatan"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c] dark:bg-gray-800 dark:border-gray-700 dark:text-white">
             </div>
 
             {{-- Tim --}}
@@ -144,7 +144,7 @@
                 <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">Tim <span class="text-red-500">*</span> </label>
                 <input type="text" name="tim" value="{{ old('tim') }}"
                     placeholder="Masukkan nama tim"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c] dark:bg-gray-800 dark:border-gray-700 dark:text-white">
             </div>
 
         </div>

@@ -35,13 +35,13 @@
         <div class="flex items-center justify-between mb-3">
             <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Dipublikasikan</span>
             <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center">
-                <i class="ti ti-circle-check text-blue-500 text-lg"></i>
+                <i class="ti ti-circle-check text-[#035f9c] text-lg"></i>
             </div>
         </div>
         <div class="text-3xl font-bold text-gray-800 dark:text-white">
             {{ $stats['dipublikasikan'] }}
         </div>
-        <p class="text-xs text-blue-500 mt-1 font-medium">
+        <p class="text-xs text-[#035f9c]mt-1 font-medium">
             @if($stats['total_data'] > 0)
                 {{ round(($stats['dipublikasikan'] / $stats['total_data']) * 100) }}% dari total
             @else

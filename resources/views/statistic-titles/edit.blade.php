@@ -25,7 +25,7 @@
             {{-- ── Card: Info Judul ── --}}
             <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-4">
                 <h2 class="text-sm font-bold text-gray-700 dark:text-white flex items-center gap-2">
-                    <i class="ti ti-file-description text-blue-500"></i> Informasi Judul
+                    <i class="ti ti-file-description text-[#035f9c]"></i> Informasi Judul
                 </h2>
 
                 <div class="grid grid-cols-2 gap-4">
@@ -33,7 +33,7 @@
                     <div>
                         <label class="block text-xs font-semibold text-gray-500 mb-1.5">Indikator Data <span class="text-red-400">*</span></label>
                         <select name="indikator_data" required
-                            class="w-full appearance-none border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            class="w-full appearance-none border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-[#035f9c]">
                             @foreach([
                                 'indikator_ekonomi'             => 'Indikator Ekonomi',
                                 'indikator_ketenagakerjaan'     => 'Indikator Kependudukan & Ketenagakerjaan',
@@ -54,7 +54,7 @@
                         <input type="text" name="judul_kolom"
                             value="{{ old('judul_kolom', $statisticTitle->judul_kolom) }}"
                             placeholder="cth: Dimensi/Indikator"
-                            class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-[#035f9c]">
                     </div>
                 </div>
 
@@ -64,7 +64,7 @@
                     <input type="text" name="judul_data" required
                         value="{{ old('judul_data', $statisticTitle->judul_data) }}"
                         placeholder="cth: Indeks Pembangunan Manusia (IPM)"
-                        class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-[#035f9c]">
                 </div>
             </div>
 
@@ -107,11 +107,11 @@
             <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-sm font-bold text-gray-700 dark:text-white flex items-center gap-2">
-                        <i class="ti ti-list text-blue-500"></i> Komponen / Kategori
+                        <i class="ti ti-list text-[#035f9c]"></i> Komponen / Kategori
                         <span class="text-xs font-normal text-gray-400">(<span x-text="components.length"></span> komponen)</span>
                     </h2>
                     <button type="button" @click="addComponent()"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-50 text-blue-600 hover:bg-blue-100 transition">
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-50 text-[#035f9c] hover:bg-blue-100 transition">
                         <i class="ti ti-plus"></i> Tambah Komponen
                     </button>
                 </div>
@@ -145,7 +145,7 @@
                                 <input type="text" :name="`components[${idx}][satuan]`"
                                     x-model="comp.satuan"
                                     placeholder="Satuan (cth: %)"
-                                    class="w-28 border border-gray-200 dark:border-gray-700 rounded-lg px-2.5 py-1 text-xs text-gray-600 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-blue-400">
+                                    class="w-28 border border-gray-200 dark:border-gray-700 rounded-lg px-2.5 py-1 text-xs text-gray-600 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-[#035f9c]">
 
                                 {{-- Toggle is_sub --}}
                                 <label class="flex items-center gap-1.5 cursor-pointer shrink-0">
@@ -157,7 +157,7 @@
 
                                 {{-- Toggle expand --}}
                                 <button type="button" @click="comp._open = !comp._open"
-                                    class="text-gray-400 hover:text-blue-500 transition">
+                                    class="text-gray-400 hover:text-[#035f9c] transition">
                                     <i class="ti text-base" :class="comp._open ? 'ti-chevron-up' : 'ti-chevron-down'"></i>
                                 </button>
 
@@ -184,7 +184,7 @@
     class="px-4 py-4 space-y-4 border-t border-gray-100 dark:border-gray-800">
 
     <div class="flex items-center gap-2">
-        <div class="w-1.5 h-5 rounded-full bg-blue-500"></div>
+        <div class="w-1.5 h-5 rounded-full bg-[#035f9c]"></div>
         <p class="text-xs font-bold text-gray-500 uppercase tracking-widest">
             Detail Komponen
         </p>
@@ -192,7 +192,7 @@
 
     {{-- Definisi --}}
     <div class="bg-blue-50/60 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800 rounded-xl p-3">
-        <label class="flex items-center gap-2 text-xs font-semibold text-blue-700 dark:text-blue-300 mb-2">
+        <label class="flex items-center gap-2 text-xs font-semibold text-[#035f9c] dark:text-[#035f9c] mb-2">
             <i class="ti ti-book-2"></i>
             Definisi Komponen
         </label>
@@ -201,9 +201,9 @@
             x-model="comp.definisi"
             rows="3"
             placeholder="Masukkan definisi atau penjelasan komponen..."
-            class="w-full border border-blue-100 dark:border-blue-800 rounded-lg px-3 py-2 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-400 resize-none"></textarea>
+            class="w-full border border-blue-100 dark:border-blue-800 rounded-lg px-3 py-2 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-[#035f9c] resize-none"></textarea>
 
-        <p class="text-[11px] text-blue-500 mt-1">
+        <p class="text-[11px] text-[#035f9c] mt-1">
             Definisi akan selalu tampil di bawah grafik dan tabel saat komponen dipilih.
         </p>
     </div>
@@ -269,7 +269,7 @@
 
                 {{-- Tombol tambah bawah --}}
                 <button type="button" @click="addComponent()" x-show="components.length > 0"
-                    class="mt-3 w-full py-2 rounded-xl border-2 border-dashed border-gray-200 text-xs font-semibold text-gray-400 hover:border-blue-300 hover:text-blue-500 transition flex items-center justify-center gap-1.5">
+                    class="mt-3 w-full py-2 rounded-xl border-2 border-dashed border-gray-200 text-xs font-semibold text-gray-400 hover:border-blue-100 hover:text-[#035f9c] transition flex items-center justify-center gap-1.5">
                     <i class="ti ti-plus"></i> Tambah Komponen
                 </button>
             </div>
@@ -281,7 +281,7 @@
                     Batal
                 </a>
                 <button type="submit"
-                    class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold bg-blue-600 text-white hover:bg-blue-700 transition shadow-sm">
+                    class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold bg-[#035f9c] text-white hover:text-[#035f9c] hover:bg-gray-100 transition shadow-sm">
                     <i class="ti ti-device-floppy"></i> Simpan Perubahan
                 </button>
             </div>

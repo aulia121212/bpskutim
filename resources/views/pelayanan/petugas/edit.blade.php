@@ -185,7 +185,7 @@
 
                     <i class="ti ti-cloud-upload text-3xl text-blue-400 mb-2"></i>
 
-                    <p class="text-sm text-blue-500 font-semibold">
+                    <p class="text-sm text-[#035f9c] font-semibold">
                         Click to upload or drag and drop
                     </p>
 

@@ -55,37 +55,37 @@
 
                 {{-- Nama Lengkap --}}
                 <div>
-                    <label class="block text-sm font-semibold text-blue-500 mb-1.5">
+                    <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">
                         Nama Lengkap<span class="text-red-400">*</span>
                     </label>
                     <input type="text" name="name" value="{{ old('name', auth()->user()?->name) }}"
                         placeholder="Nama Lengkap"
-                        class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                        class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#035f9c] transition">
                 </div>
 
                 {{-- Nomor WhatsApp --}}
                 <div>
-                    <label class="block text-sm font-semibold text-blue-500 mb-1.5">
+                    <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">
                         Nomor WhatsApp<span class="text-red-400">*</span>
                     </label>
                     <input type="text" name="no_whatsapp" value="{{ old('no_whatsapp', auth()->user()?->no_whatsapp) }}"
                         placeholder="0812-xxxx-xxxx"
-                        class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                        class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#035f9c] transition">
                 </div>
 
                 {{-- Email --}}
                 <div>
-                    <label class="block text-sm font-semibold text-blue-500 mb-1.5">
+                    <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">
                         Email<span class="text-red-400">*</span>
                     </label>
                     <input type="email" name="email" value="{{ old('email', auth()->user()?->email) }}"
                         placeholder="email@example.com"
-                        class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                        class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#035f9c] transition">
                 </div>
 
                 {{-- Kata Sandi --}}
 <div id="current-password-wrap" style="display:none">
-    <label class="block text-sm font-semibold text-blue-500 mb-1.5">
+    <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">
         Password Saat Ini<span class="text-red-400">*</span>
     </label>
     <input type="password" name="current_password" id="current_password"
@@ -95,7 +95,7 @@
 
 {{-- Password Baru --}}
 <div>
-    <label class="block text-sm font-semibold text-blue-500 mb-1.5">
+    <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">
         Password Baru
     </label>
     <input type="password" name="new_password" id="new_password"
@@ -106,34 +106,34 @@
 
                 {{-- Asal Instansi --}}
                 <div>
-                    <label class="block text-sm font-semibold text-blue-500 mb-1.5">Asal Instansi</label>
+                    <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">Asal Instansi</label>
                     <input type="text" name="instansi" value="{{ old('instansi', auth()->user()?->instansi) }}"
                         placeholder="BPS Kutai Timur"
-                        class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                        class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#035f9c] transition">
                 </div>
 
                 {{-- Alamat --}}
                 <div>
-                    <label class="block text-sm font-semibold text-blue-500 mb-1.5">Alamat</label>
+                    <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">Alamat</label>
                     <input type="text" name="alamat" value="{{ old('alamat', auth()->user()?->alamat) }}"
                         placeholder="Alamat Admin"
-                        class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                        class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#035f9c] transition">
                 </div>
 
                 {{-- Jabatan --}}
                 <div>
-                    <label class="block text-sm font-semibold text-blue-500 mb-1.5">Jabatan</label>
+                    <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">Jabatan</label>
                     <input type="text" name="jabatan" value="{{ old('jabatan', auth()->user()?->jabatan) }}"
                         placeholder="Jabatan Admin"
-                        class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                        class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#035f9c] transition">
                 </div>
 
                 {{-- Tim --}}
                 <div>
-                    <label class="block text-sm font-semibold text-blue-500 mb-1.5">Tim</label>
+                    <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">Tim</label>
                     <input type="text" name="tim" value="{{ old('tim', auth()->user()?->tim) }}"
                         placeholder="Tim Admin"
-                        class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                        class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#035f9c] transition">
                 </div>
 
             </div>

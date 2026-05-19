@@ -119,7 +119,7 @@
                 </div>
             </div>
             <!-- <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1">File Referensi</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1">File Referensi</label>
                 <label class="flex items-center justify-between border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-400 dark:bg-gray-800 cursor-pointer hover:bg-gray-50 transition">
                     <span id="file-label">Pilih file...</span>
                     <i class="ti ti-upload text-gray-400"></i>

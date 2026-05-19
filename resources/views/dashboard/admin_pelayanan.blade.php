@@ -22,7 +22,7 @@
         <div class="flex items-center justify-between mb-3">
             <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total Petugas</span>
             <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center">
-                <i class="ti ti-users text-blue-500 text-lg"></i>
+                <i class="ti ti-users text-[#035f9c] text-lg"></i>
             </div>
         </div>
         <div class="text-3xl font-bold text-gray-800 dark:text-white">
@@ -83,7 +83,7 @@
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-sm font-bold text-gray-700 dark:text-white">Reservasi Terbaru</h2>
             <a href="{{ route('pelayanan.reservasi.index') }}"
-               class="text-xs text-blue-500 hover:underline font-semibold">
+               class="text-xs text-[#035f9c] hover:underline font-semibold">
                 Lihat semua →
             </a>
         </div>
@@ -138,7 +138,7 @@
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-sm font-bold text-gray-700 dark:text-white">Jadwal Petugas Hari Ini</h2>
             <a href="{{ route('pelayanan.jadwal.index') }}"
-               class="text-xs text-blue-500 hover:underline font-semibold">
+               class="text-xs text-[#035f9c] hover:underline font-semibold">
                 Kelola jadwal →
             </a>
         </div>

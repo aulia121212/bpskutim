@@ -181,7 +181,7 @@
         {{-- Role Badge — tampilkan role user yang sedang login --}}
         <div x-show="expanded" x-cloak
              class="px-3 py-1.5 mb-1 rounded-lg bg-gray-50 dark:bg-gray-900 flex items-center gap-2">
-            <i class="ti ti-shield-check text-sm text-blue-500"></i>
+            <i class="ti ti-shield-check text-sm text-[#035f9c]"></i>
             <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">
                 {{ auth()->user()->role_label }}
             </span>

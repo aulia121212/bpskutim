@@ -19,7 +19,7 @@
         </div>
         <div class="flex items-center gap-2 shrink-0">
             <a href="{{ route('statistic-titles.edit', $statisticTitle->id) }}"
-                class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-[#035f9c] text-white hover:bg-blue-700 transition shadow-sm">
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-[#035f9c] text-white hover:text-[#035f9c] hover:bg-gray-100 transition shadow-sm">
                 <i class="ti ti-pencil text-sm"></i> Edit
             </a>
             <a href="{{ route('statistic-titles.index') }}"
@@ -35,7 +35,7 @@
         <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6">
             <h2 class="text-sm font-bold text-gray-700 dark:text-white flex items-center gap-2 mb-5">
                 <span class="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
-                    <i class="ti ti-file-description text-blue-500 text-sm"></i>
+                    <i class="ti ti-file-description text-[#035f9c] text-sm"></i>
                 </span>
                 Informasi Judul
             </h2>
@@ -197,9 +197,9 @@
 {{-- Definisi --}}
 <div class="mt-3 rounded-xl border border-blue-100 dark:border-blue-900/40 bg-blue-50/50 dark:bg-blue-900/10 p-3">
     <div class="flex items-center gap-1.5 mb-1.5">
-        <i class="ti ti-book-2 text-blue-500 text-xs"></i>
+        <i class="ti ti-book-2 text-[#035f9c] text-xs"></i>
 
-        <p class="text-[10px] font-bold uppercase tracking-widest text-blue-600 dark:text-blue-300">
+        <p class="text-[10px] font-bold uppercase tracking-widest text-[#035f9c] dark:text-blue-300">
             Definisi
         </p>
     </div>
@@ -340,7 +340,7 @@
                 </button>
             </form>
             <a href="{{ route('statistic-titles.edit', $statisticTitle->id) }}"
-                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-[#035f9c] text-white hover:bg-blue-700 transition shadow-sm">
+                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-[#035f9c] text-white hover:text-[#035f9c] hover:bg-gray-100 transition shadow-sm">
                 <i class="ti ti-pencil text-sm"></i> Edit Data Ini
             </a>
         </div>

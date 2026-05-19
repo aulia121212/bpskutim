@@ -30,7 +30,7 @@
         <div class="flex items-center justify-between mb-3">
             <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Petugas</span>
             <div class="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center">
-                <i class="ti ti-headset text-blue-500 text-base"></i>
+                <i class="ti ti-headset text-[#035f9c] text-base"></i>
             </div>
         </div>
         <div class="text-3xl font-bold text-gray-800 dark:text-white">{{ $totalPetugas }}</div>
@@ -94,7 +94,7 @@
                 <p class="text-xs text-gray-400 mt-0.5">12 bulan terakhir</p>
             </div>
             <a href="{{ route('pelayanan.reservasi.index') }}"
-               class="text-xs text-blue-500 hover:underline font-semibold">Lihat semua →</a>
+               class="text-xs text-[#035f9c] hover:underline font-semibold">Lihat semua →</a>
         </div>
         <canvas id="grafikReservasi" height="140"></canvas>
     </div>
@@ -122,7 +122,7 @@
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-sm font-bold text-gray-700 dark:text-white">Reservasi Terbaru</h2>
             <a href="{{ route('pelayanan.reservasi.index') }}"
-               class="text-xs text-blue-500 hover:underline font-semibold">Lihat semua →</a>
+               class="text-xs text-[#035f9c] hover:underline font-semibold">Lihat semua →</a>
         </div>
 
         <div class="overflow-x-auto">
@@ -172,7 +172,7 @@
                 </td>
                 <td class="py-3 text-right">
                     <a href="{{ route('pelayanan.reservasi.show', $r->id_reservasi) }}"
-                       class="text-xs text-blue-500 hover:underline">Detail</a>
+                       class="text-xs text-[#035f9c] hover:underline">Detail</a>
                 </td>
             </tr>
             @empty

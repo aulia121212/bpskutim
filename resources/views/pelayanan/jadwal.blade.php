@@ -42,19 +42,19 @@
             <div id="add-form" class="hidden absolute inset-4 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 shadow-xl p-6 overflow-y-auto">
                 <div class="flex justify-between items-center mb-4">
                     <input type="text" id="form-judul" placeholder="Tambah Judul Kegiatan"
-                        class="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mr-3">
+                        class="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c] mr-3">
                     <button onclick="closeForm()" class="p-1.5 bg-blue-600 hover:bg-blue-700 rounded-lg text-white transition">
                         <i class="ti ti-x text-base"></i>
                     </button>
                 </div>
 
                 <div class="mb-5">
-                    <span class="text-sm font-semibold text-blue-500">Tanggal :</span>
-                    <span id="form-tanggal-label" class="text-sm font-semibold text-blue-600 ml-2"></span>
+                    <span class="text-sm font-semibold text-[#035f9c]">Tanggal :</span>
+                    <span id="form-tanggal-label" class="text-sm font-semibold text-[#035f9c] ml-2"></span>
                 </div>
 
                 <div class="mb-5">
-                    <p class="text-sm font-semibold text-blue-500 mb-3">Alasan :</p>
+                    <p class="text-sm font-semibold text-[#035f9c] mb-3">Alasan :</p>
                     <div class="bg-gray-50 rounded-xl px-4 py-3 space-y-3">
                         <label class="flex items-center gap-3 cursor-pointer">
                             <input type="radio" name="alasan" value="Cuti Pribadi" class="text-blue-600">
@@ -72,7 +72,7 @@
                 </div>
 
                 <div class="mb-6">
-                    <p class="text-sm font-semibold text-blue-500 mb-3">Nama Petugas :</p>
+                    <p class="text-sm font-semibold text-[#035f9c] mb-3">Nama Petugas :</p>
                     <div class="bg-gray-50 rounded-xl px-4 py-3 space-y-3">
 
     {{-- Semua Petugas --}}
@@ -221,7 +221,7 @@ function renderKeterangan() {
                     <p class="text-sm font-semibold text-gray-800">${entry.judul || entry.alasan}</p>
                     <p class="text-xs text-gray-400 mt-0.5">${entry.petugas ?? 'Semua Petugas'}</p>
                     <div class="flex items-center gap-1 mt-2 text-xs text-gray-500">
-                        <i class="ti ti-calendar text-blue-500"></i> ${formatDateID(date)}
+                        <i class="ti ti-calendar text-[#035f9c]"></i> ${formatDateID(date)}
                     </div>
                 </div>
                 <span class="shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full ${cls}">${entry.alasan}</span>

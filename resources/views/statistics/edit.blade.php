@@ -22,13 +22,13 @@
         {{-- Row 1: Indikator + Judul Data (read-only) --}}
         <div class="grid grid-cols-2 gap-6 mb-6">
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1">Indikator</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1">Indikator</label>
                 <div class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 bg-gray-50">
                     {{ ucwords(str_replace('_', ' ', $statistic->indikator_data)) }}
                 </div>
             </div>
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1">Judul Data</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1">Judul Data</label>
                 <div class="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 bg-gray-50">
                     {{ $statistic->judul_data }}
                 </div>
@@ -38,10 +38,10 @@
         {{-- Row 2: Wilayah + File Referensi --}}
         <div class="grid grid-cols-2 gap-6 mb-6">
             <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1">Wilayah Data</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1">Wilayah Data</label>
                 <div class="relative">
                     <select name="wilayah_data"
-                        class="w-full appearance-none border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        class="w-full appearance-none border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#035f9c]">
                         @foreach(['Paser','Kutai Barat','Kutai Kartanegara','Kutai Timur','Berau','Penajam Paser Utara','Mahakam Ulu','Balikpapan','Samarinda','Bontang','Kalimantan Timur','Indonesia'] as $wil)
                         <option value="{{ $wil }}" {{ $statistic->wilayah_data === $wil ? 'selected' : '' }}>{{ $wil }}</option>
                         @endforeach
@@ -50,7 +50,7 @@
                 </div>
             </div>
             <!-- <div>
-                <label class="block text-sm font-semibold text-blue-500 mb-1">File Referensi (opsional, ganti jika perlu)</label>
+                <label class="block text-sm font-semibold text-[#035f9c] mb-1">File Referensi (opsional, ganti jika perlu)</label>
                 <label class="flex items-center justify-between border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-400 dark:bg-gray-800 cursor-pointer hover:bg-gray-50 transition">
                     <span id="file-label">
                          {{ $statistic->file_data ? basename($statistic->file_data) : 'Pilih file...' }}
@@ -67,15 +67,15 @@
         <div class="border-t border-gray-100 dark:border-gray-800 pt-6">
             <div class="flex items-center justify-between mb-4">
                 <div>
-                    <p class="text-sm font-semibold text-blue-500">Nilai Data</p>
+                    <p class="text-sm font-semibold text-[#035f9c]">Nilai Data</p>
                     <p class="text-xs text-gray-400 mt-0.5">
                         Baris = <span class="font-semibold text-gray-600 dark:text-gray-300">Kategori</span> &nbsp;·&nbsp;
                         Kolom = <span class="font-semibold text-gray-600 dark:text-gray-300">Tahun</span>
                     </p>
                 </div>
                 <div class="flex items-center gap-2 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800">
-                    <i class="ti ti-table text-blue-500 text-sm"></i>
-                    <span class="text-xs font-bold text-blue-600">Tabel Grid</span>
+                    <i class="ti ti-table text-[#035f9c] text-sm"></i>
+                    <span class="text-xs font-bold text-[#035f9c]">Tabel Grid</span>
                 </div>
             </div>
 
