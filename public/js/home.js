@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const track = document.getElementById("heroTrack");
+    const track = document.getElementById("heroTrack");
     const dots = document.querySelectorAll(".slider-dots .dot");
     const slides = document.querySelectorAll(".slide");
     const total = slides.length;
@@ -8,9 +8,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function goTo(n) {
         idx = (n + total) % total;
-        if (track) track.style.transform = `translateX(-${idx * 100}%)`;
+        /* Pakai window.innerWidth (pixel) bukan % agar slide
+           selalu bergeser tepat 1 lebar viewport — tidak bocor */
+        if (track)
+            track.style.transform = `translateX(-${idx * window.innerWidth}px)`;
         dots.forEach((d, i) => d.classList.toggle("active", i === idx));
     }
+
+    /* Update posisi saat resize agar tidak stuck di posisi salah */
+    window.addEventListener("resize", () => {
+        if (track)
+            track.style.transform = `translateX(-${idx * window.innerWidth}px)`;
+    });
     function startAuto() {
         clearInterval(timer);
         timer = setInterval(() => goTo(idx + 1), 5000);

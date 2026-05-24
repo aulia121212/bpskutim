@@ -14,69 +14,121 @@
 <div class="hero-wrapper">
 @include('partials.navbar')
 
-{{-- ══ HERO SLIDER ══════════════════════════════════ --}}
+{{-- ══ HERO SLIDER — FULLSCREEN PHOTO + GLASS CARD ══ --}}
 <section class="hero">
     <div class="slider-wrap">
         <div class="slider-track" id="heroTrack">
 
             {{-- ── Slide 1 — Data Statistik ── --}}
-            <div class="slide">
-                <div class="slide-img">
-                    <img src="{{ asset('images/bpss.jpeg') }}" alt="Data Statistik">
+            <div class="slide slide-fs">
+
+                {{-- Full-screen background photo --}}
+                <div class="slide-fs-bg">
+                    <img src="{{ asset('images/AMZA9067.jpeg') }}"
+                         onerror="this.src='{{ asset('images/bpss.jpeg') }}'"
+                         alt="BPS Kutai Timur">
                 </div>
-                <div class="slide-texture"></div>
-                <div class="slide-deco"></div>
-                <div class="slide-card">
-                    <span class="slide-tag">
+                {{-- Overlay gradasi gelap kiri --}}
+                <div class="slide-fs-overlay"></div>
+
+                {{-- Glass content card --}}
+                <div class="slide-glass-card">
+                    <span class="slide-glass-tag">
                         <i class="ti ti-chart-dots"></i> Portal Data Resmi
                     </span>
-                    <h1 class="slide-title">
+                    <h1 class="slide-glass-title">
                         Data<br><em>Statistik</em>
                     </h1>
-                    <p class="slide-lead">Butuh data statistik untuk referensi atau analisis?</p>
-                    <p class="slide-desc">
-                        Jelajahi berbagai indikator dan tabel data yang dapat Anda gunakan sebagai dasar
-                        informasi, penelitian, maupun perencanaan.
+                    <p class="slide-glass-lead">
+                        Butuh data statistik untuk referensi atau analisis?
                     </p>
-                    <a href="/data-statistik" class="btn-hero">
-                        <span class="btn-icon"><i class="ti ti-search"></i></span>
+                    <p class="slide-glass-desc">
+                        Jelajahi berbagai indikator dan tabel data yang dapat Anda gunakan
+                        sebagai dasar informasi, penelitian, maupun perencanaan.
+                    </p>
+                    <a href="/data-statistik" class="btn-glass">
+                        <span class="btn-glass-icon"><i class="ti ti-search"></i></span>
                         Jelajahi Data
                     </a>
                 </div>
+
+                {{-- Stats badge pojok kanan bawah --}}
+                <!-- <div class="slide-stats-row">
+                    <div class="stat-badge">
+                        <span class="stat-badge-num">1.345</span>
+                        <span class="stat-badge-lbl">Dataset</span>
+                    </div>
+                    <div class="stat-badge">
+                        <span class="stat-badge-num">568</span>
+                        <span class="stat-badge-lbl">Publikasi</span>
+                    </div>
+                    <div class="stat-badge">
+                        <span class="stat-badge-num">2.340</span>
+                        <span class="stat-badge-lbl">Konsultasi</span>
+                    </div>
+                </div> -->
+
             </div>
 
             {{-- ── Slide 2 — Konsultasi Statistik ── --}}
-            <div class="slide">
-                <div class="slide-img">
-                    <img src="{{ asset('images/pst.jpeg') }}" alt="Layanan Konsultasi">
+            <div class="slide slide-fs">
+
+                <div class="slide-fs-bg">
+                    <img src="{{ asset('images/AMZA9062.jpeg') }}"
+                         onerror="this.src='{{ asset('images/pst.jpeg') }}'"
+                         alt="Pelayanan Statistik Terpadu">
                 </div>
-                <div class="slide-texture"></div>
-                <div class="slide-deco"></div>
-                <div class="slide-card">
-                    <span class="slide-tag">
+                <div class="slide-fs-overlay slide-fs-overlay--teal"></div>
+
+                <div class="slide-glass-card">
+                    <span class="slide-glass-tag">
                         <i class="ti ti-headset"></i> Layanan BPS Kutai Timur
                     </span>
-                    <h1 class="slide-title">
+                    <h1 class="slide-glass-title">
                         Layanan<br><em>Konsultasi</em> Statistik
                     </h1>
-                    <p class="slide-lead">Butuh Bantuan Memahami Data Statistik?</p>
-                    <p class="slide-desc">
+                    <p class="slide-glass-lead">
+                        Butuh Bantuan Memahami Data Statistik?
+                    </p>
+                    <p class="slide-glass-desc">
                         Dapatkan pendampingan dari petugas untuk memahami data,
                         indikator, dan konsep statistik sesuai kebutuhan Anda.
                     </p>
-                    <a href="/konsultasi" class="btn-hero">
-                        <span class="btn-icon"><i class="ti ti-headset"></i></span>
+                    <a href="/konsultasi" class="btn-glass">
+                        <span class="btn-glass-icon"><i class="ti ti-headset"></i></span>
                         Mulai Konsultasi
                     </a>
                 </div>
+
+                <!-- <div class="slide-stats-row">
+                    <div class="stat-badge">
+                        <span class="stat-badge-num">1.345</span>
+                        <span class="stat-badge-lbl">Dataset</span>
+                    </div>
+                    <div class="stat-badge">
+                        <span class="stat-badge-num">568</span>
+                        <span class="stat-badge-lbl">Publikasi</span>
+                    </div>
+                    <div class="stat-badge">
+                        <span class="stat-badge-num">2.340</span>
+                        <span class="stat-badge-lbl">Konsultasi</span>
+                    </div>
+                </div> -->
+
             </div>
+
         </div>
 
-        <div class="slider-dots">
-            <button class="slider-prev-dot" id="dotPrev"><i class="ti ti-chevron-left"></i></button>
+        {{-- DOT NAV --}}
+        <div class="slider-dots slider-dots--fs">
+            <button class="slider-prev-dot" id="dotPrev">
+                <i class="ti ti-chevron-left"></i>
+            </button>
             <button class="dot active" data-idx="0"></button>
-            <button class="dot"        data-idx="1"></button>
-            <button class="slider-next-dot" id="dotNext"><i class="ti ti-chevron-right"></i></button>
+            <button class="dot" data-idx="1"></button>
+            <button class="slider-next-dot" id="dotNext">
+                <i class="ti ti-chevron-right"></i>
+            </button>
         </div>
     </div>
 </section>
@@ -354,6 +406,31 @@ function notifPublikasi() {
         toast.remove();
     }, 2500);
 }
+</script>
+
+{{-- ── Ken Burns: tambah class is-active ke slide pertama ── --}}
+<script>
+(function () {
+    /* Tandai slide aktif agar Ken Burns berjalan */
+    function markActive(idx) {
+        document.querySelectorAll('.slide-fs').forEach(function (s, i) {
+            s.classList.toggle('is-active', i === idx);
+        });
+    }
+    /* Jalankan segera untuk slide pertama */
+    markActive(0);
+
+    /* Pantau perubahan transform pada heroTrack dari home.js */
+    var track = document.getElementById('heroTrack');
+    if (track && window.MutationObserver) {
+        new MutationObserver(function () {
+            var tx  = new WebKitCSSMatrix(getComputedStyle(track).transform).m41;
+            var w   = track.parentElement.offsetWidth || window.innerWidth;
+            var idx = Math.round(Math.abs(tx) / w);
+            markActive(idx);
+        }).observe(track, { attributes: true, attributeFilter: ['style'] });
+    }
+})();
 </script>
 
 <script src="{{ asset('js/home.js') }}"></script>

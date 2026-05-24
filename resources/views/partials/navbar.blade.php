@@ -14,8 +14,7 @@
         @auth
             {{-- DROPDOWN USER --}}
             <div class="nav-user-wrap" id="navUserWrap">
-                <button class="btn-nav nav-user-btn" id="navUserBtn" type="button"
-                        style="display:flex;align-items:center;gap:8px;padding:6px 14px 6px 6px!important;cursor:pointer;border:none;background:#1a56db;border-radius:12px;">
+                <button class="btn-nav nav-user-btn" id="navUserBtn" type="button">
                     <div style="width:32px;height:32px;border-radius:50%;background:#e8f0fe;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;border: 1px solid rgba(255,255,255,0.2);">
                         @if(auth()->user()->foto_profil)
                             <img src="{{ asset(auth()->user()->foto_profil) . '?v=' . time() }}" style="width:100%;height:100%;object-fit:cover;">
@@ -29,14 +28,13 @@
                         @endif
                     </div>
                     <div style="display:flex;flex-direction:column;align-items:flex-start;line-height:1.2;">
-                        <span style="font-size:13px;font-weight:700;color:#fff;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                            {{ auth()->user()->name }}
+<span style="font-family:'Plus Jakarta Sans', sans-serif;font-size:13px;font-weight:600;color:#035f9c;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">                            {{ auth()->user()->name }}
                         </span>
-                        <span style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.8);text-transform:uppercase;letter-spacing:0.5px;">
+                        <!-- <span style="font-size:10px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;">
                             {{ auth()->user()->role_label }}
-                        </span>
+                        </span> -->
                     </div>
-                    <i class="ti ti-chevron-down" id="navChevron" style="color:#fff;font-size:13px;transition:transform .2s;margin-left:4px;"></i>
+                    <i class="ti ti-chevron-down" id="navChevron" style="color:#035f9c;font-size:13px;transition:transform .2s;margin-left:4px;"></i>
                 </button>
 
                 {{-- Dropdown panel --}}
@@ -152,6 +150,43 @@
     --bg: #f0f6ff;
 }
 
+.nav-user-btn{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:6px 14px 6px 6px !important;
+    cursor:pointer;
+    border:var(--muted) !important;
+    background: graytint !important;
+    box-shadow:none !important;
+    border-radius:12px;
+}
+
+button.btn-nav.nav-user-btn{
+        font-family: 'Plus Jakarta Sans', sans-serif;
+
+    background: var(--bg) !important;
+    border: transparent !important;
+    color:transparent !important;
+}
+
+#main-nav.scrolled button.btn-nav.nav-user-btn{
+        font-family: 'Plus Jakarta Sans', sans-serif;
+
+    background: var(--bg) !important;
+    border: transparent !important;
+    color:transparent !important;
+}
+
+#main-nav .nav-user-btn,
+#main-nav.scrolled .nav-user-btn{
+        background: var(--bg) !important;
+
+    border: none !important;
+    box-shadow: none !important;
+    color: #1e293b !important;
+}
+
 /* ── HAMBURGER ── */
 .nav-hamburger {
     display: none;
@@ -220,8 +255,7 @@
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    text-align: left;
+     text-align: left;
 }
 .mobile-logout-btn i {
     color: #ef4444 !important;
@@ -370,7 +404,7 @@
 
 /* ── BTN NAV ── */
 .btn-nav {
-    background: var(--biru) !important;
+    background: var(--bg) !important;
     color: #ffffff !important;
     border: 1.5px solid var(--biru) !important;
     border-radius: 10px !important;
@@ -397,7 +431,10 @@
 }
 
 /* ── USER DROPDOWN ── */
-.nav-user-wrap { position: relative; }
+.nav-user-wrap { 
+    position: relative; 
+    /* background: #ffffff; */
+}
 .nav-dropdown {
     display: none;
     position: absolute;

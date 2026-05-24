@@ -99,7 +99,7 @@
 
 <!-- CARA RESERVASI -->
 <section class="cara-section" id="cara">
-    <h2 class="section-title">Alur Reservasi Mudah</h2>
+    <h2 class="section-title">Alur Reservasi</h2>
     <p class="section-sub">
         Empat langkah sederhana untuk mendapatkan bantuan konsultasi data profesional secara gratis.
     </p>
@@ -223,6 +223,13 @@
 
                     {{-- Banner + avatar overlap --}}
                     <div class="petugas-banner">
+
+                        {{-- Gelombang SVG smooth --}}
+                        <svg class="petugas-banner-svg" viewBox="0 0 400 72" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0,72 L0,38 Q100,72 200,50 Q300,28 400,44 L400,72 Z" fill="rgba(255,255,255,0.35)"/>
+                            <path d="M0,72 L0,52 Q100,72 200,62 Q300,52 400,58 L400,72 Z" fill="#ffffff"/>
+                        </svg>
+
                         <div class="petugas-avatar-wrap">
                             @if($p->foto)
                                 <img src="{{ asset($p->foto) }}" alt="{{ $p->nama_lengkap }}">

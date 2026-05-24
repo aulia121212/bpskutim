@@ -448,6 +448,12 @@ body {
     font-weight: 600;
 } */
 
+.topik-section .section-title {
+    font-family: "Montserrat", sans-serif;
+    color: var(--biru);
+    font-size: 38px;
+    margin-bottom: 10px;
+}
 /* Keep btn-konsultasi-sm for backward compat */
 .btn-konsultasi-sm {
     display: inline-flex;
@@ -520,7 +526,7 @@ body {
 
 .reservasi-section {
     padding: 80px 60px;
-    background: var(--bg);
+    background: #ffffff;
 }
 
 .reservasi-header {
@@ -529,7 +535,12 @@ body {
 }
 
 .reservasi-header .section-title {
-    margin-bottom: 8px;
+    font-family: "Montserrat", sans-serif;
+    color: var(--biru);
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--biru);
+    margin-bottom: 12px;
 }
 
 /* ── Layout: sidebar kiri + grid kanan ── */
@@ -573,9 +584,16 @@ body {
     overflow-y: auto;
 }
 
-.filter-sidebar-list::-webkit-scrollbar { width: 4px; }
-.filter-sidebar-list::-webkit-scrollbar-track { background: transparent; }
-.filter-sidebar-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+.filter-sidebar-list::-webkit-scrollbar {
+    width: 4px;
+}
+.filter-sidebar-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.filter-sidebar-list::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
 
 .filter-btn {
     display: flex;
@@ -606,14 +624,18 @@ body {
     background: #f0f6ff;
     color: var(--biru);
 }
-.filter-btn:hover i { color: var(--biru); }
+.filter-btn:hover i {
+    color: var(--biru);
+}
 
 .filter-btn.active {
     background: #eff6ff;
     color: var(--biru);
     font-weight: 700;
 }
-.filter-btn.active i { color: var(--biru); }
+.filter-btn.active i {
+    color: var(--biru);
+}
 
 .filter-btn-reset {
     display: flex;
@@ -635,7 +657,9 @@ body {
 .filter-btn-reset:hover {
     background: #fef2f2;
 }
-.filter-btn-reset i { font-size: 14px; }
+.filter-btn-reset i {
+    font-size: 14px;
+}
 
 /* ── PETUGAS GRID ── */
 .petugas-grid {
@@ -650,7 +674,9 @@ body {
     border: 1px solid var(--border);
     border-radius: 20px;
     overflow: hidden;
-    transition: box-shadow 0.25s, transform 0.25s;
+    transition:
+        box-shadow 0.25s,
+        transform 0.25s;
     display: flex;
     flex-direction: column;
 }
@@ -661,41 +687,74 @@ body {
 }
 
 /* Gradient banner atas */
+/* ── Banner atas dengan gelombang ── */
 .petugas-banner {
-    height: 88px;
-    background: linear-gradient(135deg, #1e6fb8 0%, #5ba8e0 60%, #a8d8f0 100%);
+    height: 80px;
     position: relative;
+    overflow: visible;
     flex-shrink: 0;
+    background: linear-gradient(160deg, #4a9fd4 0%, #6cb8e8 40%, #a8d8f5 100%);
 }
 
-/* Avatar overlap */
+/* Dot pattern di kiri atas */
+/* .petugas-banner::before {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    width: 100px;
+    height: 50px;
+    background-image: radial-gradient(
+        rgba(255, 255, 255, 0.4) 1.5px,
+        transparent 1.5px
+    );
+    background-size: 10px 10px;
+    opacity: 0.8;
+    z-index: 1;
+} */
+
+/* Wave putih bawah — ditangani SVG inline */
+
+/* SVG wave */
+.petugas-banner-svg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 72px;
+    z-index: 2;
+}
+
+/* Avatar overlap — di atas wave */
 .petugas-avatar-wrap {
     position: absolute;
-    bottom: -36px;
+    bottom: -40px;
     left: 50%;
     transform: translateX(-50%);
-    width: 76px;
-    height: 76px;
+    width: 88px;
+    height: 88px;
     border-radius: 50%;
-    border: 3px solid #fff;
-    box-shadow: 0 4px 14px rgba(3, 95, 156, 0.2);
+    border: 4px solid #fff;
+    box-shadow: 0 4px 18px rgba(3, 95, 156, 0.22);
     background: linear-gradient(135deg, #dbeafe, #93c5fd);
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 32px;
+    font-size: 36px;
+    z-index: 10;
 }
 
 .petugas-avatar-wrap img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: top; /* atau center / 50% 20% */
 }
 
-/* Body kartu */
+/* Body kartu — padding top lebih besar karena avatar lebih besar */
 .petugas-body {
-    padding: 44px 20px 20px;
+    padding: 52px 20px 20px;
     text-align: center;
     flex: 1;
     display: flex;
@@ -727,10 +786,12 @@ body {
 .petugas-tags {
     display: flex;
     gap: 6px;
-    flex-wrap: wrap;
     justify-content: center;
-    margin-bottom: 16px;
-    flex: 1;
+    flex-wrap: wrap;
+}
+
+.petugas-tags:has(.petugas-tag:nth-child(2):last-child) {
+    flex-wrap: nowrap; /* 🔥 kalau cuma 2 item, jangan turun */
 }
 
 .petugas-tag {
@@ -742,6 +803,7 @@ body {
     border-radius: 20px;
     border: 1px solid #bfdbfe;
     white-space: nowrap;
+    margin-bottom: 10px;
 }
 
 /* Tag +N lainnya — tooltip */
@@ -756,6 +818,8 @@ body {
     border: 1px solid #e2e8f0;
     cursor: default;
     white-space: nowrap;
+
+    margin-bottom: 10px;
 }
 
 .tag-more-tooltip {
@@ -774,13 +838,13 @@ body {
     line-height: 1.7;
     z-index: 20;
     text-align: left;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
     min-width: 140px;
     pointer-events: none;
 }
 
 .tag-more-tooltip::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 100%;
     left: 50%;
@@ -809,6 +873,8 @@ body {
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s;
+
+    margin-top: auto;
 }
 
 .btn-reservasi:hover {
@@ -828,8 +894,14 @@ body {
     color: var(--muted);
     grid-column: 1 / -1;
 }
-.filter-empty i { font-size: 52px; color: #cbd5e1; }
-.filter-empty p { font-size: 15px; font-weight: 500; }
+.filter-empty i {
+    font-size: 52px;
+    color: #cbd5e1;
+}
+.filter-empty p {
+    font-size: 15px;
+    font-weight: 500;
+}
 .filter-empty button {
     padding: 10px 24px;
     background: var(--blue);
@@ -842,8 +914,9 @@ body {
     cursor: pointer;
     transition: background 0.2s;
 }
-.filter-empty button:hover { background: var(--blue-dark); }
-
+.filter-empty button:hover {
+    background: var(--blue-dark);
+}
 
 /* ════════════════════════════════════════════════════
    TOPIK SECTION — Display Only (no filter interaction)
@@ -874,13 +947,15 @@ body {
     align-items: center;
     gap: 8px;
     padding: 16px 8px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
+    /* background: #f8fafc; */
+    /* border: 1px solid #e2e8f0; */
     border-radius: 16px;
     cursor: default;
-    transition: box-shadow 0.2s, transform 0.2s;
+    transition:
+        box-shadow 0.2s,
+        transform 0.2s;
     font-family: "Plus Jakarta Sans", sans-serif;
-    pointer-events: none;   /* tidak bisa diklik */
+    pointer-events: none; /* tidak bisa diklik */
     user-select: none;
 }
 
@@ -919,9 +994,17 @@ body {
 
 /* Hapus semua active/hover effects karena topik tidak interaktif */
 .topik-item.active .topik-icon,
-.topik-item:hover .topik-icon { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-.topik-item.active .topik-label { color: #475569; font-weight: 600; }
-.topik-item.active .topik-icon img { filter: none; }
+.topik-item:hover .topik-icon {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.topik-item.active .topik-label {
+    color: #475569;
+    font-weight: 600;
+}
+.topik-item.active .topik-icon img {
+    filter: none;
+}
 
 /* Tombol hapus filter — dipakai oleh sidebar reset saja */
 .btn-hapus-filter {
@@ -941,7 +1024,9 @@ body {
     white-space: nowrap;
     flex-shrink: 0;
 }
-.btn-hapus-filter:hover { background: #fecaca; }
+.btn-hapus-filter:hover {
+    background: #fecaca;
+}
 
 .btn-wrapper {
     text-align: center;
@@ -986,17 +1071,33 @@ body {
 }
 /* ── RESPONSIVE ── */
 @media (max-width: 1024px) {
-    .hero { padding: 40px; }
-    .cara-section { padding: 60px 40px; }
-    .reservasi-section { padding: 60px 32px; }
-    .topik-section { padding: 60px 32px; }
+    .hero {
+        padding: 40px;
+    }
+    .cara-section {
+        padding: 60px 40px;
+    }
+    .reservasi-section {
+        padding: 60px 32px;
+    }
+    .topik-section {
+        padding: 60px 32px;
+    }
     .hero {
         flex-direction: column;
         min-height: auto;
     }
-    .hero-left { width: 100%; min-height: 280px; }
-    .hero-right { padding: 20px 40px 40px; width: 100%; }
-    .steps-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-left {
+        width: 100%;
+        min-height: 280px;
+    }
+    .hero-right {
+        padding: 20px 40px 40px;
+        width: 100%;
+    }
+    .steps-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 
     /* sidebar collapse ke horizontal pill list */
     .reservasi-body {
@@ -1006,7 +1107,12 @@ body {
         position: static;
         padding: 14px 16px;
     }
-    .filter-sidebar-title { display: none; }
+    .filter-sidebar-title {
+        display: block; /* tampil lagi */
+        margin-bottom: 8px;
+        font-size: 12px;
+        text-align: center; /* biar rapi di mobile */
+    }
     .filter-sidebar-list {
         flex-direction: row;
         flex-wrap: wrap;
@@ -1041,42 +1147,71 @@ body {
 }
 
 @media (max-width: 768px) {
-    .reservasi-section { padding: 48px 20px; }
-    .topik-section { padding: 48px 20px; }
+    .reservasi-section {
+        padding: 48px 20px;
+    }
+    .topik-section {
+        padding: 48px 20px;
+    }
     .steps-grid,
-    .petugas-grid { grid-template-columns: 1fr; }
-    .hero-title { font-size: 28px; }
+    .petugas-grid {
+        grid-template-columns: 1fr;
+    }
+    .hero-title {
+        font-size: 28px;
+    }
     .topik-grid {
         grid-template-columns: repeat(4, 1fr);
         gap: 14px;
     }
-    .topik-icon { width: 48px; height: 48px; }
-    .topik-icon img { width: 28px; height: 28px; }
-    .topik-label { font-size: 10.5px; }
+    .topik-icon {
+        width: 48px;
+        height: 48px;
+    }
+    .topik-icon img {
+        width: 28px;
+        height: 28px;
+    }
+    .topik-label {
+        font-size: 10.5px;
+    }
 }
 
 @media (max-width: 480px) {
-    .reservasi-section, .topik-section { padding: 36px 14px; }
-    .petugas-grid { grid-template-columns: 1fr; }
+    .reservasi-section,
+    .topik-section {
+        padding: 36px 14px;
+    }
+    .petugas-grid {
+        grid-template-columns: 1fr;
+    }
     .topik-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 10px;
     }
-    .topik-icon { width: 44px; height: 44px; }
-    .topik-icon img { width: 26px; height: 26px; }
+    .topik-icon {
+        width: 44px;
+        height: 44px;
+    }
+    .topik-icon img {
+        width: 26px;
+        height: 26px;
+    }
 }
 
 .cara-section {
     padding: 100px 0 80px;
-    background: #f8f9fc;
+    background: #ffffff;
     overflow: hidden;
 }
 
 .cara-section .section-title {
+    font-family: "Montserrat", sans-serif;
+
     text-align: center;
     font-size: 2.2rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--biru);
     margin-bottom: 12px;
 }
 
