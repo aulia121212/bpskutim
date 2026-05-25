@@ -103,14 +103,14 @@
                 </div>
 
                 <p class="brand-tagline">
-                    Platform data statistik resmi Kabupaten Kutai Timur. Data terpercaya untuk pengambilan keputusan yang lebih baik.
+                    Platform Badan Pusat Statistik Kabupaten Kutai Timur yang menyediakan data statistik, interpretasi data, serta pilihan layanan konsultasi secara online maupun offline.
                 </p>
 
                 <div class="brand-chips">
                     <span class="chip">Data Statistik</span>
-                    <span class="chip">18 Kecamatan</span>
-                    <span class="chip">500+ Dataset</span>
-                    <span class="chip">Terintegrasi</span>
+                    <span class="chip">Interpretasi Data</span>
+                    <span class="chip">Konsultasi Online</span>
+                    <span class="chip">Konsultasi Offline</span>
                 </div>
             </div>
 

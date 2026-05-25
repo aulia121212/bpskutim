@@ -52,28 +52,14 @@
                 <div class="border border-gray-200 rounded-xl px-4 py-3 max-h-48 overflow-y-auto space-y-2">
                     @php
                     $bidangList = [
-                        'Pelayanan Umum',
-                        'Pembelian Data Mikro',
-                        'Potensi Desa',
-                        'Kependudukan',
-                        'Tenaga Kerja',
-                        'Pertumbuhan Ekonomi',
-                        'Ekspor-Impor',
-                        'Konsumsi',
-                        'Pertanian, Peternakan, dan Perikanan',
-                        'Statistik Industri',
-                        'Indeks Pembangunan Manusia',
-                        'Pertambangan, Energi, dan Konstruksi',
-                        'Big Data',
-                        'Nilai Tukar Petani',
-                        'Kemiskinan',
-                        'Statistik Sektoral',
-                        'Sains Data',
-                        'Pariwisata',
-                        'Harga & Inflasi',
-                        'Demokrasi dan Kriminalitas',
-                        'Layanan Pengaduan',
-                        'Petugas PPID',
+                        
+                        'Statistik Ekonomi',
+                        'Statistik Lingkungan Hidup',
+                        'Metode Statistik',
+                        'Statistik Multidomain',
+                        'Statistik Demografi',
+                        'Statistik Sosial',
+                        'Metode Sampling',
                     ];
                     @endphp
                     @foreach($bidangList as $bidang)
@@ -109,7 +95,7 @@
                 Batal
             </a>
             <button type="submit"
-                class="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition">
+                class="px-6 py-2.5 rounded-xl bg-[#035f9c] hover:bg-gray-100 hover:text-[#035f9c] text-white text-sm font-semibold transition">
                 Simpan
             </button>
         </div>

@@ -102,7 +102,7 @@
     <i class="ti ti-trash"></i>
 </button>
 
-<!-- Modal Hapus Popup -->
+<!-- Hapus Popup -->
 <div 
     id="deletePopupModal"
     class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 backdrop-blur-sm"

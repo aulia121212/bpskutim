@@ -14,11 +14,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\ProfileController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
+
 
 
 // ── PUBLIC ────────────────────────────────────────────────────────────
@@ -87,17 +83,14 @@ Route::middleware('auth')->group(function () {
     // ── ADMIN STATISTIK + SUPER ADMIN ─────────────────────────────────
     Route::middleware('role:admin_statistik,super_admin')->group(function () {
 
-        // Statistics CRUD (index & show di public group bawah)
         Route::resource('statistics', StatisticController::class)->except(['index', 'show']);
         Route::post('/statistics/{statistics}/publish', [StatisticController::class, 'publish'])
             ->name('statistics.publish');
         Route::get('/statistics/{id}/preview', [StatisticController::class, 'preview'])
             ->name('statistics.preview');
 
-        // Statistic Titles CRUD lengkap
         Route::resource('statistic-titles', StatisticTitleController::class);
 
-        // ✅ Route tambahan di luar resource (interpretasi JSON)
         Route::get('/statistic-titles/{statisticTitle}/interpretasi',
             [StatisticTitleController::class, 'getInterpretasi'])
             ->name('statistic-titles.interpretasi');

@@ -231,15 +231,13 @@
             <div class="flex items-start gap-2 py-2.5 border-b border-gray-50 dark:border-gray-800 last:border-0">
                 <div class="w-2 h-2 rounded-full bg-teal-400 flex-shrink-0 mt-1.5"></div>
                 <div class="flex-1 min-w-0">
-                    <p class="text-xs font-semibold text-gray-800 dark:text-white truncate">
-                        {{ $data->judul ?? $data->title ?? '-' }}
-                    </p>
-                    <p class="text-[11px] text-gray-400 mt-0.5">
-                        {{ \Carbon\Carbon::parse($data->updated_at)->diffForHumans() }}
-                        · <span class="{{ $data->is_published ? 'text-green-500' : 'text-amber-500' }} font-semibold">
-                            {{ $data->is_published ? 'Publik' : 'Draft' }}
-                          </span>
-                    </p>
+                    <p class="text-sm font-semibold text-gray-800 dark:text-white truncate">
+    {{ $data->judul_data ?? '-' }}
+</p>
+<p class="text-xs text-gray-400">
+    {{ $data->title->judul_data ?? '-' }}
+    · Diperbarui {{ \Carbon\Carbon::parse($data->updated_at)->diffForHumans() }}
+</p>
                 </div>
             </div>
             @empty

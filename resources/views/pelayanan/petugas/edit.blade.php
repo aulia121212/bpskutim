@@ -126,28 +126,14 @@
 
                         @php
                         $bidangList = [
-                            'Pelayanan Umum',
-                            'Pembelian Data Mikro',
-                            'Potensi Desa',
-                            'Kependudukan',
-                            'Tenaga Kerja',
-                            'Pertumbuhan Ekonomi',
-                            'Ekspor-Impor',
-                            'Konsumsi',
-                            'Pertanian, Peternakan, dan Perikanan',
-                            'Statistik Industri',
-                            'Indeks Pembangunan Manusia',
-                            'Pertambangan, Energi, dan Konstruksi',
-                            'Big Data',
-                            'Nilai Tukar Petani',
-                            'Kemiskinan',
-                            'Statistik Sektoral',
-                            'Sains Data',
-                            'Pariwisata',
-                            'Harga & Inflasi',
-                            'Demokrasi dan Kriminalitas',
-                            'Layanan Pengaduan',
-                            'Petugas PPID',
+                           
+                            'Statistik Ekonomi',
+                        'Statistik Lingkungan Hidup',
+                        'Metode Statistik',
+                        'Statistik Multidomain',
+                        'Statistik Demografi',
+                        'Statistik Sosial',
+                        'Metode Sampling',
                         ];
 
                        $selectedBidang = old(

@@ -405,8 +405,8 @@ button.btn-nav.nav-user-btn{
 /* ── BTN NAV ── */
 .btn-nav {
     background: var(--bg) !important;
-    color: #ffffff !important;
-    border: 1.5px solid var(--biru) !important;
+    color: #969ca7 !important;
+    border: transparent !important;
     border-radius: 10px !important;
     padding: 9px 22px !important;
     font-size: 14px !important;
@@ -420,13 +420,13 @@ button.btn-nav.nav-user-btn{
     color: #ffffff !important;
 }
 #main-nav.scrolled .btn-nav {
-    background: var(--biru) !important;
-    color: #ffffff !important;
-    border-color: var(--biru) !important;
+    background: #e8f0fe !important;
+    color: #969ca7 !important;
+    border-color: transparent !important;
 }
 #main-nav.scrolled .btn-nav:hover {
     background: #ffffff !important;
-    border-color: var(--biru) !important;
+    border-color: transparent !important;
     color: var(--biru) !important;
 }
 

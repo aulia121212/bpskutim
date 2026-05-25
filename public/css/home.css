@@ -133,7 +133,7 @@
 } */
 
 .konsultasi-image-grid {
-    flex: 1.2; 
+    flex: 1.2;
 }
 
 .grid-bento {
@@ -151,7 +151,6 @@
     display: block;
 }
 
-
 .item-top-left {
     grid-column: 1;
     grid-row: 1 / span 1;
@@ -160,13 +159,13 @@
 /* Foto 2: Kanan (Besar & Tinggi) */
 .item-right {
     grid-column: 2;
-    grid-row: 1 / span 2; 
+    grid-row: 1 / span 2;
 }
 
 /* Foto 3: Kiri Bawah (Lebar) */
 .item-bottom-left {
     grid-column: 1;
-    grid-row: 2 / span 2; 
+    grid-row: 2 / span 2;
 }
 
 /* Foto 4: Kanan Bawah */
@@ -213,10 +212,9 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-
 .item-2 {
     grid-column: 2;
-    grid-row: 1 / span 2; 
+    grid-row: 1 / span 2;
 }
 
 /* Foto Kiri Atas (Kecil/Sedang) */
@@ -230,7 +228,6 @@
     grid-column: 1;
     grid-row: 2;
 }
-
 
 .image-grid {
     grid-template-areas:
@@ -346,9 +343,10 @@ body #main-nav.scrolled .nav-logo-title {
 }
 /* Btn outline putih */
 body #main-nav .btn-nav {
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    color: #ffffff !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     padding: 12px 28px;
 
@@ -360,14 +358,21 @@ body #main-nav .btn-nav {
 
     background: transparent !important;
 
-
     font-size: 15px;
     font-weight: 700;
 
     line-height: 1;
 
-    transition: all .3s ease;
+    transition: all 0.3s ease;
 }
+
+
+body #main-nav .btn-nav:hover {
+    background: rgb(255, 255, 255) !important;
+    border-color: #ffffff !important;
+        color: var(--biru) !important;
+
+} 
 
 /* .btn-nav {
     background: var(--bg) !important;
@@ -382,7 +387,7 @@ body #main-nav .btn-nav {
     transition: all 0.2s !important;
 } */
 
-body #main-nav.scrolled .btn-nav {
+/* body #main-nav.scrolled .btn-nav {
     background: #6096ba !important;
     border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
     color: #ffffff !important;
@@ -390,7 +395,7 @@ body #main-nav.scrolled .btn-nav {
 body #main-nav .btn-nav:hover {
     background: rgb(255, 255, 255) !important;
     border-color: #ffffff !important;
-}
+} */
 
 /* body #main-nav.scrolled .btn-nav:hover {
     background: #6096ba !important;

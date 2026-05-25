@@ -16,8 +16,7 @@
     @keydown.window.slash.prevent="searchOpen = true"
     x-cloak>
 
-    <div class="flex items-center justify-between px-4 py-3 sm:px-6">
-
+<div class="h-[72px] flex items-center justify-between px-4 sm:px-6">
         {{-- LEFT AREA: Toggler & Search Trigger --}}
         <div class="flex items-center gap-4">
             {{-- Desktop Toggler --}}
@@ -70,12 +69,10 @@
                 {{ $user->name }}
             </p>
             {{-- Menampilkan Role Label sesuai data profil --}}
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+            <!-- <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                 {{ $user->role_label }}
 
-
-                
-            </p>
+            </p> -->
             <p class="text-[10px] text-gray-400 truncate">
                 {{ $user->email }}
             </p>

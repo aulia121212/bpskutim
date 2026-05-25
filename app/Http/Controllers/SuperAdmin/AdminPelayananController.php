@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
-use App\Models\AdminPelayanan;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -11,7 +11,8 @@ class AdminPelayananController extends Controller
 {
     public function index()
     {
-        $admins = AdminPelayanan::all();
+        $admins = User::where('role', User::ROLE_ADMIN_PELAYANAN)->get();
+
         return view('super-admin.admin-pelayanan.index', compact('admins'));
     }
 
@@ -23,8 +24,8 @@ class AdminPelayananController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_lengkap' => 'required',
-            'email'        => 'required|email|unique:admin_pelayanans,email',
+            'name'         => 'required',
+            'email'        => 'required|email|unique:users,email',
             'password'     => 'required|min:6',
             'no_whatsapp'  => 'required',
         ]);
@@ -37,15 +38,18 @@ class AdminPelayananController extends Controller
             $foto = 'uploads/admin/' . $filename;
         }
 
-        AdminPelayanan::create([
-            'nama_lengkap' => $request->nama_lengkap,
+        User::create([
+            'name'         => $request->name,
             'email'        => $request->email,
-            'password'     => bcrypt($request->password),
+            'password'     => Hash::make($request->password),
+            'role'         => User::ROLE_ADMIN_PELAYANAN,
             'no_whatsapp'  => $request->no_whatsapp,
+            'instansi'     => $request->instansi,
             'jabatan'      => $request->jabatan,
             'tim'          => $request->tim,
             'alamat'       => $request->alamat,
-            'foto'         => $foto,
+            'foto_profil'  => $foto,
+            'is_active'    => true,
         ]);
 
         return redirect()->route('superadmin.admin-pelayanan.index')
@@ -54,29 +58,30 @@ class AdminPelayananController extends Controller
 
     public function show($id)
     {
-        $admin = AdminPelayanan::findOrFail($id);
+        $admin = User::where('role', User::ROLE_ADMIN_PELAYANAN)->findOrFail($id);
+
         return view('super-admin.admin-pelayanan.show', compact('admin'));
     }
 
     public function edit($id)
     {
-        $admin = AdminPelayanan::findOrFail($id);
+        $admin = User::where('role', User::ROLE_ADMIN_PELAYANAN)->findOrFail($id);
+
         return view('super-admin.admin-pelayanan.edit', compact('admin'));
     }
 
     public function update(Request $request, $id)
     {
-        $admin = AdminPelayanan::findOrFail($id);
+        $admin = User::where('role', User::ROLE_ADMIN_PELAYANAN)->findOrFail($id);
 
         $request->validate([
-    'nama_lengkap'             => 'required',
-    'email'            => 'required|email|unique:users,email,' . $id,
-    'no_whatsapp'      => 'required',
-    'current_password' => 'required_with:new_password|nullable',
-    'new_password'     => 'nullable|min:8',
-]);
+            'name'        => 'required',
+            'email'       => 'required|email|unique:users,email,' . $id,
+            'no_whatsapp' => 'required',
+        ]);
 
-        $foto = $admin->foto;
+        $foto = $admin->foto_profil;
+
         if ($request->hasFile('foto')) {
             $file     = $request->file('foto');
             $filename = time() . '_' . $file->getClientOriginalName();
@@ -85,30 +90,19 @@ class AdminPelayananController extends Controller
         }
 
         $data = [
-            'nama_lengkap' => $request->nama_lengkap,
-            'email'        => $request->email,
-            'no_whatsapp'  => $request->no_whatsapp,
-            'jabatan'      => $request->jabatan,
-            'tim'          => $request->tim,
-            'alamat'       => $request->alamat,
-            'foto'         => $foto,
+            'name'        => $request->name,
+            'email'       => $request->email,
+            'no_whatsapp' => $request->no_whatsapp,
+            'instansi'    => $request->instansi,
+            'jabatan'     => $request->jabatan,
+            'tim'         => $request->tim,
+            'alamat'      => $request->alamat,
+            'foto_profil' => $foto,
         ];
 
-       if ($request->filled('new_password')) {
-
-    // cek password lama
-    if (!Hash::check($request->current_password, $admin->password)) {
-
-        return back()
-            ->withInput()
-            ->withErrors([
-                'current_password' => 'Password saat ini tidak sesuai.'
-            ]);
-    }
-
-    // update password baru
-    $data['password'] = Hash::make($request->new_password);
-}
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
 
         $admin->update($data);
 
@@ -118,7 +112,9 @@ class AdminPelayananController extends Controller
 
     public function destroy($id)
     {
-        AdminPelayanan::findOrFail($id)->delete();
+        $admin = User::where('role', User::ROLE_ADMIN_PELAYANAN)->findOrFail($id);
+        $admin->delete();
+
         return redirect()->route('superadmin.admin-pelayanan.index')
             ->with('success', 'Admin berhasil dihapus.');
     }

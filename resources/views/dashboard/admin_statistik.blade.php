@@ -107,12 +107,12 @@
 
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-semibold text-gray-800 dark:text-white truncate">
-                        {{ $data->judul ?? $data->title ?? '-' }}
-                    </p>
-                    <p class="text-xs text-gray-400">
-                        {{ $data->statisticTitle->title ?? $data->kategori ?? '-' }}
-                        · Diperbarui {{ \Carbon\Carbon::parse($data->updated_at)->diffForHumans() }}
-                    </p>
+    {{ $data->judul_data ?? '-' }}
+</p>
+<p class="text-xs text-gray-400">
+    {{ $data->title->judul_data ?? '-' }}
+    · Diperbarui {{ \Carbon\Carbon::parse($data->updated_at)->diffForHumans() }}
+</p>
                 </div>
 
                 <span class="text-[11px] font-semibold px-2.5 py-1 rounded-full {{ $badgeClass }} flex-shrink-0">
@@ -157,7 +157,7 @@
             @endphp
             <div class="flex items-center gap-3 mb-3 last:mb-0">
                 <span class="text-xs text-gray-500 dark:text-gray-400 text-right w-28 flex-shrink-0 truncate">
-                    {{ $kategori->title ?? $kategori->nama ?? '-' }}
+{{ $kategori->judul_data ?? '-' }}
                 </span>
                 <div class="flex-1 h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                     <div class="h-full rounded-full {{ $color }}"

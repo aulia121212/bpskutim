@@ -55,11 +55,11 @@
                 <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">
                     Nama Lengkap <span class="text-red-500">*</span>
                 </label>
-                <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap') }}"
+                <input type="text" name="name" value="{{ old('name') }}"
                     placeholder="Masukkan nama lengkap"
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c] dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                     required>
-                @error('nama_lengkap')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+                @error('name')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
            <div>
@@ -118,7 +118,7 @@
             {{-- Asal Instansi --}}
             <div>
                 <label class="block text-sm font-semibold text-[#035f9c] mb-1.5">Asal Instansi <span class="text-red-500">*</span> </label>
-                <input type="text" name="asal_instansi" value="{{ old('asal_instansi', 'BPS Kutai Timur') }}"
+                <input type="text" name="instansi" value="{{ old('instansi', 'BPS Kutai Timur') }}"
                     placeholder="BPS Kutai Timur"
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#035f9c] dark:bg-gray-800 dark:border-gray-700 dark:text-white">
             </div>
