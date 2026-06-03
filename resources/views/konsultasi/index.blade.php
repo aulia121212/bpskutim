@@ -15,7 +15,7 @@
 
 <!-- HERO -->
 <section class="hero">
-
+<div class="hero-container">
     {{-- Sisi kiri: ilustrasi lingkaran + floating cards --}}
     <div class="hero-left">
 
@@ -93,6 +93,8 @@
                 </a>
             </div>
         </div>
+    </div>
+
     </div>
 
 </section>

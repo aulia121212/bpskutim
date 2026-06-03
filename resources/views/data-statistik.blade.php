@@ -19,6 +19,7 @@
     <!-- <div class="flex gap-10 items-center"> -->
 
         <!-- LEFT: HERO TEXT -->
+          <div class="hero-container">
         <div class="hero-content">
             <div class="hero-tag">
                 <i class="ti ti-chart-dots"></i> Portal Data Statistik Resmi
@@ -95,7 +96,7 @@
         </div>
 
     </div>
-
+</div>
 </section>
 
 <section class="search-section" id="data">
